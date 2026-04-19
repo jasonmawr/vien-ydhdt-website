@@ -1,0 +1,15 @@
+# Đảm bảo line endings nhất quán trên mọi OS (Windows/Mac/Linux)
+* text=auto eol=lf
+
+# Các file binary không được chuyển đổi line endings
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.pdf binary
