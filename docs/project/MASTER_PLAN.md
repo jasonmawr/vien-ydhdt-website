@@ -25,26 +25,31 @@ AI Agent hãy đọc kỹ file này. Khi hoàn thành xong một bước, hãy d
 ## **PHASE 3: XÂY DỰNG TRANG CHỦ & MOCK DATA** ✅ HOÀN THÀNH
 
 * \[x\] 1\. Định nghĩa các Interfaces trong /lib/types.ts (Doctor, Article, Herb). SSOT chuẩn. *(Hoàn thành sớm trong Phase 1)*
-* \[x\] 2\. Viết file /services/mockData.ts chứa dữ liệu giả cho Bác sĩ, Tin tức, Dược liệu.
-* \[x\] 3\. Code HeroSection.tsx: Banner chính với câu khẩu hiệu và nút Call-to-action.
-* \[x\] 4\. Code FeaturedServices.tsx: 3-4 khối dịch vụ chính (Khám bệnh, Dược liệu, Nghiên cứu).
-* \[x\] 5\. Code FeaturedDoctors.tsx: Grid hiển thị các bác sĩ tiêu biểu.
-* \[x\] 6\. Ráp tất cả vào /src/app/page.tsx để hoàn thiện Trang chủ.
+* [x] 1. Định nghĩa các Interfaces trong /lib/types.ts (Doctor, Article, Herb). SSOT chuẩn. *(Hoàn thành sớm trong Phase 1)*
+* [x] 2. Viết file /services/mockData.ts chứa dữ liệu giả cho Bác sĩ, Tin tức, Dược liệu.
+* [x] 3. Code HeroSection.tsx: Banner chính với câu khẩu hiệu và nút Call-to-action.
+* [x] 4. Code FeaturedServices.tsx: 3-4 khối dịch vụ chính (Khám bệnh, Dược liệu, Nghiên cứu).
+* [x] 5. Code FeaturedDoctors.tsx: Grid hiển thị các bác sĩ tiêu biểu.
+* [x] 6. Ráp tất cả vào /src/app/page.tsx để hoàn thiện Trang chủ.
 
-## **PHASE 4: TÍNH NĂNG CỐT LÕI (CÁC TRANG CON)**
+## **PHASE 4: TÍNH NĂNG CỐT LÕI (CÁC TRANG CON)** ✅ HOÀN THÀNH
 
-* \[ \] 1\. Xây dựng trang Từ Điển Dược Liệu (/duoc-lieu/page.tsx): Có ô tìm kiếm, hiển thị danh sách dạng lưới.
-* \[ \] 2\. Xây dựng trang Đặt Lịch Khám (/dat-lich/page.tsx): Form nhập liệu UI gọn gàng, validation cơ bản.
+* [x] 1. Code /src/app/duoc-lieu/page.tsx: Trang danh sách dược liệu, hiển thị dạng thẻ Grid.
+* [x] 2. Thêm tính năng Search & Filter (thanh tìm kiếm + bộ lọc theo Category).
+* [x] 3. Code /src/app/dat-lich/page.tsx: Form đặt lịch khám đa bước (Step-by-step).
+* [x] 4. Xử lý Validation form Đặt lịch: Số điện thoại VN, bắt buộc điền các field cần thiết.
 
 ## **GHI CHÚ CUỐI NGÀY (HANDOVER)**
 
-**Cập nhật: 2026-04-19 23:18 (GMT+7)**
+**Cập nhật: 2026-04-19 23:25 (GMT+7)**
 
-**Phase 1, 2, và 3 đã HOÀN THÀNH:**
-- Phase 1: Next.js 16, TypeScript strict, Tailwind CSS v4, design system, utils.ts, types.ts.
-- Phase 2: Header.tsx (responsive, dropdown, sticky scroll), Footer.tsx (4 cột, Google Maps), tích hợp layout.tsx.
-- Phase 3: Hoàn thiện `mockData.ts`, `HeroSection`, `FeaturedServices`, `FeaturedDoctors`, và tích hợp vào `page.tsx`.
-- Cấu trúc Git Repo đã được khởi tạo chuẩn tại root folder, push lên remote https://github.com/jasonmawr/vien-ydhdt-website.git.
-- Cấu hình nhánh đầy đủ theo `ADR-001-git-workflow.md` (main, develop, feature/phase-3-homepage).
+**Toàn bộ dự án (Phase 1, 2, 3, 4) đã HOÀN THÀNH:**
+- Phase 1 & 2: Base UI, Header, Footer, Design System, Type SSOT.
+- Phase 3: Trang chủ (`HeroSection`, `FeaturedServices`, `FeaturedDoctors`, `mockData.ts`).
+- Phase 4: Các trang tính năng cốt lõi:
+  - `/duoc-lieu`: Tra cứu Dược Liệu bằng Component Client side (Tìm kiếm + Bộ lọc).
+  - `/dat-lich`: Đặt lịch khám bệnh Đa Bước (Step-by-step form) có xử lý Validation.
+- Đã tạo Flow documentation cho cả hai luồng nghiệp vụ trên trong `/docs/flows/`.
+- Mã nguồn đảm bảo 0 TypeScript errors.
 
-**Tiếp theo:** Phase 4 — Xây dựng trang con cốt lõi (Từ điển Dược Liệu & Đặt Lịch Khám).
+**Dự án đã sẵn sàng để bàn giao cho người dùng.**
