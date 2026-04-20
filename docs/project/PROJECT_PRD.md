@@ -8,7 +8,7 @@ Mục tiêu: Đẹp, tốc độ tải chớp nhoáng, tối ưu hóa quy trình
 
 ## **2\. HỆ THỐNG MÀU SẮC & TYPOGRAPHY (DESIGN SYSTEM)**
 
-* **Màu chủ đạo (Primary):** Xanh Thảo Dược \- \#065f46 (Tailwind: emerald-800).  
+* **Màu chủ đạo (Primary):** Xanh Lục Ngọc Bích \- \#109173 (Tailwind custom token: primary-800).  
 * **Màu điểm nhấn (Accent):** Vàng Kim Loại \- \#d97706 (Tailwind: amber-600).  
 * **Màu nền (Background):** Giấy Dó (Trắng ngà) \- \#fbf9f6.  
 * **Font chữ:** \- Tiêu đề (Headings): Merriweather (Serif, thể hiện sự uy tín, học thuật).  
