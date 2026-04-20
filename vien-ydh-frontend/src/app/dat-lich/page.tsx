@@ -10,7 +10,7 @@ export default function DatLichPage() {
   return (
     <div className="bg-[#fbf9f6] min-h-screen pb-20">
       {/* Header Banner */}
-      <section className="bg-[#065f46] text-white py-16 md:py-24 relative overflow-hidden">
+      <section className="bg-primary-800 text-white py-16 md:py-24 relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute -left-20 top-0 h-96 w-96 rounded-full bg-white blur-3xl"></div>
           <div className="absolute -right-20 bottom-0 h-96 w-96 rounded-full bg-[#d97706] blur-3xl"></div>

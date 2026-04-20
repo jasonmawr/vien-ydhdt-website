@@ -47,11 +47,11 @@ export default function FeaturedDoctors() {
               {/* Content */}
               <div className="p-6 flex flex-col flex-1">
                 <h3 className="font-heading text-xl font-bold text-[#1a1a1a] mb-1">
-                  <Link href={`/bac-si/${doc.slug}`} className="hover:text-[#065f46] transition-colors">
+                  <Link href={`/bac-si/${doc.slug}`} className="hover:text-primary-800 transition-colors">
                     {doc.fullName}
                   </Link>
                 </h3>
-                <p className="text-sm font-medium text-[#065f46] mb-4">{doc.specialty}</p>
+                <p className="text-sm font-medium text-primary-800 mb-4">{doc.specialty}</p>
                 
                 <p className="text-sm text-[#6b7280] line-clamp-3 mb-6 flex-1">
                   {doc.bio}
@@ -60,7 +60,7 @@ export default function FeaturedDoctors() {
                 <div className="border-t border-gray-100 pt-4 mt-auto">
                   <div className="flex items-center justify-between text-sm mb-4">
                     <div className="flex items-center gap-1.5 text-[#6b7280]">
-                      <Clock className="h-4 w-4 text-[#065f46]" />
+                      <Clock className="h-4 w-4 text-primary-800" />
                       <span>{doc.experience} năm KN</span>
                     </div>
                     <div className="font-semibold text-[#1a1a1a]">

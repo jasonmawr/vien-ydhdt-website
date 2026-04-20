@@ -3,7 +3,7 @@ import { Calendar, ShieldPlus, ChevronRight } from "lucide-react";
 
 export default function HeroSection() {
   return (
-    <section className="relative overflow-hidden bg-[#065f46] text-white">
+    <section className="relative overflow-hidden bg-primary-800 text-white">
       {/* Background Pattern / Overlay */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute -left-20 top-0 h-96 w-96 rounded-full bg-white blur-3xl"></div>
@@ -44,9 +44,9 @@ export default function HeroSection() {
             <div className="mt-10 flex items-center gap-6 text-sm font-medium text-emerald-100/80">
               <div className="flex items-center gap-2">
                 <div className="flex -space-x-2">
-                  <div className="h-8 w-8 rounded-full border-2 border-[#065f46] bg-emerald-300"></div>
-                  <div className="h-8 w-8 rounded-full border-2 border-[#065f46] bg-emerald-400"></div>
-                  <div className="h-8 w-8 rounded-full border-2 border-[#065f46] bg-emerald-500"></div>
+                  <div className="h-8 w-8 rounded-full border-2 border-primary-800 bg-emerald-300"></div>
+                  <div className="h-8 w-8 rounded-full border-2 border-primary-800 bg-emerald-400"></div>
+                  <div className="h-8 w-8 rounded-full border-2 border-primary-800 bg-emerald-500"></div>
                 </div>
                 <span>120+ Bác sĩ giỏi</span>
               </div>

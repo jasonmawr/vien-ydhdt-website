@@ -15,18 +15,18 @@
    2. DESIGN TOKENS — Tailwind CSS v4 (@theme)
    ------------------------------------------------------------- */
 @theme {
-  /* ── Màu chủ đạo: Xanh Thảo Dược (#065f46 = emerald-800) ── */
-  --color-primary-50:  #ecfdf5;
-  --color-primary-100: #d1fae5;
-  --color-primary-200: #a7f3d0;
-  --color-primary-300: #6ee7b7;
-  --color-primary-400: #34d399;
-  --color-primary-500: #10b981;
-  --color-primary-600: #059669;
-  --color-primary-700: #047857;
-  --color-primary-800: #065f46; /* ← Màu chủ đạo chính thức */
-  --color-primary-900: #064e3b;
-  --color-primary-950: #022c22;
+  /* ── Màu chủ đạo: Lục Ngọc Bích (#109173) ── */
+  --color-primary-50:  #ebf7f4;
+  --color-primary-100: #d0ebe4;
+  --color-primary-200: #a8dad0;
+  --color-primary-300: #74c1b3;
+  --color-primary-400: #46a695;
+  --color-primary-500: #298d7d;
+  --color-primary-600: #1d7165;
+  --color-primary-700: #185a52;
+  --color-primary-800: #109173; /* ← Màu chủ đạo chính thức */
+  --color-primary-900: #13403a;
+  --color-primary-950: #0a2522;
 
   /* ── Màu điểm nhấn: Vàng Kim Loại (#d97706 = amber-600) ── */
   --color-accent-50:  #fffbeb;

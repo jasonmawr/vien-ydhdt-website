@@ -25,9 +25,9 @@ import {
   Clock,
   Share2,
   Play,
-  Leaf,
   ChevronRight,
 } from 'lucide-react';
+import Image from 'next/image';
 
 // ─────────────────────────────────────────────────────────────
 // Cấu hình liên kết Footer — SSOT
@@ -56,9 +56,9 @@ const FOOTER_LINKS = {
 };
 
 const WORKING_HOURS = [
-  { day: 'Thứ Hai – Thứ Sáu', time: '07:00 – 17:00' },
-  { day: 'Thứ Bảy', time: '07:00 – 11:30' },
-  { day: 'Chủ Nhật', time: 'Nghỉ' },
+  { day: 'Thứ Hai – Thứ Sáu', time: '06:00 – 16:30' },
+  { day: 'Khám ngoài giờ (T2-T6)', time: '16:30 – 18:30' },
+  { day: 'Thứ Bảy, Chủ Nhật', time: '07:00 – 11:30' },
 ];
 
 // ─────────────────────────────────────────────────────────────
@@ -82,8 +82,14 @@ export default function Footer() {
               className="mb-5 flex items-center gap-3 group"
               aria-label="Viện Y Dược Học Dân Tộc — Về trang chủ"
             >
-              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 transition-colors group-hover:bg-white/20">
-                <Leaf className="h-6 w-6 text-[#6ee7b7]" aria-hidden="true" />
+              <div className="relative flex h-14 w-14 items-center justify-center rounded-full bg-white transition-colors group-hover:bg-gray-100 overflow-hidden">
+                <Image 
+                  src="/images/logo.png" 
+                  alt="Logo Viện" 
+                  fill 
+                  sizes="56px"
+                  className="object-contain p-1"
+                />
               </div>
               <div>
                 <p className="text-xs font-medium text-white/60">VIỆN</p>

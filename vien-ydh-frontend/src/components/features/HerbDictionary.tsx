@@ -35,7 +35,7 @@ export default function HerbDictionary() {
           </div>
           <input
             type="text"
-            className="block w-full rounded-xl border-gray-200 bg-gray-50 py-3 pl-10 pr-3 text-sm placeholder-gray-500 focus:border-[#065f46] focus:bg-white focus:ring-1 focus:ring-[#065f46] transition-all"
+            className="block w-full rounded-xl border-gray-200 bg-gray-50 py-3 pl-10 pr-3 text-sm placeholder-gray-500 focus:border-primary-800 focus:bg-white focus:ring-1 focus:ring-primary-800 transition-all"
             placeholder="Tìm theo tên tiếng Việt hoặc tên Latin..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -52,7 +52,7 @@ export default function HerbDictionary() {
               className={cn(
                 "shrink-0 rounded-full px-4 py-2 text-sm font-medium transition-colors",
                 selectedCategory === cat
-                  ? "bg-[#065f46] text-white"
+                  ? "bg-primary-800 text-white"
                   : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               )}
               aria-pressed={selectedCategory === cat}

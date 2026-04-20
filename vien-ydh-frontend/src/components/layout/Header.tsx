@@ -19,7 +19,8 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { Menu, X, Phone, ChevronDown, Leaf, Calendar } from 'lucide-react';
+import Image from 'next/image';
+import { Menu, X, Phone, ChevronDown, Calendar } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 // ─────────────────────────────────────────────────────────────
@@ -105,10 +106,10 @@ export default function Header() {
   return (
     <>
       {/* ── Thanh thông báo phía trên ── */}
-      <div className="hidden bg-[#065f46] text-white text-sm py-2 sm:block">
-        <div className="container-site flex items-center justify-between">
-          <span className="opacity-90">
-            🌿 Chào mừng đến với Viện Y Dược Học Dân Tộc — Điều trị bằng Y học Cổ truyền
+      <div className="hidden bg-primary-800 text-white text-sm py-2 sm:block">
+        <div className="container-site flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <span className="opacity-90 truncate max-w-full">
+            🌿 Chào mừng đến với Viện Y Dược Học Dân Tộc
           </span>
           <a
             href="tel:02838554269"
@@ -141,15 +142,21 @@ export default function Header() {
               aria-label="Viện Y Dược Học Dân Tộc — Về trang chủ"
             >
               <div
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-[#065f46] shadow-md transition-transform duration-200 group-hover:scale-105 lg:h-12 lg:w-12"
+                className="relative flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-sm transition-transform duration-200 group-hover:scale-105 overflow-hidden"
                 aria-hidden="true"
               >
-                <Leaf className="h-5 w-5 text-white lg:h-6 lg:w-6" />
+                <Image 
+                  src="/images/logo.png" 
+                  alt="Logo Viện" 
+                  fill 
+                  sizes="(max-width: 768px) 48px, 48px"
+                  className="object-contain p-1"
+                />
               </div>
               <div className="leading-tight">
                 <p className="text-xs font-medium text-[#6b7280] sm:text-sm">VIỆN</p>
                 <p
-                  className="font-heading text-sm font-bold text-[#065f46] sm:text-base lg:text-lg"
+                  className="font-heading text-sm font-bold text-primary-800 sm:text-base lg:text-lg"
                   style={{ fontFamily: 'var(--font-merriweather)' }}
                 >
                   Y Dược Học Dân Tộc
@@ -170,7 +177,7 @@ export default function Header() {
                       onClick={() =>
                         setActiveDropdown(activeDropdown === item.href ? null : item.href)
                       }
-                      className="flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium text-[#374151] transition-colors hover:bg-[#ecfdf5] hover:text-[#065f46]"
+                      className="flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium text-[#374151] transition-colors hover:bg-[#ecfdf5] hover:text-primary-800"
                       aria-expanded={activeDropdown === item.href}
                       aria-haspopup="true"
                     >
@@ -186,7 +193,7 @@ export default function Header() {
                   ) : (
                     <Link
                       href={item.href}
-                      className="rounded-md px-3 py-2 text-sm font-medium text-[#374151] transition-colors hover:bg-[#ecfdf5] hover:text-[#065f46]"
+                      className="rounded-md px-3 py-2 text-sm font-medium text-[#374151] transition-colors hover:bg-[#ecfdf5] hover:text-primary-800"
                     >
                       {item.label}
                     </Link>
@@ -202,7 +209,7 @@ export default function Header() {
                         <Link
                           key={child.href}
                           href={child.href}
-                          className="block px-4 py-2.5 text-sm text-[#374151] transition-colors hover:bg-[#ecfdf5] hover:text-[#065f46]"
+                          className="block px-4 py-2.5 text-sm text-[#374151] transition-colors hover:bg-[#ecfdf5] hover:text-primary-800"
                           role="menuitem"
                           onClick={() => setActiveDropdown(null)}
                         >
@@ -229,7 +236,7 @@ export default function Header() {
               {/* Hamburger button — mobile only */}
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="flex h-10 w-10 items-center justify-center rounded-lg text-[#374151] transition-colors hover:bg-[#ecfdf5] hover:text-[#065f46] lg:hidden"
+                className="flex h-10 w-10 items-center justify-center rounded-lg text-[#374151] transition-colors hover:bg-[#ecfdf5] hover:text-primary-800 lg:hidden"
                 aria-expanded={isMenuOpen}
                 aria-controls="mobile-menu"
                 aria-label={isMenuOpen ? 'Đóng menu điều hướng' : 'Mở menu điều hướng'}
@@ -265,7 +272,7 @@ export default function Header() {
                       onClick={() =>
                         setActiveDropdown(activeDropdown === item.href ? null : item.href)
                       }
-                      className="flex w-full items-center justify-between rounded-lg px-4 py-3 text-left text-base font-medium text-[#374151] transition-colors hover:bg-[#ecfdf5] hover:text-[#065f46]"
+                      className="flex w-full items-center justify-between rounded-lg px-4 py-3 text-left text-base font-medium text-[#374151] transition-colors hover:bg-[#ecfdf5] hover:text-primary-800"
                       aria-expanded={activeDropdown === item.href}
                     >
                       {item.label}
@@ -283,7 +290,7 @@ export default function Header() {
                           <Link
                             key={child.href}
                             href={child.href}
-                            className="block rounded-lg px-3 py-2.5 text-sm text-[#374151] transition-colors hover:bg-[#ecfdf5] hover:text-[#065f46]"
+                            className="block rounded-lg px-3 py-2.5 text-sm text-[#374151] transition-colors hover:bg-[#ecfdf5] hover:text-primary-800"
                             onClick={() => { setIsMenuOpen(false); setActiveDropdown(null); }}
                           >
                             {child.label}
@@ -295,7 +302,7 @@ export default function Header() {
                 ) : (
                   <Link
                     href={item.href}
-                    className="block rounded-lg px-4 py-3 text-base font-medium text-[#374151] transition-colors hover:bg-[#ecfdf5] hover:text-[#065f46]"
+                    className="block rounded-lg px-4 py-3 text-base font-medium text-[#374151] transition-colors hover:bg-[#ecfdf5] hover:text-primary-800"
                     onClick={() => { setIsMenuOpen(false); setActiveDropdown(null); }}
                   >
                     {item.label}
@@ -319,7 +326,7 @@ export default function Header() {
 
             <a
               href="tel:02838554269"
-              className="flex items-center justify-center gap-2 rounded-lg border border-[#065f46] px-4 py-3 text-base font-medium text-[#065f46] transition-colors hover:bg-[#ecfdf5]"
+              className="flex items-center justify-center gap-2 rounded-lg border border-primary-800 px-4 py-3 text-base font-medium text-primary-800 transition-colors hover:bg-[#ecfdf5]"
               aria-label="Gọi điện cho Viện Y Dược Học Dân Tộc"
             >
               <Phone className="h-5 w-5" aria-hidden="true" />

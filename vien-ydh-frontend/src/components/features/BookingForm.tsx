@@ -88,8 +88,8 @@ export default function BookingForm() {
             className={cn(
               "cursor-pointer rounded-xl border p-4 transition-all",
               formData.departmentId === dept.id
-                ? "border-[#065f46] bg-[#ecfdf5] ring-1 ring-[#065f46]"
-                : "border-gray-200 bg-white hover:border-[#065f46]/30 hover:bg-gray-50"
+                ? "border-primary-800 bg-[#ecfdf5] ring-1 ring-primary-800"
+                : "border-gray-200 bg-white hover:border-primary-800/30 hover:bg-gray-50"
             )}
           >
             <h4 className="font-semibold text-[#1a1a1a]">{dept.name}</h4>
@@ -109,8 +109,8 @@ export default function BookingForm() {
           className={cn(
             "cursor-pointer rounded-xl border p-4 transition-all flex items-center justify-center text-center",
             formData.doctorId === "any"
-              ? "border-[#065f46] bg-[#ecfdf5] ring-1 ring-[#065f46]"
-              : "border-gray-200 bg-white hover:border-[#065f46]/30 hover:bg-gray-50"
+              ? "border-primary-800 bg-[#ecfdf5] ring-1 ring-primary-800"
+              : "border-gray-200 bg-white hover:border-primary-800/30 hover:bg-gray-50"
           )}
         >
           <span className="font-semibold">Bác sĩ khám nhanh nhất</span>
@@ -122,15 +122,15 @@ export default function BookingForm() {
             className={cn(
               "cursor-pointer rounded-xl border p-4 transition-all flex gap-4",
               formData.doctorId === doc.id
-                ? "border-[#065f46] bg-[#ecfdf5] ring-1 ring-[#065f46]"
-                : "border-gray-200 bg-white hover:border-[#065f46]/30 hover:bg-gray-50"
+                ? "border-primary-800 bg-[#ecfdf5] ring-1 ring-primary-800"
+                : "border-gray-200 bg-white hover:border-primary-800/30 hover:bg-gray-50"
             )}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={doc.imageUrl} alt={doc.fullName} className="h-16 w-16 rounded-full object-cover bg-gray-100" />
             <div>
               <h4 className="font-semibold text-[#1a1a1a]">{doc.degree} {doc.fullName}</h4>
-              <p className="text-sm text-[#065f46]">{doc.specialty}</p>
+              <p className="text-sm text-primary-800">{doc.specialty}</p>
             </div>
           </div>
         ))}
@@ -159,8 +159,8 @@ export default function BookingForm() {
                 className={cn(
                   "cursor-pointer rounded-xl border py-3 text-center transition-all",
                   isSelected
-                    ? "border-[#065f46] bg-[#065f46] text-white shadow-md"
-                    : "border-gray-200 bg-white text-gray-700 hover:border-[#065f46]/50"
+                    ? "border-primary-800 bg-primary-800 text-white shadow-md"
+                    : "border-gray-200 bg-white text-gray-700 hover:border-primary-800/50"
                 )}
               >
                 <div className={cn("text-xs uppercase mb-1 opacity-80", isSelected ? "text-emerald-100" : "")}>
@@ -212,7 +212,7 @@ export default function BookingForm() {
               id="patientName"
               type="text"
               required
-              className="block w-full rounded-xl border-gray-200 bg-gray-50 py-2.5 pl-10 pr-3 text-sm focus:border-[#065f46] focus:bg-white focus:ring-1 focus:ring-[#065f46]"
+              className="block w-full rounded-xl border-gray-200 bg-gray-50 py-2.5 pl-10 pr-3 text-sm focus:border-primary-800 focus:bg-white focus:ring-1 focus:ring-primary-800"
               placeholder="VD: Nguyễn Văn A"
               value={formData.patientName}
               onChange={(e) => updateForm("patientName", e.target.value)}
@@ -230,7 +230,7 @@ export default function BookingForm() {
               id="patientPhone"
               type="tel"
               required
-              className="block w-full rounded-xl border-gray-200 bg-gray-50 py-2.5 pl-10 pr-3 text-sm focus:border-[#065f46] focus:bg-white focus:ring-1 focus:ring-[#065f46]"
+              className="block w-full rounded-xl border-gray-200 bg-gray-50 py-2.5 pl-10 pr-3 text-sm focus:border-primary-800 focus:bg-white focus:ring-1 focus:ring-primary-800"
               placeholder="VD: 0912345678"
               value={formData.patientPhone}
               onChange={(e) => updateForm("patientPhone", e.target.value)}
@@ -244,7 +244,7 @@ export default function BookingForm() {
             id="patientDob"
             type="date"
             required
-            className="block w-full rounded-xl border-gray-200 bg-gray-50 py-2.5 px-3 text-sm focus:border-[#065f46] focus:bg-white focus:ring-1 focus:ring-[#065f46]"
+            className="block w-full rounded-xl border-gray-200 bg-gray-50 py-2.5 px-3 text-sm focus:border-primary-800 focus:bg-white focus:ring-1 focus:ring-primary-800"
             value={formData.patientDob}
             onChange={(e) => updateForm("patientDob", e.target.value)}
           />
@@ -261,7 +261,7 @@ export default function BookingForm() {
                   value={g}
                   checked={formData.patientGender === g}
                   onChange={(e) => updateForm("patientGender", e.target.value)}
-                  className="text-[#065f46] focus:ring-[#065f46]"
+                  className="text-primary-800 focus:ring-primary-800"
                 />
                 <span className="text-sm">{g === "male" ? "Nam" : "Nữ"}</span>
               </label>
@@ -278,7 +278,7 @@ export default function BookingForm() {
             <textarea
               id="symptoms"
               rows={3}
-              className="block w-full rounded-xl border-gray-200 bg-gray-50 py-2.5 pl-10 pr-3 text-sm focus:border-[#065f46] focus:bg-white focus:ring-1 focus:ring-[#065f46]"
+              className="block w-full rounded-xl border-gray-200 bg-gray-50 py-2.5 pl-10 pr-3 text-sm focus:border-primary-800 focus:bg-white focus:ring-1 focus:ring-primary-800"
               placeholder="Mô tả ngắn gọn vấn đề sức khỏe của bạn..."
               value={formData.symptoms}
               onChange={(e) => updateForm("symptoms", e.target.value)}
@@ -292,7 +292,7 @@ export default function BookingForm() {
   const renderSuccess = () => (
     <div className="text-center py-12 animate-fade-in-up">
       <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100">
-        <CheckCircle2 className="h-10 w-10 text-[#065f46]" />
+        <CheckCircle2 className="h-10 w-10 text-primary-800" />
       </div>
       <h3 className="mb-2 font-heading text-2xl font-bold text-[#1a1a1a]">Đặt Lịch Thành Công!</h3>
       <p className="mb-8 text-gray-600 max-w-md mx-auto">
@@ -307,7 +307,7 @@ export default function BookingForm() {
           </div>
         </div>
         <div className="flex items-center gap-3 mb-3 pb-3 border-b border-gray-200">
-          <User className="h-5 w-5 text-[#065f46]" />
+          <User className="h-5 w-5 text-primary-800" />
           <div>
             <p className="text-xs text-gray-500 uppercase font-semibold">Bệnh nhân</p>
             <p className="font-medium">{formData.patientName}</p>
@@ -339,8 +339,8 @@ export default function BookingForm() {
               <div key={i} className="flex items-center">
                 <div className={cn(
                   "flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold transition-colors",
-                  step === i ? "bg-[#065f46] text-white ring-4 ring-emerald-100" :
-                  step > i ? "bg-emerald-100 text-[#065f46]" : "bg-gray-200 text-gray-500"
+                  step === i ? "bg-primary-800 text-white ring-4 ring-emerald-100" :
+                  step > i ? "bg-emerald-100 text-primary-800" : "bg-gray-200 text-gray-500"
                 )}>
                   {step > i ? <CheckCircle2 className="h-5 w-5" /> : i}
                 </div>
@@ -372,7 +372,7 @@ export default function BookingForm() {
               disabled={step === 1}
               className={cn(
                 "flex items-center gap-2 text-sm font-medium transition-colors",
-                step === 1 ? "text-gray-300 cursor-not-allowed" : "text-gray-600 hover:text-[#065f46]"
+                step === 1 ? "text-gray-300 cursor-not-allowed" : "text-gray-600 hover:text-primary-800"
               )}
             >
               <ChevronLeft className="h-4 w-4" />
@@ -386,7 +386,7 @@ export default function BookingForm() {
                 disabled={!isStepValid()}
                 className={cn(
                   "btn-primary px-6",
-                  !isStepValid() && "opacity-50 cursor-not-allowed hover:bg-[#065f46]"
+                  !isStepValid() && "opacity-50 cursor-not-allowed hover:bg-primary-800"
                 )}
               >
                 Tiếp tục
