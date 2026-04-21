@@ -435,8 +435,8 @@ export function HospitalLandingPage() {
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 flex flex-col justify-end p-8 z-20">
-                  <h3 className="text-2xl font-bold mb-2 text-white drop-shadow-md">Vườn Y Đạo Tượng Danh Y</h3>
-                  <p className="text-white/90 text-lg mb-6 drop-shadow-md">Khuôn viên lưu giữ tinh hoa y học truyền thống Việt Nam</p>
+                  <h3 className="text-2xl font-bold mb-2 !text-white drop-shadow-md">Vườn Y Đạo Tượng Danh Y</h3>
+                  <p className="!text-white/90 text-lg mb-6 drop-shadow-md">Khuôn viên lưu giữ tinh hoa y học truyền thống Việt Nam</p>
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -465,8 +465,8 @@ export function HospitalLandingPage() {
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 flex flex-col justify-end p-6 z-20">
-                  <h3 className="text-xl font-bold text-white drop-shadow-md">Khu Vực Phục Hồi</h3>
-                  <p className="text-sm text-white/90 drop-shadow-md">Yên tĩnh và chuyên biệt</p>
+                  <h3 className="text-xl font-bold !text-white drop-shadow-md">Khu Vực Phục Hồi</h3>
+                  <p className="text-sm !text-white/90 drop-shadow-md">Yên tĩnh và chuyên biệt</p>
                 </div>
               </motion.div>
               <motion.div
@@ -483,8 +483,8 @@ export function HospitalLandingPage() {
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 flex flex-col justify-end p-6 z-20">
-                  <h3 className="text-xl font-bold text-white drop-shadow-md">Cảnh Quan Thiên Nhiên</h3>
-                  <p className="text-sm text-white/90 drop-shadow-md">Không gian xanh hỗ trợ chữa lành</p>
+                  <h3 className="text-xl font-bold !text-white drop-shadow-md">Cảnh Quan Thiên Nhiên</h3>
+                  <p className="text-sm !text-white/90 drop-shadow-md">Không gian xanh hỗ trợ chữa lành</p>
                 </div>
               </motion.div>
               <motion.div
@@ -501,8 +501,8 @@ export function HospitalLandingPage() {
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 flex flex-col justify-end p-6 z-20">
-                  <h3 className="text-xl font-bold text-white drop-shadow-md">Phòng Chẩn Trị</h3>
-                  <p className="text-sm text-white/90 drop-shadow-md">Trang thiết bị hiện đại, sạch sẽ</p>
+                  <h3 className="text-xl font-bold !text-white drop-shadow-md">Phòng Chẩn Trị</h3>
+                  <p className="text-sm !text-white/90 drop-shadow-md">Trang thiết bị hiện đại, sạch sẽ</p>
                 </div>
               </motion.div>
             </motion.div>
