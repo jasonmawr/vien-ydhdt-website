@@ -22,10 +22,12 @@ import {
   ShieldCheck,
   Stethoscope,
   Microscope,
+  CheckCircle2
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { DoctorDTO, getAllDoctors } from "@/services/api"
 
 // Animation variants
 const fadeIn = {
@@ -59,39 +61,21 @@ const itemFadeIn = {
 export function HospitalLandingPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [scrollY, setScrollY] = useState(0)
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitSuccess, setSubmitSuccess] = useState(false)
 
-  const handleAppointmentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    
-    const formData = new FormData(e.currentTarget);
-    const data = {
-      patientName: formData.get("patientName"),
-      phone: formData.get("phone"),
-      reason: `${formData.get("specialty")} - ${formData.get("reason")}`,
-      date: new Date().toISOString(), // Lấy tạm ngày hiện tại vì form chưa có trường ngày
-    };
+  const [featuredDoctors, setFeaturedDoctors] = useState<DoctorDTO[]>([]);
 
-    try {
-      const res = await fetch("/api/appointments", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-
-      if (res.ok) {
-        setSubmitSuccess(true);
-        e.currentTarget.reset();
-        setTimeout(() => setSubmitSuccess(false), 5000);
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        const docs = await getAllDoctors();
+        // Lấy 8 bác sĩ đầu tiên làm featured
+        setFeaturedDoctors(docs.slice(0, 8));
+      } catch (err) {
+        console.error("Failed to load featured doctors", err);
       }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+    };
+    fetchDoctors();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -152,9 +136,11 @@ export function HospitalLandingPage() {
             <Button variant="outline" size="sm" className="rounded-xl border-primary-200 text-primary-700 hover:bg-primary-50">
               Hotline: 0964 392 632
             </Button>
-            <Button size="sm" className="rounded-xl bg-primary-600 hover:bg-primary-700 text-white shadow-md">
-              Đặt Lịch Khám
-            </Button>
+            <Link href="/dat-lich">
+              <Button size="sm" className="rounded-xl bg-primary-600 hover:bg-primary-700 text-white shadow-md">
+                Đặt Lịch Khám
+              </Button>
+            </Link>
           </div>
           <button className="flex md:hidden text-stone-700 hover:text-primary-600 transition-colors" onClick={toggleMenu}>
             <Menu className="h-6 w-6" />
@@ -213,9 +199,11 @@ export function HospitalLandingPage() {
               <Button variant="outline" className="w-full rounded-xl border-primary-200 text-primary-700 h-12 text-base font-semibold">
                 Hotline: 0964 392 632
               </Button>
-              <Button className="w-full rounded-xl bg-primary-600 text-white h-12 text-base font-semibold">
-                Đặt Lịch Khám
-              </Button>
+              <Link href="/dat-lich" onClick={toggleMenu} className="w-full">
+                <Button className="w-full rounded-xl bg-primary-600 hover:bg-primary-700 text-white h-12 text-base font-semibold">
+                  Đặt Lịch Khám
+                </Button>
+              </Link>
             </motion.div>
           </motion.nav>
         </motion.div>
@@ -269,16 +257,18 @@ export function HospitalLandingPage() {
                   transition={{ duration: 0.7, delay: 0.6 }}
                   className="flex flex-col gap-4 sm:flex-row"
                 >
-                  <Button size="lg" className="rounded-xl group bg-primary-600 hover:bg-primary-700 text-white shadow-lg shadow-primary-500/30 text-base h-14 px-8">
-                    Đặt Lịch Khám Ngay
-                    <motion.span
-                      initial={{ x: 0 }}
-                      whileHover={{ x: 5 }}
-                      transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                    >
-                      <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-                    </motion.span>
-                  </Button>
+                  <Link href="/dat-lich">
+                    <Button size="lg" className="rounded-xl group bg-primary-600 hover:bg-primary-700 text-white shadow-lg shadow-primary-500/30 text-base h-14 px-8">
+                      Đặt Lịch Khám Ngay
+                      <motion.span
+                        initial={{ x: 0 }}
+                        whileHover={{ x: 5 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                      >
+                        <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                      </motion.span>
+                    </Button>
+                  </Link>
                   <Button variant="outline" size="lg" className="rounded-xl border-stone-300 text-stone-700 hover:bg-stone-50 hover:text-primary-700 text-base h-14 px-8">
                     Tìm Hiểu Thêm
                   </Button>
@@ -611,49 +601,29 @@ export function HospitalLandingPage() {
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
-              className="bg-white p-8 lg:p-12 h-full flex flex-col justify-center border-l border-stone-200"
+              className="bg-white p-8 lg:p-12 h-full flex flex-col justify-center items-center text-center border-l border-stone-200"
             >
-              <h3 className="text-2xl font-bold text-stone-900">Gửi Yêu Cầu Khám Bệnh</h3>
-              <p className="text-stone-500 mt-2 mb-8">
-                Điền thông tin vào form dưới đây, bộ phận CSKH sẽ liên hệ lại với bạn trong thời gian sớm nhất.
+              <div className="h-20 w-20 rounded-full bg-primary-50 flex items-center justify-center mb-6 text-primary-600 shadow-inner">
+                <Sparkles className="h-10 w-10" />
+              </div>
+              <h3 className="text-3xl font-bold text-stone-900 mb-4">Đặt Lịch Nhanh Chóng</h3>
+              <p className="text-stone-600 mb-8 max-w-md">
+                Hệ thống đặt lịch trực tuyến mới cho phép bạn chọn ngày giờ, bác sĩ yêu thích và thanh toán ngay lập tức chỉ với vài thao tác.
               </p>
-              <form className="space-y-5" onSubmit={handleAppointmentSubmit}>
-                <div className="grid gap-5 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <label className="text-sm font-semibold text-stone-700">Họ và tên</label>
-                    <Input name="patientName" required placeholder="Nhập họ và tên" className="rounded-xl h-12 bg-stone-50 border-stone-200 focus-visible:ring-primary-500" />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-semibold text-stone-700">Số điện thoại</label>
-                    <Input name="phone" required placeholder="Nhập số điện thoại" className="rounded-xl h-12 bg-stone-50 border-stone-200 focus-visible:ring-primary-500" />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-stone-700">Chuyên khoa muốn khám</label>
-                  <select name="specialty" className="flex h-12 w-full rounded-xl border border-stone-200 bg-stone-50 px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500">
-                    <option value="">Chọn chuyên khoa...</option>
-                    <option value="Châm cứu - Phục hồi">Châm cứu - Phục hồi</option>
-                    <option value="Khám tổng quát">Khám tổng quát</option>
-                    <option value="Cấy chỉ trị liệu">Cấy chỉ trị liệu</option>
-                  </select>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-stone-700">Triệu chứng bệnh</label>
-                  <Textarea name="reason" placeholder="Mô tả sơ lược tình trạng của bạn" className="min-h-[120px] rounded-xl bg-stone-50 border-stone-200 focus-visible:ring-primary-500 resize-none p-4" />
-                </div>
-                
-                {submitSuccess && (
-                  <div className="p-4 bg-green-50 text-green-700 rounded-xl border border-green-200 text-sm font-medium">
-                    Gửi yêu cầu thành công! Viện sẽ liên hệ lại sớm nhất.
-                  </div>
-                )}
-                
-                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="pt-2">
-                  <Button type="submit" disabled={isSubmitting} className="w-full rounded-xl bg-primary-600 hover:bg-primary-700 h-14 text-base font-bold shadow-md shadow-primary-500/20">
-                    {isSubmitting ? "Đang gửi..." : "Gửi Yêu Cầu"}
+              
+              <Link href="/dat-lich" className="w-full max-w-sm">
+                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                  <Button className="w-full rounded-2xl bg-primary-600 hover:bg-primary-700 h-16 text-lg font-bold shadow-xl shadow-primary-500/30">
+                    Bắt Đầu Đặt Lịch
+                    <ArrowRight className="ml-2 h-6 w-6" />
                   </Button>
                 </motion.div>
-              </form>
+              </Link>
+              
+              <div className="flex items-center gap-4 mt-8 text-sm text-stone-500 font-medium">
+                <div className="flex items-center gap-1"><CheckCircle2 className="h-4 w-4 text-green-500"/> Xác nhận tức thì</div>
+                <div className="flex items-center gap-1"><CheckCircle2 className="h-4 w-4 text-green-500"/> Không chờ đợi</div>
+              </div>
             </motion.div>
           </motion.div>
         </section>
