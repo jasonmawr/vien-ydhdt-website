@@ -200,7 +200,8 @@ export interface ExamPricingDTO {
   unit: string;
   priceBHYT: number;
   priceService: number;
-  priceForeign: number;
+  priceRequest: number;
+  priceExpert: number;
   bhytPercent: number;
 }
 

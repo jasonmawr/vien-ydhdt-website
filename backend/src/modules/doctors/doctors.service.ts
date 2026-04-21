@@ -45,6 +45,8 @@ export async function getAllDoctors(limit?: number): Promise<DoctorDTO[]> {
       LEFT JOIN MEDI.DMCHUYENKHOA ck ON ck.ID = bs.CHUYENKHOA
       WHERE (bs.HIDE IS NULL OR bs.HIDE = 0)
         AND bs.HOTEN IS NOT NULL
+        AND NOT REGEXP_LIKE(UPPER(bs.HOTEN), '^(ĐD|DS|CN|YS|DD|KTV|CS|NHS)\\.?')
+        AND UPPER(bs.HOTEN) NOT LIKE '%DS.%'
       ORDER BY bs.STT NULLS LAST, bs.MA
       ${limit ? `FETCH FIRST ${limit} ROWS ONLY` : ""}
     `;
@@ -82,6 +84,8 @@ export async function getFeaturedDoctors(limit = 8): Promise<DoctorDTO[]> {
        WHERE (bs.HIDE IS NULL OR bs.HIDE = 0)
          AND bs.HOTEN IS NOT NULL
          AND bs.STT IS NOT NULL
+         AND NOT REGEXP_LIKE(UPPER(bs.HOTEN), '^(ĐD|DS|CN|YS|DD|KTV|CS|NHS)\\.?')
+         AND UPPER(bs.HOTEN) NOT LIKE '%DS.%'
        ORDER BY bs.STT
        FETCH FIRST :limit ROWS ONLY`,
       { limit }
@@ -182,6 +186,8 @@ export async function getDoctorsByDepartment(chuyenkhoa: number): Promise<Doctor
        WHERE bs.CHUYENKHOA = :chuyenkhoa
          AND (bs.HIDE IS NULL OR bs.HIDE = 0)
          AND bs.HOTEN IS NOT NULL
+         AND NOT REGEXP_LIKE(UPPER(bs.HOTEN), '^(ĐD|DS|CN|YS|DD|KTV|CS|NHS)\\.?')
+         AND UPPER(bs.HOTEN) NOT LIKE '%DS.%'
        ORDER BY bs.STT NULLS LAST`,
       { chuyenkhoa }
     );

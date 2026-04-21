@@ -7,8 +7,8 @@ import {
 } from "lucide-react";
 import {
   getDepartments, getAllDoctors, createAppointment, getDoctorImageUrl, generatePaymentQR,
-  getInsuranceTuyen,
-  type DepartmentDTO, type DoctorDTO, type InsuranceTuyenDTO
+  getInsuranceTuyen, getExamPricing,
+  type DepartmentDTO, type DoctorDTO, type InsuranceTuyenDTO, type ExamPricingDTO
 } from "@/services/api";
 import { cn } from "@/lib/utils";
 
@@ -31,6 +31,9 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
   const [departments, setDepartments] = useState<DepartmentDTO[]>([]);
   const [allDoctors, setAllDoctors] = useState<DoctorDTO[]>([]);
   const [insuranceTuyenList, setInsuranceTuyenList] = useState<InsuranceTuyenDTO[]>([]);
+  const [pricingList, setPricingList] = useState<ExamPricingDTO[]>([]);
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const [searchDoctor, setSearchDoctor] = useState("");
 
   const [formData, setFormData] = useState({
     departmentId: "",
@@ -44,31 +47,55 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
     patientIdNumber: "",
     symptoms: "",
     // Đối tượng & BHYT
-    patientType: "dich-vu", // bhyt | dich-vu | chuyen-gia | nuoc-ngoai
+    patientType: "dich-vu", // bhyt | dich-vu | yeu-cau | chuyen-gia
     bhytNumber: "",
     bhytTuyen: "",
   });
 
-  // Fetch departments & doctors on mount
+  // Fetch data on mount
   useEffect(() => {
     setIsLoading(true);
-    Promise.all([getDepartments(), getAllDoctors(), getInsuranceTuyen()])
-      .then(([depts, docs, tuyen]) => {
+    Promise.all([getDepartments(), getAllDoctors(), getInsuranceTuyen(), getExamPricing()])
+      .then(([depts, docs, tuyen, prices]) => {
         setDepartments(depts);
         setAllDoctors(docs);
         setInsuranceTuyenList(tuyen);
+        setPricingList(prices);
       })
       .catch(console.error)
       .finally(() => setIsLoading(false));
   }, []);
 
+  // Tính toán giá tiền động cho toàn bộ component
+  const defaultPricing = pricingList.find(p => p.code === 'K1') || pricingList[0]; // K1 là Y học cổ truyền, có đủ khung giá
+  let summaryPrice = 0;
+  if (defaultPricing) {
+    if (formData.patientType === "bhyt") summaryPrice = defaultPricing.priceBHYT;
+    else if (formData.patientType === "dich-vu") summaryPrice = defaultPricing.priceService;
+    else if (formData.patientType === "yeu-cau") summaryPrice = defaultPricing.priceRequest;
+    else if (formData.patientType === "chuyen-gia") summaryPrice = defaultPricing.priceExpert;
+  }
+
   // Derived data
   const availableDoctors = useMemo(() => {
-    if (!formData.departmentId) return allDoctors.slice(0, 8);
-    return allDoctors.filter(
-      (doc) => doc.departmentId === Number(formData.departmentId)
-    );
-  }, [formData.departmentId, allDoctors]);
+    let filtered = allDoctors;
+    
+    // Filter by department if selected
+    if (formData.departmentId) {
+      filtered = filtered.filter(
+        (doc) => String(doc.departmentId) === formData.departmentId || !doc.departmentId || doc.departmentId === 0
+      );
+      if (filtered.length === 0) filtered = allDoctors; // Fallback
+    }
+
+    // Filter by search query
+    if (searchDoctor.trim()) {
+      const q = searchDoctor.toLowerCase();
+      filtered = filtered.filter(doc => doc.fullName.toLowerCase().includes(q));
+    }
+
+    return filtered;
+  }, [formData.departmentId, allDoctors, searchDoctor]);
 
   const selectedDoctor = allDoctors.find((d) => d.id === formData.doctorId);
   const selectedDept = departments.find((d) => String(d.id) === formData.departmentId);
@@ -89,7 +116,26 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
   const handlePrev = () => setStep((s) => Math.max(s - 1, 1) as Step);
 
   const updateForm = (key: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [key]: value }));
+    setFormData((prev) => {
+      const nextData = { ...prev, [key]: value };
+      
+      // Auto switch logic: If user selects "Khám trái tuyến" (khac), switch to Dịch vụ
+      if (key === "bhytTuyen" && value === "khac") {
+        setIsAlertOpen(true); // Mở custom modal thay vì alert
+        nextData.patientType = "dich-vu";
+        nextData.bhytTuyen = ""; // reset
+      }
+      
+      return nextData;
+    });
+  };
+
+  const validateStep4 = () => {
+    if (formData.patientName.length < 2) return "Vui lòng nhập họ tên đầy đủ.";
+    if (!/^(0|\+84)[3|5|7|8|9][0-9]{8}$/.test(formData.patientPhone)) return "Số điện thoại không hợp lệ (cần 10 số hợp lệ).";
+    if (!formData.patientDob) return "Vui lòng chọn ngày sinh.";
+    if (formData.patientType === "bhyt" && formData.bhytNumber.length < 10) return "Vui lòng nhập số thẻ BHYT hợp lệ.";
+    return null; // OK
   };
 
   const isStepValid = () => {
@@ -97,25 +143,28 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
       case 1: return !!formData.departmentId;
       case 2: return !!formData.doctorId;
       case 3: return !!formData.appointmentDate && !!formData.appointmentTime;
-      case 4:
-        return (
-          formData.patientName.length > 2 &&
-          /^(0|\+84)[3|5|7|8|9][0-9]{8}$/.test(formData.patientPhone) &&
-          !!formData.patientDob
-        );
+      case 4: return true; // Luôn true để button không bị disabled, ta validate khi click
       default: return true;
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isStepValid()) return;
+    if (step < 4 && !isStepValid()) return;
+
+    if (step === 4) {
+      const errorMsg = validateStep4();
+      if (errorMsg) {
+        alert(errorMsg); // Hoặc bạn có thể dùng toast
+        return;
+      }
+    }
 
     setIsSubmitting(true);
     try {
       if (step === 4) {
-        // Gọi API sinh mã QR thanh toán
-        const qrRes = await generatePaymentQR({ amount: 150000, orderInfo: `Kham benh ${formData.patientPhone}` });
+        // Gọi API sinh mã QR thanh toán bằng giá tiền đã tính (summaryPrice)
+        const qrRes = await generatePaymentQR({ amount: summaryPrice || 150000, orderInfo: `Kham benh ${formData.patientPhone}` });
         if (qrRes.success) {
           setQrUrl(qrRes.data.qrCodeUrl);
           setOrderId(qrRes.data.orderId);
@@ -186,43 +235,60 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
 
   const renderStep2 = () => (
     <div className="space-y-4 animate-fade-in-up">
-      <h3 className="text-xl font-bold text-[#1a1a1a] mb-4">2. Chọn Bác Sĩ</h3>
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div
-          onClick={() => updateForm("doctorId", "any")}
-          className={cn(
-            "cursor-pointer rounded-xl border p-4 transition-all flex items-center justify-center text-center",
-            formData.doctorId === "any"
-              ? "border-primary-800 bg-[#ecfdf5] ring-1 ring-primary-800"
-              : "border-gray-200 bg-white hover:border-primary-800/30 hover:bg-gray-50"
-          )}
-        >
-          <span className="font-semibold">Bác sĩ khám nhanh nhất</span>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+        <h3 className="text-xl font-bold text-[#1a1a1a]">2. Chọn Bác Sĩ</h3>
+        <div className="relative w-full sm:w-64">
+          <input
+            type="text"
+            placeholder="Tìm theo tên bác sĩ..."
+            value={searchDoctor}
+            onChange={(e) => setSearchDoctor(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-800 focus:border-transparent text-sm transition-all"
+          />
+          <svg className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
         </div>
-        {availableDoctors.slice(0, 7).map((doc) => (
+      </div>
+        {/* Scrollable container for doctors */}
+        <div className="grid gap-4 sm:grid-cols-2 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar col-span-1 sm:col-span-2 pb-4">
           <div
-            key={doc.id}
-            onClick={() => updateForm("doctorId", doc.id)}
+            onClick={() => updateForm("doctorId", "any")}
             className={cn(
-              "cursor-pointer rounded-xl border p-4 transition-all flex gap-4",
-              formData.doctorId === doc.id
+              "cursor-pointer rounded-xl border p-4 transition-all flex flex-col items-center justify-center text-center h-full min-h-[96px]",
+              formData.doctorId === "any"
                 ? "border-primary-800 bg-[#ecfdf5] ring-1 ring-primary-800"
                 : "border-gray-200 bg-white hover:border-primary-800/30 hover:bg-gray-50"
             )}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={getDoctorImageUrl(doc.id)}
-              alt={doc.fullName}
-              className="h-16 w-16 rounded-full object-cover bg-gray-100 flex-shrink-0"
-            />
-            <div>
-              <h4 className="font-semibold text-[#1a1a1a]">{doc.degree} {doc.fullName}</h4>
-              <p className="text-sm text-primary-800">{doc.specialty ?? "Y học cổ truyền"}</p>
-            </div>
+            <span className="font-semibold text-[#1a1a1a]">Không chọn bác sĩ cụ thể</span>
+            <span className="text-xs text-gray-500 block mt-1">(Tự động phân bổ theo lịch trống)</span>
           </div>
-        ))}
-      </div>
+          
+          {availableDoctors.map((doc) => (
+            <div
+              key={doc.id}
+              onClick={() => updateForm("doctorId", doc.id)}
+              className={cn(
+                "cursor-pointer rounded-xl border p-4 transition-all flex gap-4 items-center",
+                formData.doctorId === doc.id
+                  ? "border-primary-800 bg-[#ecfdf5] ring-1 ring-primary-800"
+                  : "border-gray-200 bg-white hover:border-primary-800/30 hover:bg-gray-50"
+              )}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={getDoctorImageUrl(doc.id)}
+                alt={doc.fullName}
+                className="h-16 w-16 rounded-full object-cover bg-gray-100 flex-shrink-0"
+              />
+              <div>
+                <h4 className="font-semibold text-[#1a1a1a]">{doc.degree} {doc.fullName}</h4>
+                <p className="text-sm text-primary-800">{doc.specialty ?? "Y học cổ truyền"}</p>
+              </div>
+            </div>
+          ))}
+        </div>
     </div>
   );
 
@@ -265,7 +331,7 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
         <div className="animate-fade-in-up">
           <label className="mb-2 block text-sm font-semibold text-gray-700">Khung giờ trống</label>
           <div className="grid gap-3 grid-cols-3 sm:grid-cols-4">
-            {["08:00", "08:30", "09:00", "09:30", "10:00", "13:30", "14:00", "15:00", "15:30"].map((time) => (
+            {["06:30", "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30"].map((time) => (
               <div
                 key={time}
                 onClick={() => updateForm("appointmentTime", time)}
@@ -376,8 +442,8 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
             {[
               { value: "bhyt", label: "BHYT", desc: "Bảo hiểm Y tế", color: "emerald" },
               { value: "dich-vu", label: "Dịch vụ", desc: "Không BHYT", color: "blue" },
+              { value: "yeu-cau", label: "Yêu cầu", desc: "Khám theo yêu cầu", color: "amber" },
               { value: "chuyen-gia", label: "Chuyên gia", desc: "BS Chuyên gia", color: "purple" },
-              { value: "nuoc-ngoai", label: "Nước ngoài", desc: "Người nước ngoài", color: "amber" },
             ].map((pt) => (
               <label
                 key={pt.value}
@@ -405,35 +471,46 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
 
         {/* Form BHYT (chỉ hiện khi chọn BHYT) */}
         {formData.patientType === "bhyt" && (
-          <div className="sm:col-span-2 p-4 bg-emerald-50 rounded-xl border border-emerald-200 space-y-4">
+          <div className="sm:col-span-2 p-5 bg-emerald-50 rounded-xl border border-emerald-200 space-y-5">
             <p className="text-sm font-semibold text-emerald-800 flex items-center gap-2">
-              <ShieldCheck className="h-4 w-4" />
+              <ShieldCheck className="h-5 w-5" />
               Thông tin Bảo hiểm Y tế
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="mb-1 block text-xs font-medium text-gray-600">Số thẻ BHYT *</label>
-                <input
-                  type="text"
-                  maxLength={15}
-                  className="block w-full rounded-lg border border-emerald-200 bg-white py-2 px-3 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none font-mono"
-                  placeholder="VD: GD49632584585"
-                  value={formData.bhytNumber}
-                  onChange={(e) => updateForm("bhytNumber", e.target.value.toUpperCase())}
-                />
-              </div>
-              <div>
-                <label className="mb-1 block text-xs font-medium text-gray-600">Tuyến khám *</label>
-                <select
-                  className="block w-full rounded-lg border border-emerald-200 bg-white py-2 px-3 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none"
-                  value={formData.bhytTuyen}
-                  onChange={(e) => updateForm("bhytTuyen", e.target.value)}
-                >
-                  <option value="">-- Chọn tuyến --</option>
-                  {insuranceTuyenList.map((t) => (
-                    <option key={t.id} value={t.code}>{t.name}</option>
-                  ))}
-                </select>
+            <div>
+              <label className="mb-2 block text-sm font-medium text-gray-700">Số thẻ BHYT *</label>
+              <input
+                type="text"
+                maxLength={15}
+                className="block w-full sm:w-1/2 rounded-lg border border-emerald-200 bg-white py-2.5 px-3 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none font-mono"
+                placeholder="VD: GD49632584585"
+                value={formData.bhytNumber}
+                onChange={(e) => updateForm("bhytNumber", e.target.value.toUpperCase())}
+              />
+            </div>
+            
+            <div className="bg-white p-4 rounded-lg border border-emerald-100">
+              <label className="mb-3 block text-sm font-semibold text-gray-800">Chọn đối tượng Bảo hiểm Y tế *</label>
+              <div className="space-y-3">
+                {[
+                  { id: "1.1", label: "Có thẻ BHYT đăng ký khám chữa bệnh ban đầu tại Viện YDHDT" },
+                  { id: "1.5", label: "Có tái khám theo hẹn trên đơn thuốc BHYT của Viện YDHDT" },
+                  { id: "1.3", label: "Có giấy chuyển BHYT đúng tuyến đến Viện YDHDT" },
+                  { id: "khac", label: "Không phải 3 trường hợp trên (Khám trái tuyến)" },
+                ].map((option) => (
+                  <label key={option.id} className="flex items-start gap-3 cursor-pointer group">
+                    <div className="flex h-5 items-center">
+                      <input
+                        type="radio"
+                        name="bhytTuyen"
+                        value={option.id}
+                        checked={formData.bhytTuyen === option.id}
+                        onChange={(e) => updateForm("bhytTuyen", e.target.value)}
+                        className="h-4 w-4 text-emerald-600 border-gray-300 focus:ring-emerald-600"
+                      />
+                    </div>
+                    <div className="text-sm text-gray-700 group-hover:text-emerald-800">{option.label}</div>
+                  </label>
+                ))}
               </div>
             </div>
           </div>
@@ -469,8 +546,10 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
         <img src={qrUrl} alt="VietinBank QR Code" className="w-64 h-64 object-contain" />
       </div>
 
-      <div className="mt-4 bg-blue-50 text-blue-800 p-4 rounded-xl text-sm max-w-sm">
-        <p className="font-semibold">Số tiền: 150,000 VNĐ</p>
+      <div className="mt-4 bg-blue-50 text-blue-800 p-4 rounded-xl text-sm max-w-sm mx-auto">
+        <p className="font-semibold">
+          Số tiền: {new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(summaryPrice)}
+        </p>
         <p>Mã đơn: <span className="font-mono">{orderId}</span></p>
       </div>
       
@@ -538,7 +617,30 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
   );
 
   return (
-    <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
+    <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 relative">
+      
+      {/* Custom Modal for Trái Tuyến */}
+      {isAlertOpen && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="bg-white rounded-2xl shadow-2xl p-6 max-w-sm w-full text-center">
+            <div className="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-4">
+              <ShieldCheck className="h-8 w-8" />
+            </div>
+            <h4 className="text-lg font-bold text-gray-900 mb-2">Chuyển Đối Tượng</h4>
+            <p className="text-sm text-gray-600 mb-6">
+              Bạn chọn Khám Trái Tuyến. Theo quy định, chi phí khám sẽ được tính theo giá <strong className="text-blue-700">Dịch vụ (Không BHYT)</strong>.
+            </p>
+            <button 
+              type="button"
+              onClick={() => setIsAlertOpen(false)}
+              className="w-full btn-primary py-2.5 rounded-xl"
+            >
+              Tôi đã hiểu
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Progress Bar */}
       {step < 6 && (
         <div className="bg-gray-50 px-6 py-4 border-b border-gray-100 flex items-center justify-between">
@@ -564,84 +666,140 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="p-6 md:p-10">
-        {step === 1 && renderStep1()}
-        {step === 2 && renderStep2()}
-        {step === 3 && renderStep3()}
-        {step === 4 && renderStep4()}
-        {step === 5 && renderStep5()}
-        {step === 6 && renderSuccess()}
+      <div className="flex flex-col lg:flex-row">
+        <form onSubmit={handleSubmit} className="p-6 md:p-10 flex-1">
+          {step === 1 && renderStep1()}
+          {step === 2 && renderStep2()}
+          {step === 3 && renderStep3()}
+          {step === 4 && renderStep4()}
+          {step === 5 && renderStep5()}
+          {step === 6 && renderSuccess()}
 
-        {/* Footer Actions */}
-        {step < 6 && (
-          <div className="mt-10 flex items-center justify-between border-t border-gray-100 pt-6">
-            <button
-              type="button"
-              onClick={handlePrev}
-              disabled={step === 1 || step === 5}
-              className={cn(
-                "flex items-center gap-2 text-sm font-medium transition-colors",
-                (step === 1 || step === 5) ? "text-gray-300 cursor-not-allowed" : "text-gray-600 hover:text-primary-800"
+          {/* Footer Actions */}
+          {step < 6 && (
+            <div className="mt-10 flex items-center justify-between border-t border-gray-100 pt-6">
+              <button
+                type="button"
+                onClick={handlePrev}
+                disabled={step === 1 || step === 5}
+                className={cn(
+                  "flex items-center gap-2 text-sm font-medium transition-colors",
+                  (step === 1 || step === 5) ? "text-gray-300 cursor-not-allowed" : "text-gray-600 hover:text-primary-800"
+                )}
+              >
+                <ChevronLeft className="h-4 w-4" />
+                Quay lại
+              </button>
+
+              {step < 4 ? (
+                <button
+                  type="button"
+                  onClick={handleNext}
+                  disabled={!isStepValid()}
+                  className={cn(
+                    "btn-primary px-6",
+                    !isStepValid() && "opacity-50 cursor-not-allowed hover:bg-primary-800"
+                  )}
+                >
+                  Tiếp tục
+                  <ChevronRight className="h-4 w-4" />
+                </button>
+              ) : step === 4 ? (
+                <button
+                  type="submit"
+                  disabled={!isStepValid() || isSubmitting}
+                  className={cn(
+                    "btn-accent px-8 shadow-lg flex items-center gap-2",
+                    (!isStepValid() || isSubmitting) && "opacity-50 cursor-not-allowed"
+                  )}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Đang tạo mã QR...
+                    </>
+                  ) : (
+                    "Tiến hành Thanh toán"
+                  )}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleSubmit}
+                  disabled={isSubmitting}
+                  className={cn(
+                    "btn-accent px-8 shadow-lg flex items-center gap-2",
+                    isSubmitting && "opacity-50 cursor-not-allowed"
+                  )}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Đang xác nhận...
+                    </>
+                  ) : (
+                    "Đã thanh toán (Giả lập IPN)"
+                  )}
+                </button>
               )}
-            >
-              <ChevronLeft className="h-4 w-4" />
-              Quay lại
-            </button>
+            </div>
+          )}
+        </form>
 
-            {step < 4 ? (
-              <button
-                type="button"
-                onClick={handleNext}
-                disabled={!isStepValid()}
-                className={cn(
-                  "btn-primary px-6",
-                  !isStepValid() && "opacity-50 cursor-not-allowed hover:bg-primary-800"
-                )}
-              >
-                Tiếp tục
-                <ChevronRight className="h-4 w-4" />
-              </button>
-            ) : step === 4 ? (
-              <button
-                type="submit"
-                disabled={!isStepValid() || isSubmitting}
-                className={cn(
-                  "btn-accent px-8 shadow-lg flex items-center gap-2",
-                  (!isStepValid() || isSubmitting) && "opacity-50 cursor-not-allowed"
-                )}
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    Đang tạo mã QR...
-                  </>
-                ) : (
-                  "Tiến hành Thanh toán"
-                )}
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={handleSubmit}
-                disabled={isSubmitting}
-                className={cn(
-                  "btn-accent px-8 shadow-lg flex items-center gap-2",
-                  isSubmitting && "opacity-50 cursor-not-allowed"
-                )}
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    Đang xác nhận...
-                  </>
-                ) : (
-                  "Đã thanh toán (Giả lập IPN)"
-                )}
-              </button>
+        {/* Summary Panel */}
+        {step < 6 && (
+          <div className="lg:w-80 bg-gray-50 border-t lg:border-t-0 lg:border-l border-gray-100 p-6 md:p-10">
+            <h4 className="font-bold text-[#1a1a1a] mb-6 flex items-center gap-2">
+              <FileText className="h-5 w-5 text-primary-800" />
+              Hồ sơ đăng ký
+            </h4>
+            <div className="space-y-4 text-sm">
+              <div className="flex justify-between border-b border-gray-200 pb-3">
+                <span className="text-gray-500">Chuyên khoa</span>
+                <span className="font-medium text-right max-w-[150px]">{selectedDept?.name || "---"}</span>
+              </div>
+              <div className="flex justify-between border-b border-gray-200 pb-3">
+                <span className="text-gray-500">Bác sĩ</span>
+                <span className="font-medium text-right max-w-[150px]">
+                  {formData.doctorId === "any" ? "Phân bổ tự động" : (selectedDoctor ? selectedDoctor.fullName : "---")}
+                </span>
+              </div>
+              <div className="flex justify-between border-b border-gray-200 pb-3">
+                <span className="text-gray-500">Thời gian</span>
+                <span className="font-medium text-right">
+                  {formData.appointmentTime || "---"} <br/>
+                  {formData.appointmentDate || "---"}
+                </span>
+              </div>
+              <div className="flex justify-between border-b border-gray-200 pb-3">
+                <span className="text-gray-500">Đối tượng</span>
+                <span className="font-medium text-right">
+                  {formData.patientType === "bhyt" ? "Bảo hiểm Y tế" : 
+                   formData.patientType === "dich-vu" ? "Dịch vụ (Không BHYT)" :
+                   formData.patientType === "yeu-cau" ? "Khám theo Yêu cầu" :
+                   formData.patientType === "chuyen-gia" ? "Khám Chuyên gia" : "---"}
+                </span>
+              </div>
+              {formData.patientType === "bhyt" && formData.bhytNumber && (
+                <div className="flex justify-between border-b border-gray-200 pb-3 text-emerald-700">
+                  <span className="opacity-80">Số thẻ BHYT</span>
+                  <span className="font-mono font-bold">{formData.bhytNumber}</span>
+                </div>
+              )}
+            </div>
+            
+            {step >= 4 && summaryPrice > 0 && (
+              <div className="mt-8 bg-blue-50 p-4 rounded-xl border border-blue-100">
+                <p className="text-xs text-blue-600 mb-1 font-semibold uppercase">Tổng tiền khám (Tạm tính)</p>
+                <p className="text-xl font-bold text-blue-800">
+                  {new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(summaryPrice)}
+                </p>
+                <p className="text-xs text-blue-600/70 mt-2">Đã bao gồm phí tiện ích. BHYT (nếu có) sẽ được khấu trừ tại viện.</p>
+              </div>
             )}
           </div>
         )}
-      </form>
+      </div>
     </div>
   );
 }

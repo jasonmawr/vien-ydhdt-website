@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Stethoscope, UserRound, CalendarDays, ShieldCheck, Clock, CreditCard } from "lucide-react";
+import { getExamPricing } from "@/services/api";
 
 export const metadata: Metadata = {
   title: "Đặt Lịch Khám - Viện Y Dược Học Dân Tộc",
@@ -40,7 +41,9 @@ const features = [
   { icon: CreditCard, text: "Thanh toán QR VietinBank" },
 ];
 
-export default function DatLichPage() {
+export default async function DatLichPage() {
+  const pricingData = await getExamPricing().catch(() => []);
+
   return (
     <div className="bg-[#fbf9f6] min-h-screen pb-20">
       {/* Header Banner */}
@@ -113,30 +116,38 @@ export default function DatLichPage() {
                 <thead>
                   <tr className="border-b border-gray-200">
                     <th className="text-left py-3 px-4 font-semibold text-gray-600">Dịch vụ</th>
-                    <th className="text-right py-3 px-4 font-semibold text-emerald-700">Giá BHYT</th>
-                    <th className="text-right py-3 px-4 font-semibold text-blue-700">Giá Dịch Vụ</th>
-                    <th className="text-right py-3 px-4 font-semibold text-amber-700">Giá Nước Ngoài</th>
+                    <th className="text-right py-3 px-4 font-semibold text-emerald-700">BHYT</th>
+                    <th className="text-right py-3 px-4 font-semibold text-blue-700">Dịch Vụ<br/><span className="text-xs font-normal opacity-80">(Không BHYT)</span></th>
+                    <th className="text-right py-3 px-4 font-semibold text-amber-700">Khám theo<br/>Yêu cầu</th>
+                    <th className="text-right py-3 px-4 font-semibold text-purple-700">Khám<br/>Chuyên gia</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr className="border-b border-gray-50 hover:bg-gray-50">
-                    <td className="py-3 px-4 font-medium">Khám Y học cổ truyền</td>
-                    <td className="py-3 px-4 text-right text-emerald-700 font-semibold">50,600đ</td>
-                    <td className="py-3 px-4 text-right text-blue-700">50,600đ</td>
-                    <td className="py-3 px-4 text-right text-amber-700">150,000đ</td>
-                  </tr>
-                  <tr className="border-b border-gray-50 hover:bg-gray-50">
-                    <td className="py-3 px-4 font-medium">Khám Phục hồi chức năng</td>
-                    <td className="py-3 px-4 text-right text-emerald-700 font-semibold">50,600đ</td>
-                    <td className="py-3 px-4 text-right text-blue-700">50,600đ</td>
-                    <td className="py-3 px-4 text-right text-amber-700">150,000đ</td>
-                  </tr>
-                  <tr className="hover:bg-gray-50">
-                    <td className="py-3 px-4 font-medium">Khám Chuyên gia</td>
-                    <td className="py-3 px-4 text-right text-emerald-700 font-semibold">300,000đ</td>
-                    <td className="py-3 px-4 text-right text-blue-700">200,000đ</td>
-                    <td className="py-3 px-4 text-right text-amber-700">300,000đ</td>
-                  </tr>
+                  {pricingData.length > 0 ? (
+                    pricingData.map((item, index) => (
+                      <tr key={item.id} className={`border-b border-gray-50 hover:bg-gray-50 ${index % 2 === 0 ? "bg-white" : "bg-gray-50/30"}`}>
+                        <td className="py-3 px-4 font-medium">{item.name}</td>
+                        <td className="py-3 px-4 text-right text-emerald-700 font-semibold">
+                          {new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(item.priceBHYT)}
+                        </td>
+                        <td className="py-3 px-4 text-right text-blue-700">
+                          {new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(item.priceService)}
+                        </td>
+                        <td className="py-3 px-4 text-right text-amber-700">
+                          {new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(item.priceRequest)}
+                        </td>
+                        <td className="py-3 px-4 text-right text-purple-700">
+                          {new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(item.priceExpert)}
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={5} className="py-4 text-center text-gray-500">
+                        Đang cập nhật bảng giá...
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
