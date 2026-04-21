@@ -1,0 +1,29 @@
+{
+  "name": "vien-ydh-backend",
+  "version": "1.0.0",
+  "description": "Backend API Server - Viện Y Dược Học Dân Tộc",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test:db": "tsx src/scripts/test-connection.ts",
+    "discover:schema": "tsx src/scripts/discover-schema.ts"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "jsonwebtoken": "^9.0.2",
+    "oracledb": "^6.7.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/node": "^22.0.0",
+    "@types/oracledb": "^6.10.3",
+    "tsx": "^4.21.0",
+    "typescript": "^5.6.0"
+  }
+}
