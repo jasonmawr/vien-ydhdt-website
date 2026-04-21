@@ -67,12 +67,21 @@ AI Agent hãy đọc kỹ file này. Khi hoàn thành xong một bước, hãy d
 * [x] 4. API hoạt động: `GET /api/departments`, `GET /api/doctors`, `GET /api/doctors/:id/image` (stream BLOB ảnh).
 * [x] 5. Refactor Frontend: xóa Prisma/SQLite, thay bằng HTTP calls sang Backend API.
 
+## **PHASE 9: TÍCH HỢP XÁC THỰC ADMIN (JWT & COOKIES)** ✅ ĐÃ HOÀN THÀNH
+
+* [x] 1. Khởi tạo bảng `WEB_USERS` trên Oracle (Auto-migration) và tạo account `admin`.
+* [x] 2. Backend: Viết Service login, hash password bằng `bcryptjs` và sinh `JWT`.
+* [x] 3. Backend: Middleware bảo vệ các route `/api/appointments` yêu cầu token `ADMIN`.
+* [x] 4. Frontend: Tạo Server Action lưu token vào `HTTP-Only Cookies` bảo mật tuyệt đối.
+* [x] 5. Frontend: Next.js Middleware (`src/middleware.ts`) chặn và chuyển hướng nếu chưa đăng nhập.
+* [x] 6. Frontend: Giao diện Đăng nhập quản trị viên chuyên nghiệp với Lucide icons.
+
 ## **GHI CHÚ (HANDOVER - 2026-04-21)**
 
 **Trạng thái hiện tại:**
-- **Hệ thống đã hoàn toàn decoupled:** Frontend (Next.js) gọi data qua REST API từ Backend (Express).
-- **Backend API Server** đang chạy tại `http://localhost:4000` — kết nối Oracle DB thật lấy dữ liệu sống.
+- **Hệ thống đã có bảo mật:** Trang Admin yêu cầu đăng nhập bằng JWT.
+- **Backend API Server** đang chạy tại `http://localhost:4000`.
 - **Frontend** đang chạy tại `http://localhost:3000`.
-- **Nhánh hiện tại:** `feature/phase-8-monorepo-oracle` (đã commit & push).
+- **Nhánh hiện tại:** `feature/phase-9-auth` (chuẩn bị merge vào develop).
 
-**Dự án đã hoàn tất chuyển đổi kiến trúc và sẵn sàng hoạt động với dữ liệu thực tế!**
+**Dự án sẵn sàng cho Phase 10: Xây dựng hệ thống CMS quản lý bài viết y khoa!**

@@ -158,9 +158,14 @@ export async function createAppointment(payload: CreateAppointmentPayload) {
   });
 }
 
-export async function getAppointments(limit = 50): Promise<AppointmentRecord[]> {
+export async function getAppointments(token: string, limit = 50): Promise<AppointmentRecord[]> {
   const data = await apiFetch<{ success: boolean; data: AppointmentRecord[] }>(
-    `/api/appointments?limit=${limit}`
+    `/api/appointments?limit=${limit}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
   );
   return data.data;
 }

@@ -1,0 +1,431 @@
+﻿Γ£à Oracle Database connection pool ─æ├ú khß╗ƒi tß║ío th├ánh c├┤ng.
+
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+≡ƒôè MEDI.DMBS
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+  MA                             VARCHAR2        NOT NULL
+  HOTEN                          NVARCHAR2       NULL
+  MAKP                           VARCHAR2        NULL
+  MAPK                           VARCHAR2        NULL
+  NHOM                           NUMBER          NULL
+  VIETTAT                        VARCHAR2        NULL
+  PASSWORD_                      NVARCHAR2       NULL
+  DIENTHOAI                      NVARCHAR2       NULL
+  DIDONG                         NVARCHAR2       NULL
+  MESSAGE                        VARCHAR2        NULL
+  IMAGE                          BLOB            NULL
+  CHUYENKHOA                     NUMBER          NULL
+  NGONNGU                        NUMBER          NULL
+  PHAI                           NUMBER          NULL
+  DTNUOCNGOAI                    NUMBER          NULL
+  BANGCAP                        NVARCHAR2       NULL
+  KINHNGHIEM                     NVARCHAR2       NULL
+  HINH                           BLOB            NULL
+  NGAYSINH                       DATE            NULL
+  DIACHI                         NVARCHAR2       NULL
+  NGAYUD                         DATE            NULL
+  HOTEN_VN                       VARCHAR2        NULL
+  HOTEN_EN                       VARCHAR2        NULL
+  HOTEN_OT                       VARCHAR2        NULL
+  BANGCAP_VN                     VARCHAR2        NULL
+  BANGCAP_EN                     VARCHAR2        NULL
+  BANGCAP_OT                     VARCHAR2        NULL
+  KINHNGHIEM_VN                  VARCHAR2        NULL
+  KINHNGHIEM_EN                  VARCHAR2        NULL
+  KINHNGHIEM_OT                  VARCHAR2        NULL
+  SIGNATURE                      BLOB            NULL
+  CCHANHNGHE                     VARCHAR2        NULL
+  STT                            NUMBER          NULL
+  HIDE                           NUMBER          NULL
+  USERDTQG                       NVARCHAR2       NULL
+  PASSDTQG                       NVARCHAR2       NULL
+  HOCVAN                         VARCHAR2        NULL
+  NGAYHL                         DATE            NULL
+  TAIKHOAN_                      NVARCHAR2       NULL
+  MA_BHXH                        NVARCHAR2       NULL
+  PIN_                           NVARCHAR2       NULL
+
+  ≡ƒôï Dß╗» liß╗çu mß║½u (2 rows):
+   {"MA":"0155","HOTEN":"CN. Nguyß╗àn Thß╗ì","MAKP":null,"MAPK":null,"NHOM":11,"VIETTAT":"0155","PASSWORD_":null,"DIENTHOAI":null,"DIDONG":null,"MESSAGE":null,"IMAGE":null,"CHUYENKHOA":0,"NGONNGU":0,"PHAI":0,"DTNUOCNGOAI":0,"BANGCAP":null,"KINHNGHIEM":null,"HINH":null,"NGAYSINH":"2026-03-06T17:00:00.000Z","DIACHI":null,"NGAYUD":"2026-03-07T16:29:22.000Z","HOTEN_VN":null,"HOTEN_EN":null,"HOTEN_OT":null,"BANGCAP_VN":null,"BANGCAP_EN":null,"BANGCAP_OT":null,"KINHNGHIEM_VN":null,"KINHNGHIEM_EN":null,"KINHNGHIEM_OT":null,"SIGNATURE":{"_events":{},"_readableState":{"highWaterMark":16384,"buffer":[],"bufferIndex":0,"length":0,"pipes":[],"awaitDrainWriters":null},"_writableState":{"highWaterMark":16384,"length":0,"corked":0,"writelen":0,"bufferedIndex":0,"pendingcb":0},"allowHalfOpen":true,"offset":1,"_isActive":false,"_eventsCount":1,"_impl":{"_parentObj":{"_parentObj":{"_inProgress":false,"_dbObjectTypes":{},"_requestQueue":[],"_osonMaxFieldNameSize":255,"_pool":{"_connectString":"(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.1.113)(PORT=1521))(CONNECT_DATA=(SID=medi)))","_user":"system"},"_newSession":true},"metaData":[{"name":"MA","dbColumnName":"MA","dbType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1},"nullable":false,"isJson":false,"isOson":false,"byteSize":4,"dbTypeName":"VARCHAR2","fetchType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1}},{"name":"HOTEN","dbColumnName":"HOTEN","dbType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2},"nullable":true,"isJson":false,"isOson":false,"byteSize":508,"dbTypeName":"NVARCHAR2","fetchType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2}},{"name":"MAKP","dbColumnName":"MAKP","dbType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1},"nullable":true,"isJson":false,"isOson":false,"byteSize":3,"dbTypeName":"VARCHAR2","fetchType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1}},{"name":"MAPK","dbColumnName":"MAPK","dbType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1},"nullable":true,"isJson":false,"isOson":false,"byteSize":3,"dbTypeName":"VARCHAR2","fetchType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1}},{"name":"NHOM","dbColumnName":"NHOM","dbType":{"num":2010,"name":"DB_TYPE_NUMBER","columnTypeName":"NUMBER","_bufferSizeFactor":22,"_oraTypeNum":2,"_csfrm":0},"nullable":true,"isJson":false,"isOson":false,"precision":3,"scale":0,"dbTypeName":"NUMBER","fetchType":{"num":2010,"name":"DB_TYPE_NUMBER","columnTypeName":"NUMBER","_bufferSizeFactor":22,"_oraTypeNum":2,"_csfrm":0}},{"name":"VIETTAT","dbColumnName":"VIETTAT","dbType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1},"nullable":true,"isJson":false,"isOson":false,"byteSize":10,"dbTypeName":"VARCHAR2","fetchType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1}},{"name":"PASSWORD_","dbColumnName":"PASSWORD_","dbType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2},"nullable":true,"isJson":false,"isOson":false,"byteSize":508,"dbTypeName":"NVARCHAR2","fetchType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2}},{"name":"DIENTHOAI","dbColumnName":"DIENTHOAI","dbType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2},"nullable":true,"isJson":false,"isOson":false,"byteSize":508,"dbTypeName":"NVARCHAR2","fetchType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2}},{"name":"DIDONG","dbColumnName":"DIDONG","dbType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2},"nullable":true,"isJson":false,"isOson":false,"byteSize":508,"dbTypeName":"NVARCHAR2","fetchType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2}},{"name":"MESSAGE","dbColumnName":"MESSAGE","dbType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1},"nullable":true,"isJson":false,"isOson":false,"byteSize":4000,"dbTypeName":"VARCHAR2","fetchType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1}},{"name":"IMAGE","dbColumnName":"IMAGE","dbType":{"num":2019,"name":"DB_TYPE_BLOB","columnTypeName":"BLOB","_bufferSizeFactor":112,"_oraTypeNum":113,"_csfrm":0},"nullable":true,"isJson":false,"isOson":false,"dbTypeName":"BLOB","fetchType":{"num":2019,"name":"DB_TYPE_BLOB","columnTypeName":"BLOB","_bufferSizeFactor":112,"_oraTypeNum":113,"_csfrm":0}},{"name":"CHUYENKHOA","dbColumnName":"CHUYENKHOA","dbType":{"num":2010,"name":"DB_TYPE_NUMBER","columnTypeName":"NUMBER","_bufferSizeFactor":22,"_oraTypeNum":2,"_csfrm":0},"nullable":true,"isJson":false,"isOson":false,"precision":3,"scale":0,"dbTypeName":"NUMBER","fetchType":{"num":2010,"name":"DB_TYPE_NUMBER","columnTypeName":"NUMBER","_bufferSizeFactor":22,"_oraTypeNum":2,"_csfrm":0}},{"name":"NGONNGU","dbColumnName":"NGONNGU","dbType":{"num":2010,"name":"DB_TYPE_NUMBER","columnTypeName":"NUMBER","_bufferSizeFactor":22,"_oraTypeNum":2,"_csfrm":0},"nullable":true,"isJson":false,"isOson":false,"precision":2,"scale":0,"dbTypeName":"NUMBER","fetchType":{"num":2010,"name":"DB_TYPE_NUMBER","columnTypeName":"NUMBER","_bufferSizeFactor":22,"_oraTypeNum":2,"_csfrm":0}},{"name":"PHAI","dbColumnName":"PHAI","dbType":{"num":2010,"name":"DB_TYPE_NUMBER","columnTypeName":"NUMBER","_bufferSizeFactor":22,"_oraTypeNum":2,"_csfrm":0},"nullable":true,"isJson":false,"isOson":false,"precision":1,"scale":0,"dbTypeName":"NUMBER","fetchType":{"num":2010,"name":"DB_TYPE_NUMBER","columnTypeName":"NUMBER","_bufferSizeFactor":22,"_oraTypeNum":2,"_csfrm":0}},{"name":"DTNUOCNGOAI","dbColumnName":"DTNUOCNGOAI","dbType":{"num":2010,"name":"DB_TYPE_NUMBER","columnTypeName":"NUMBER","_bufferSizeFactor":22,"_oraTypeNum":2,"_csfrm":0},"nullable":true,"isJson":false,"isOson":false,"precision":1,"scale":0,"dbTypeName":"NUMBER","fetchType":{"num":2010,"name":"DB_TYPE_NUMBER","columnTypeName":"NUMBER","_bufferSizeFactor":22,"_oraTypeNum":2,"_csfrm":0}},{"name":"BANGCAP","dbColumnName":"BANGCAP","dbType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2},"nullable":true,"isJson":false,"isOson":false,"byteSize":1000,"dbTypeName":"NVARCHAR2","fetchType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2}},{"name":"KINHNGHIEM","dbColumnName":"KINHNGHIEM","dbType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2},"nullable":true,"isJson":false,"isOson":false,"byteSize":2000,"dbTypeName":"NVARCHAR2","fetchType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2}},{"name":"HINH","dbColumnName":"HINH","dbType":{"num":2019,"name":"DB_TYPE_BLOB","columnTypeName":"BLOB","_bufferSizeFactor":112,"_oraTypeNum":113,"_csfrm":0},"nullable":true,"isJson":false,"isOson":false,"dbTypeName":"BLOB","fetchType":{"num":2019,"name":"DB_TYPE_BLOB","columnTypeName":"BLOB","_bufferSizeFactor":112,"_oraTypeNum":113,"_csfrm":0}},{"name":"NGAYSINH","dbColumnName":"NGAYSINH","dbType":{"num":2011,"name":"DB_TYPE_DATE","columnTypeName":"DATE","_bufferSizeFactor":7,"_oraTypeNum":12,"_csfrm":0},"nullable":true,"isJson":false,"isOson":false,"dbTypeName":"DATE","fetchType":{"num":2011,"name":"DB_TYPE_DATE","columnTypeName":"DATE","_bufferSizeFactor":7,"_oraTypeNum":12,"_csfrm":0}},{"name":"DIACHI","dbColumnName":"DIACHI","dbType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2},"nullable":true,"isJson":false,"isOson":false,"byteSize":508,"dbTypeName":"NVARCHAR2","fetchType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2}},{"name":"NGAYUD","dbColumnName":"NGAYUD","dbType":{"num":2011,"name":"DB_TYPE_DATE","columnTypeName":"DATE","_bufferSizeFactor":7,"_oraTypeNum":12,"_csfrm":0},"nullable":true,"isJson":false,"isOson":false,"dbTypeName":"DATE","fetchType":{"num":2011,"name":"DB_TYPE_DATE","columnTypeName":"DATE","_bufferSizeFactor":7,"_oraTypeNum":12,"_csfrm":0}},{"name":"HOTEN_VN","dbColumnName":"HOTEN_VN","dbType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1},"nullable":true,"isJson":false,"isOson":false,"byteSize":254,"dbTypeName":"VARCHAR2","fetchType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1}},{"name":"HOTEN_EN","dbColumnName":"HOTEN_EN","dbType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1},"nullable":true,"isJson":false,"isOson":false,"byteSize":254,"dbTypeName":"VARCHAR2","fetchType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1}},{"name":"HOTEN_OT","dbColumnName":"HOTEN_OT","dbType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1},"nullable":true,"isJson":false,"isOson":false,"byteSize":254,"dbTypeName":"VARCHAR2","fetchType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1}},{"name":"BANGCAP_VN","dbColumnName":"BANGCAP_VN","dbType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1},"nullable":true,"isJson":false,"isOson":false,"byteSize":500,"dbTypeName":"VARCHAR2","fetchType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1}},{"name":"BANGCAP_EN","dbColumnName":"BANGCAP_EN","dbType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1},"nullable":true,"isJson":false,"isOson":false,"byteSize":500,"dbTypeName":"VARCHAR2","fetchType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1}},{"name":"BANGCAP_OT","dbColumnName":"BANGCAP_OT","dbType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1},"nullable":true,"isJson":false,"isOson":false,"byteSize":500,"dbTypeName":"VARCHAR2","fetchType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1}},{"name":"KINHNGHIEM_VN","dbColumnName":"KINHNGHIEM_VN","dbType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1},"nullable":true,"isJson":false,"isOson":false,"byteSize":1000,"dbTypeName":"VARCHAR2","fetchType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1}},{"name":"KINHNGHIEM_EN","dbColumnName":"KINHNGHIEM_EN","dbType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1},"nullable":true,"isJson":false,"isOson":false,"byteSize":1000,"dbTypeName":"VARCHAR2","fetchType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1}},{"name":"KINHNGHIEM_OT","dbColumnName":"KINHNGHIEM_OT","dbType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1},"nullable":true,"isJson":false,"isOson":false,"byteSize":1000,"dbTypeName":"VARCHAR2","fetchType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1}},{"name":"SIGNATURE","dbColumnName":"SIGNATURE","dbType":{"num":2019,"name":"DB_TYPE_BLOB","columnTypeName":"BLOB","_bufferSizeFactor":112,"_oraTypeNum":113,"_csfrm":0},"nullable":true,"isJson":false,"isOson":false,"dbTypeName":"BLOB","fetchType":{"num":2019,"name":"DB_TYPE_BLOB","columnTypeName":"BLOB","_bufferSizeFactor":112,"_oraTypeNum":113,"_csfrm":0}},{"name":"CCHANHNGHE","dbColumnName":"CCHANHNGHE","dbType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1},"nullable":true,"isJson":false,"isOson":false,"byteSize":1000,"dbTypeName":"VARCHAR2","fetchType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1}},{"name":"STT","dbColumnName":"STT","dbType":{"num":2010,"name":"DB_TYPE_NUMBER","columnTypeName":"NUMBER","_bufferSizeFactor":22,"_oraTypeNum":2,"_csfrm":0},"nullable":true,"isJson":false,"isOson":false,"precision":3,"scale":0,"dbTypeName":"NUMBER","fetchType":{"num":2010,"name":"DB_TYPE_NUMBER","columnTypeName":"NUMBER","_bufferSizeFactor":22,"_oraTypeNum":2,"_csfrm":0}},{"name":"HIDE","dbColumnName":"HIDE","dbType":{"num":2010,"name":"DB_TYPE_NUMBER","columnTypeName":"NUMBER","_bufferSizeFactor":22,"_oraTypeNum":2,"_csfrm":0},"nullable":true,"isJson":false,"isOson":false,"precision":1,"scale":0,"dbTypeName":"NUMBER","fetchType":{"num":2010,"name":"DB_TYPE_NUMBER","columnTypeName":"NUMBER","_bufferSizeFactor":22,"_oraTypeNum":2,"_csfrm":0}},{"name":"USERDTQG","dbColumnName":"USERDTQG","dbType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2},"nullable":true,"isJson":false,"isOson":false,"byteSize":200,"dbTypeName":"NVARCHAR2","fetchType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2}},{"name":"PASSDTQG","dbColumnName":"PASSDTQG","dbType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2},"nullable":true,"isJson":false,"isOson":false,"byteSize":200,"dbTypeName":"NVARCHAR2","fetchType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2}},{"name":"HOCVAN","dbColumnName":"HOCVAN","dbType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1},"nullable":true,"isJson":false,"isOson":false,"byteSize":254,"dbTypeName":"VARCHAR2","fetchType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1}},{"name":"NGAYHL","dbColumnName":"NGAYHL","dbType":{"num":2011,"name":"DB_TYPE_DATE","columnTypeName":"DATE","_bufferSizeFactor":7,"_oraTypeNum":12,"_csfrm":0},"nullable":true,"isJson":false,"isOson":false,"dbTypeName":"DATE","fetchType":{"num":2011,"name":"DB_TYPE_DATE","columnTypeName":"DATE","_bufferSizeFactor":7,"_oraTypeNum":12,"_csfrm":0}},{"name":"TAIKHOAN_","dbColumnName":"TAIKHOAN_","dbType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2},"nullable":true,"isJson":false,"isOson":false,"byteSize":200,"dbTypeName":"NVARCHAR2","fetchType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2}},{"name":"MA_BHXH","dbColumnName":"MA_BHXH","dbType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2},"nullable":true,"isJson":false,"isOson":false,"byteSize":200,"dbTypeName":"NVARCHAR2","fetchType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2}},{"name":"PIN_","dbColumnName":"PIN_","dbType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2},"nullable":true,"isJson":false,"isOson":false,"byteSize":200,"dbTypeName":"NVARCHAR2","fetchType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2}}],"lobIndices":[10,17,30],"dbObjectIndices":[],"nestedCursorIndices":[],"converterIndices":[],"outFormat":4002,"fetchArraySize":100,"dbObjectAsPojo":false,"maxRows":0}},"_chunkSize":8132,"_pieceSize":8132,"_length":86784,"_type":{"num":2019,"name":"DB_TYPE_BLOB","columnTypeName":"BLOB","_bufferSizeFactor":112,"_oraTypeNum":113,"_csfrm":0},"_autoCloseLob":true},"CCHANHNGHE":"0032572/HCM-CCHN","STT":0,"HIDE":0,"USERDTQG":null,"PASSDTQG":null,"HOCVAN":null,"NGAYHL":null,"TAIKHOAN_":"0313693377","MA_BHXH":"0201090305","PIN_":"Vien@273@&%"}
+   {"MA":"0248","HOTEN":"CN─ÉD. V┼⌐ Thß╗ï Hß╗ông Hß║ính","MAKP":null,"MAPK":null,"NHOM":9,"VIETTAT":"0248","PASSWORD_":null,"DIENTHOAI":null,"DIDONG":null,"MESSAGE":null,"IMAGE":null,"CHUYENKHOA":0,"NGONNGU":0,"PHAI":1,"DTNUOCNGOAI":0,"BANGCAP":null,"KINHNGHIEM":null,"HINH":null,"NGAYSINH":"2026-03-06T17:00:00.000Z","DIACHI":null,"NGAYUD":"2026-03-07T16:29:24.000Z","HOTEN_VN":null,"HOTEN_EN":null,"HOTEN_OT":null,"BANGCAP_VN":null,"BANGCAP_EN":null,"BANGCAP_OT":null,"KINHNGHIEM_VN":null,"KINHNGHIEM_EN":null,"KINHNGHIEM_OT":null,"SIGNATURE":{"_events":{},"_readableState":{"highWaterMark":16384,"buffer":[],"bufferIndex":0,"length":0,"pipes":[],"awaitDrainWriters":null},"_writableState":{"highWaterMark":16384,"length":0,"corked":0,"writelen":0,"bufferedIndex":0,"pendingcb":0},"allowHalfOpen":true,"offset":1,"_isActive":false,"_eventsCount":1,"_impl":{"_parentObj":{"_parentObj":{"_inProgress":false,"_dbObjectTypes":{},"_requestQueue":[],"_osonMaxFieldNameSize":255,"_pool":{"_connectString":"(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.1.113)(PORT=1521))(CONNECT_DATA=(SID=medi)))","_user":"system"},"_newSession":true},"metaData":[{"name":"MA","dbColumnName":"MA","dbType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1},"nullable":false,"isJson":false,"isOson":false,"byteSize":4,"dbTypeName":"VARCHAR2","fetchType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1}},{"name":"HOTEN","dbColumnName":"HOTEN","dbType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2},"nullable":true,"isJson":false,"isOson":false,"byteSize":508,"dbTypeName":"NVARCHAR2","fetchType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2}},{"name":"MAKP","dbColumnName":"MAKP","dbType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1},"nullable":true,"isJson":false,"isOson":false,"byteSize":3,"dbTypeName":"VARCHAR2","fetchType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1}},{"name":"MAPK","dbColumnName":"MAPK","dbType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1},"nullable":true,"isJson":false,"isOson":false,"byteSize":3,"dbTypeName":"VARCHAR2","fetchType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1}},{"name":"NHOM","dbColumnName":"NHOM","dbType":{"num":2010,"name":"DB_TYPE_NUMBER","columnTypeName":"NUMBER","_bufferSizeFactor":22,"_oraTypeNum":2,"_csfrm":0},"nullable":true,"isJson":false,"isOson":false,"precision":3,"scale":0,"dbTypeName":"NUMBER","fetchType":{"num":2010,"name":"DB_TYPE_NUMBER","columnTypeName":"NUMBER","_bufferSizeFactor":22,"_oraTypeNum":2,"_csfrm":0}},{"name":"VIETTAT","dbColumnName":"VIETTAT","dbType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1},"nullable":true,"isJson":false,"isOson":false,"byteSize":10,"dbTypeName":"VARCHAR2","fetchType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1}},{"name":"PASSWORD_","dbColumnName":"PASSWORD_","dbType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2},"nullable":true,"isJson":false,"isOson":false,"byteSize":508,"dbTypeName":"NVARCHAR2","fetchType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2}},{"name":"DIENTHOAI","dbColumnName":"DIENTHOAI","dbType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2},"nullable":true,"isJson":false,"isOson":false,"byteSize":508,"dbTypeName":"NVARCHAR2","fetchType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2}},{"name":"DIDONG","dbColumnName":"DIDONG","dbType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2},"nullable":true,"isJson":false,"isOson":false,"byteSize":508,"dbTypeName":"NVARCHAR2","fetchType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2}},{"name":"MESSAGE","dbColumnName":"MESSAGE","dbType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1},"nullable":true,"isJson":false,"isOson":false,"byteSize":4000,"dbTypeName":"VARCHAR2","fetchType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1}},{"name":"IMAGE","dbColumnName":"IMAGE","dbType":{"num":2019,"name":"DB_TYPE_BLOB","columnTypeName":"BLOB","_bufferSizeFactor":112,"_oraTypeNum":113,"_csfrm":0},"nullable":true,"isJson":false,"isOson":false,"dbTypeName":"BLOB","fetchType":{"num":2019,"name":"DB_TYPE_BLOB","columnTypeName":"BLOB","_bufferSizeFactor":112,"_oraTypeNum":113,"_csfrm":0}},{"name":"CHUYENKHOA","dbColumnName":"CHUYENKHOA","dbType":{"num":2010,"name":"DB_TYPE_NUMBER","columnTypeName":"NUMBER","_bufferSizeFactor":22,"_oraTypeNum":2,"_csfrm":0},"nullable":true,"isJson":false,"isOson":false,"precision":3,"scale":0,"dbTypeName":"NUMBER","fetchType":{"num":2010,"name":"DB_TYPE_NUMBER","columnTypeName":"NUMBER","_bufferSizeFactor":22,"_oraTypeNum":2,"_csfrm":0}},{"name":"NGONNGU","dbColumnName":"NGONNGU","dbType":{"num":2010,"name":"DB_TYPE_NUMBER","columnTypeName":"NUMBER","_bufferSizeFactor":22,"_oraTypeNum":2,"_csfrm":0},"nullable":true,"isJson":false,"isOson":false,"precision":2,"scale":0,"dbTypeName":"NUMBER","fetchType":{"num":2010,"name":"DB_TYPE_NUMBER","columnTypeName":"NUMBER","_bufferSizeFactor":22,"_oraTypeNum":2,"_csfrm":0}},{"name":"PHAI","dbColumnName":"PHAI","dbType":{"num":2010,"name":"DB_TYPE_NUMBER","columnTypeName":"NUMBER","_bufferSizeFactor":22,"_oraTypeNum":2,"_csfrm":0},"nullable":true,"isJson":false,"isOson":false,"precision":1,"scale":0,"dbTypeName":"NUMBER","fetchType":{"num":2010,"name":"DB_TYPE_NUMBER","columnTypeName":"NUMBER","_bufferSizeFactor":22,"_oraTypeNum":2,"_csfrm":0}},{"name":"DTNUOCNGOAI","dbColumnName":"DTNUOCNGOAI","dbType":{"num":2010,"name":"DB_TYPE_NUMBER","columnTypeName":"NUMBER","_bufferSizeFactor":22,"_oraTypeNum":2,"_csfrm":0},"nullable":true,"isJson":false,"isOson":false,"precision":1,"scale":0,"dbTypeName":"NUMBER","fetchType":{"num":2010,"name":"DB_TYPE_NUMBER","columnTypeName":"NUMBER","_bufferSizeFactor":22,"_oraTypeNum":2,"_csfrm":0}},{"name":"BANGCAP","dbColumnName":"BANGCAP","dbType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2},"nullable":true,"isJson":false,"isOson":false,"byteSize":1000,"dbTypeName":"NVARCHAR2","fetchType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2}},{"name":"KINHNGHIEM","dbColumnName":"KINHNGHIEM","dbType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2},"nullable":true,"isJson":false,"isOson":false,"byteSize":2000,"dbTypeName":"NVARCHAR2","fetchType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2}},{"name":"HINH","dbColumnName":"HINH","dbType":{"num":2019,"name":"DB_TYPE_BLOB","columnTypeName":"BLOB","_bufferSizeFactor":112,"_oraTypeNum":113,"_csfrm":0},"nullable":true,"isJson":false,"isOson":false,"dbTypeName":"BLOB","fetchType":{"num":2019,"name":"DB_TYPE_BLOB","columnTypeName":"BLOB","_bufferSizeFactor":112,"_oraTypeNum":113,"_csfrm":0}},{"name":"NGAYSINH","dbColumnName":"NGAYSINH","dbType":{"num":2011,"name":"DB_TYPE_DATE","columnTypeName":"DATE","_bufferSizeFactor":7,"_oraTypeNum":12,"_csfrm":0},"nullable":true,"isJson":false,"isOson":false,"dbTypeName":"DATE","fetchType":{"num":2011,"name":"DB_TYPE_DATE","columnTypeName":"DATE","_bufferSizeFactor":7,"_oraTypeNum":12,"_csfrm":0}},{"name":"DIACHI","dbColumnName":"DIACHI","dbType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2},"nullable":true,"isJson":false,"isOson":false,"byteSize":508,"dbTypeName":"NVARCHAR2","fetchType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2}},{"name":"NGAYUD","dbColumnName":"NGAYUD","dbType":{"num":2011,"name":"DB_TYPE_DATE","columnTypeName":"DATE","_bufferSizeFactor":7,"_oraTypeNum":12,"_csfrm":0},"nullable":true,"isJson":false,"isOson":false,"dbTypeName":"DATE","fetchType":{"num":2011,"name":"DB_TYPE_DATE","columnTypeName":"DATE","_bufferSizeFactor":7,"_oraTypeNum":12,"_csfrm":0}},{"name":"HOTEN_VN","dbColumnName":"HOTEN_VN","dbType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1},"nullable":true,"isJson":false,"isOson":false,"byteSize":254,"dbTypeName":"VARCHAR2","fetchType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1}},{"name":"HOTEN_EN","dbColumnName":"HOTEN_EN","dbType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1},"nullable":true,"isJson":false,"isOson":false,"byteSize":254,"dbTypeName":"VARCHAR2","fetchType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1}},{"name":"HOTEN_OT","dbColumnName":"HOTEN_OT","dbType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1},"nullable":true,"isJson":false,"isOson":false,"byteSize":254,"dbTypeName":"VARCHAR2","fetchType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1}},{"name":"BANGCAP_VN","dbColumnName":"BANGCAP_VN","dbType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1},"nullable":true,"isJson":false,"isOson":false,"byteSize":500,"dbTypeName":"VARCHAR2","fetchType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1}},{"name":"BANGCAP_EN","dbColumnName":"BANGCAP_EN","dbType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1},"nullable":true,"isJson":false,"isOson":false,"byteSize":500,"dbTypeName":"VARCHAR2","fetchType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1}},{"name":"BANGCAP_OT","dbColumnName":"BANGCAP_OT","dbType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1},"nullable":true,"isJson":false,"isOson":false,"byteSize":500,"dbTypeName":"VARCHAR2","fetchType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1}},{"name":"KINHNGHIEM_VN","dbColumnName":"KINHNGHIEM_VN","dbType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1},"nullable":true,"isJson":false,"isOson":false,"byteSize":1000,"dbTypeName":"VARCHAR2","fetchType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1}},{"name":"KINHNGHIEM_EN","dbColumnName":"KINHNGHIEM_EN","dbType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1},"nullable":true,"isJson":false,"isOson":false,"byteSize":1000,"dbTypeName":"VARCHAR2","fetchType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1}},{"name":"KINHNGHIEM_OT","dbColumnName":"KINHNGHIEM_OT","dbType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1},"nullable":true,"isJson":false,"isOson":false,"byteSize":1000,"dbTypeName":"VARCHAR2","fetchType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1}},{"name":"SIGNATURE","dbColumnName":"SIGNATURE","dbType":{"num":2019,"name":"DB_TYPE_BLOB","columnTypeName":"BLOB","_bufferSizeFactor":112,"_oraTypeNum":113,"_csfrm":0},"nullable":true,"isJson":false,"isOson":false,"dbTypeName":"BLOB","fetchType":{"num":2019,"name":"DB_TYPE_BLOB","columnTypeName":"BLOB","_bufferSizeFactor":112,"_oraTypeNum":113,"_csfrm":0}},{"name":"CCHANHNGHE","dbColumnName":"CCHANHNGHE","dbType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1},"nullable":true,"isJson":false,"isOson":false,"byteSize":1000,"dbTypeName":"VARCHAR2","fetchType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1}},{"name":"STT","dbColumnName":"STT","dbType":{"num":2010,"name":"DB_TYPE_NUMBER","columnTypeName":"NUMBER","_bufferSizeFactor":22,"_oraTypeNum":2,"_csfrm":0},"nullable":true,"isJson":false,"isOson":false,"precision":3,"scale":0,"dbTypeName":"NUMBER","fetchType":{"num":2010,"name":"DB_TYPE_NUMBER","columnTypeName":"NUMBER","_bufferSizeFactor":22,"_oraTypeNum":2,"_csfrm":0}},{"name":"HIDE","dbColumnName":"HIDE","dbType":{"num":2010,"name":"DB_TYPE_NUMBER","columnTypeName":"NUMBER","_bufferSizeFactor":22,"_oraTypeNum":2,"_csfrm":0},"nullable":true,"isJson":false,"isOson":false,"precision":1,"scale":0,"dbTypeName":"NUMBER","fetchType":{"num":2010,"name":"DB_TYPE_NUMBER","columnTypeName":"NUMBER","_bufferSizeFactor":22,"_oraTypeNum":2,"_csfrm":0}},{"name":"USERDTQG","dbColumnName":"USERDTQG","dbType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2},"nullable":true,"isJson":false,"isOson":false,"byteSize":200,"dbTypeName":"NVARCHAR2","fetchType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2}},{"name":"PASSDTQG","dbColumnName":"PASSDTQG","dbType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2},"nullable":true,"isJson":false,"isOson":false,"byteSize":200,"dbTypeName":"NVARCHAR2","fetchType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2}},{"name":"HOCVAN","dbColumnName":"HOCVAN","dbType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1},"nullable":true,"isJson":false,"isOson":false,"byteSize":254,"dbTypeName":"VARCHAR2","fetchType":{"num":2001,"name":"DB_TYPE_VARCHAR","columnTypeName":"VARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":1}},{"name":"NGAYHL","dbColumnName":"NGAYHL","dbType":{"num":2011,"name":"DB_TYPE_DATE","columnTypeName":"DATE","_bufferSizeFactor":7,"_oraTypeNum":12,"_csfrm":0},"nullable":true,"isJson":false,"isOson":false,"dbTypeName":"DATE","fetchType":{"num":2011,"name":"DB_TYPE_DATE","columnTypeName":"DATE","_bufferSizeFactor":7,"_oraTypeNum":12,"_csfrm":0}},{"name":"TAIKHOAN_","dbColumnName":"TAIKHOAN_","dbType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2},"nullable":true,"isJson":false,"isOson":false,"byteSize":200,"dbTypeName":"NVARCHAR2","fetchType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2}},{"name":"MA_BHXH","dbColumnName":"MA_BHXH","dbType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2},"nullable":true,"isJson":false,"isOson":false,"byteSize":200,"dbTypeName":"NVARCHAR2","fetchType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2}},{"name":"PIN_","dbColumnName":"PIN_","dbType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2},"nullable":true,"isJson":false,"isOson":false,"byteSize":200,"dbTypeName":"NVARCHAR2","fetchType":{"num":2002,"name":"DB_TYPE_NVARCHAR","columnTypeName":"NVARCHAR2","_bufferSizeFactor":4,"_oraTypeNum":1,"_csfrm":2}}],"lobIndices":[10,17,30],"dbObjectIndices":[],"nestedCursorIndices":[],"converterIndices":[],"outFormat":4002,"fetchArraySize":100,"dbObjectAsPojo":false,"maxRows":0}},"_chunkSize":8132,"_pieceSize":8132,"_length":77560,"_type":{"num":2019,"name":"DB_TYPE_BLOB","columnTypeName":"BLOB","_bufferSizeFactor":112,"_oraTypeNum":113,"_csfrm":0},"_autoCloseLob":true},"CCHANHNGHE":"0018639/HCM-CCHN","STT":0,"HIDE":0,"USERDTQG":null,"PASSDTQG":null,"HOCVAN":null,"NGAYHL":null,"TAIKHOAN_":"0313693377","MA_BHXH":"0202078814","PIN_":"Vien@273@&%"}
+
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+≡ƒôè MEDI.DMCHUYENKHOA
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+  ID                             NUMBER          NOT NULL
+  TEN                            NVARCHAR2       NULL
+  NGAYUD                         DATE            NULL
+  TEN_VN                         VARCHAR2        NULL
+  TEN_EN                         VARCHAR2        NULL
+  TEN_OT                         VARCHAR2        NULL
+
+  ≡ƒôï Dß╗» liß╗çu mß║½u (5 rows):
+   {"ID":1,"TEN":"Chuy├¬n khoa Nß╗Öi","NGAYUD":"2011-03-14T06:57:57.000Z","TEN_VN":null,"TEN_EN":null,"TEN_OT":null}
+   {"ID":2,"TEN":"Chuy├¬n khoa Ngoß║íi","NGAYUD":"2014-08-30T09:16:34.000Z","TEN_VN":null,"TEN_EN":null,"TEN_OT":null}
+   {"ID":3,"TEN":"Chuy├¬n khoa Nhi","NGAYUD":"2014-08-30T09:16:44.000Z","TEN_VN":null,"TEN_EN":null,"TEN_OT":null}
+   {"ID":4,"TEN":"Chuy├¬n khoa sß║ún","NGAYUD":"2014-08-30T09:16:52.000Z","TEN_VN":null,"TEN_EN":null,"TEN_OT":null}
+
+≡ƒôï Bß║úng Khoa/Ph├▓ng t├¼m thß║Ñy:
+
+≡ƒôï Bß║úng Thuß╗æc/D╞░ß╗úc liß╗çu:
+
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+≡ƒôè MEDI.THUOCNGHINGO_ADR
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+  ID                             NUMBER          NOT NULL
+  STT                            NUMBER          NOT NULL
+  MABD                           NUMBER          NULL
+  CACHDUNG                       NVARCHAR2       NULL
+  SOLAN                          NUMBER          NULL
+  NGAY                           DATE            NULL
+  NGAYKET                        DATE            NULL
+  LOSX                           NVARCHAR2       NULL
+  USERID                         NUMBER          NULL
+
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+≡ƒôè MEDI.THUOCDT
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+  ID_DT                          NUMBER          NULL
+  MABD                           VARCHAR2        NULL
+  SOLUONG                        NUMBER          NULL
+  NGAYUD                         DATE            NULL
+
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+≡ƒôè MEDI.BENHNHAN
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+  MAVAOVIEN                      NUMBER          NULL
+  MAQL                           NUMBER          NULL
+
+≡ƒôï Bß║úng Hß║╣n kh├ím / ─Éß║╖t lß╗ïch:
+  ≡ƒôü PHIEUBANGIAOBN_BS (~0 rows)
+
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+≡ƒôè MEDI.PHIEUBANGIAOBN_BS
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+  MABN                           VARCHAR2        NULL
+  MAVAOVIEN                      NUMBER          NULL
+  MAQL                           NUMBER          NOT NULL
+  LOAIBA                         NUMBER          NULL
+  LYDOCHUYEN                     NVARCHAR2       NULL
+  LYDONHAPVIEN                   NVARCHAR2       NULL
+  DIENBIENBENH                   NVARCHAR2       NULL
+  MAICD                          NVARCHAR2       NULL
+  CHANDOAN                       NVARCHAR2       NULL
+  CANTHIEP                       NVARCHAR2       NULL
+  TINHTRANG                      NVARCHAR2       NULL
+  KEHOACH                        NVARCHAR2       NULL
+  NGAY                           DATE            NULL
+  KHOADEN                        NVARCHAR2       NULL
+  MABSGIAO                       NVARCHAR2       NULL
+  MABSNHAN                       NVARCHAR2       NULL
+  GHICHU                         NVARCHAR2       NULL
+  USERID                         NUMBER          NULL
+  NGAYUD                         DATE            NULL
+  ≡ƒôü PHIEUBANGIAOBN_DD (~0 rows)
+
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+≡ƒôè MEDI.PHIEUBANGIAOBN_DD
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+  MABN                           NVARCHAR2       NULL
+  MAVAOVIEN                      NUMBER          NULL
+  MAQL                           NUMBER          NOT NULL
+  LOAIBA                         NUMBER          NULL
+  NGAY                           DATE            NULL
+  MABSCHIDINH                    NVARCHAR2       NULL
+  KHOADEN                        NVARCHAR2       NULL
+  NGUOINHAP                      NVARCHAR2       NULL
+  CHANDOANBANDAU_LAST            NVARCHAR2       NULL
+  CHANDOANBANDAU_LAST_ICD10      NVARCHAR2       NULL
+  CHANDOAN_KEMTHEO               NVARCHAR2       NULL
+  CHANDOAN_KEMTHEO_ICD10         NVARCHAR2       NULL
+  LYDOCHUYEN                     NVARCHAR2       NULL
+  ISTHEOYEUCAU                   NUMBER          NULL
+  ISTINHTRANGNGUOIBENH           NUMBER          NULL
+  ISMUCDO_TINHTAO                NUMBER          NULL
+  ISMUCDO_BUONNGU                NUMBER          NULL
+  ISMUCDO_KICHDONG               NUMBER          NULL
+  ISMUCDO_LULAN                  NUMBER          NULL
+  ISMUCDO_HONME                  NUMBER          NULL
+  ISDAU                          NUMBER          NULL
+  THANGDIEM_DAU                  NVARCHAR2       NULL
+  ISNGUYCOTENGA                  NUMBER          NULL
+  THANGDIEM_NGUYCOTENGA          NVARCHAR2       NULL
+  BG_MACH                        NVARCHAR2       NULL
+  BG_NHIETDO                     NVARCHAR2       NULL
+  BG_HUYETAP                     NVARCHAR2       NULL
+  BG_NHIPTHO                     NVARCHAR2       NULL
+  BG_SPO2                        NVARCHAR2       NULL
+  ISDIUNG                        NUMBER          NULL
+  DIUNGGHIRO                     NVARCHAR2       NULL
+  ISTMNGOAIBIEN                  NUMBER          NULL
+  TMNGOAIBIEN_NOIDAT             NVARCHAR2       NULL
+  TMNGOAIBIEN_NGAYDAT            DATE            NULL
+  ISTMTRUNGTAM                   NUMBER          NULL
+  TMTRUNGTAM_NGAYDAT             DATE            NULL
+  ISTRUYENDONGMACH               NUMBER          NULL
+  TRUYENDONGMACH_NGAYDAT         DATE            NULL
+  ISONGTHONGTIEU                 NUMBER          NULL
+  ONGTHONGTIEU_NGAYDAT           DATE            NULL
+  ISDANLUU                       NUMBER          NULL
+  DANLUU_1                       NVARCHAR2       NULL
+  DANLUU_2                       NVARCHAR2       NULL
+  DANLUU_KHAC                    NVARCHAR2       NULL
+  ISLIEUOXY                      NUMBER          NULL
+  LIEUOXY_LP                     NVARCHAR2       NULL
+  ISVETLOETDOTI                  NUMBER          NULL
+  VETLOETDOTIGHIRO               NVARCHAR2       NULL
+  ISBANGVETTHUONG                NUMBER          NULL
+  BANGVETTHUONGGHIRO             NVARCHAR2       NULL
+  DA_NGAYCATCHI                  DATE            NULL
+  ISNHINAN                       NUMBER          NULL
+  ISQUAONGTHONG                  NUMBER          NULL
+  ISCHEDOAN                      NUMBER          NULL
+  CHEDOANGHIRO                   NVARCHAR2       NULL
+  ISVANDONG_KHONGPHUTHUOC        NUMBER          NULL
+  ISVANDONG_XELAN                NUMBER          NULL
+  ISVANDONG_GHENGOI              NUMBER          NULL
+  ISVANDONG_NAMTUYETDOI          NUMBER          NULL
+  ISTIEUCOTUCHU                  NUMBER          NULL
+  ISTIEUKHONGTUCHU               NUMBER          NULL
+  ISQUALONHANTAO                 NUMBER          NULL
+  ISTHUOCDADIEUTRITRONGNGAY      NUMBER          NULL
+  THUOCDADIEUTRITRONGNGAY_GIO    NVARCHAR2       NULL
+  ISTHUOCCANSUDUNGTIEP           NUMBER          NULL
+  THUOCCANSUDUNGTIEP_GIO         NVARCHAR2       NULL
+  ISTAILIEU_HSBA                 NUMBER          NULL
+  ISTAILIEU_DODUNG               NUMBER          NULL
+  ISTAILIEU_KHAC                 NUMBER          NULL
+  GHICHU                         NVARCHAR2       NULL
+  MANVGIAO                       NVARCHAR2       NULL
+  MANVNHAN                       NVARCHAR2       NULL
+  NGAYUD                         DATE            NULL
+  USERID                         NUMBER          NULL
+  ≡ƒôü PHIEUCHANDOANTUVONG (~0 rows)
+
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+≡ƒôè MEDI.PHIEUCHANDOANTUVONG
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+  MABN                           VARCHAR2        NOT NULL
+  MAVAOVIEN                      NUMBER          NOT NULL
+  NGAY                           DATE            NULL
+  A1A_CHANDOAN                   NVARCHAR2       NULL
+  A1A_THOIGIAN                   NVARCHAR2       NULL
+  A1B_CHANDOAN                   NVARCHAR2       NULL
+  A1B_THOIGIAN                   NVARCHAR2       NULL
+  A1C_CHANDOAN                   NVARCHAR2       NULL
+  A1C_THOIGIAN                   NVARCHAR2       NULL
+  A1D_CHANDOAN                   NVARCHAR2       NULL
+  A1D_THOIGIAN                   NVARCHAR2       NULL
+  A2_CHANDOAN                    NVARCHAR2       NULL
+  A2_THOIGIAN                    NVARCHAR2       NULL
+  B1_PT                          NUMBER          NULL
+  B11_NGAY                       DATE            NULL
+  B12_LYDO                       NVARCHAR2       NULL
+  B2_KHAM                        NUMBER          NULL
+  B2_SUDUNG                      NUMBER          NULL
+  B3_HINHTHUC                    NUMBER          NULL
+  B3_TENHINHTHUC                 NVARCHAR2       NULL
+  B3_NGAYCHANTHUONG              DATE            NULL
+  B3_MOTA                        NVARCHAR2       NULL
+  B4_NOIXAYRA                    NUMBER          NULL
+  B4_TENNOIXAYRA                 NVARCHAR2       NULL
+  B4_TUVONGTHAINHI               NVARCHAR2       NULL
+  B4_DATHAI                      NUMBER          NULL
+  B4_SINHNON                     NUMBER          NULL
+  B4_24H                         NVARCHAR2       NULL
+  B4_CANNANG                     NVARCHAR2       NULL
+  B4_SOTUAN                      NVARCHAR2       NULL
+  B4_TUOIME                      NVARCHAR2       NULL
+  B4_CHUSINH                     NVARCHAR2       NULL
+  B4_COMANGTHAI                  NUMBER          NULL
+  B4_THOIDIEM                    NUMBER          NULL
+  B4_MANGTHAIGOPPHAN             NUMBER          NULL
+  KETLUAN                        NVARCHAR2       NULL
+  MAICD                          NVARCHAR2       NULL
+  CHANDOAN                       NVARCHAR2       NULL
+  MANV                           VARCHAR2        NULL
+  MABS                           VARCHAR2        NULL
+  USERID                         NUMBER          NULL
+  NGAYUD                         DATE            NULL
+  ≡ƒôü PHIEUKHAMTINHTRUNG (~0 rows)
+
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+≡ƒôè MEDI.PHIEUKHAMTINHTRUNG
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+  MABN                           VARCHAR2        NOT NULL
+  SO                             NUMBER          NOT NULL
+  NGAY                           DATE            NULL
+  MASOPHIEU                      NVARCHAR2       NULL
+  DIEUTRIBENH                    NUMBER          NULL
+  COVANDE                        NUMBER          NULL
+  MUCDICHNHANTAO                 NUMBER          NULL
+  XUATTUKYTHUAT                  NUMBER          NULL
+  TRUTINHTRUNG                   NUMBER          NULL
+  LYDOKHAC                       NVARCHAR2       NULL
+  KQ_TT_THETICH                  NVARCHAR2       NULL
+  KQ_SRD_THETICH                 NVARCHAR2       NULL
+  KQ_TT_MATDO                    NVARCHAR2       NULL
+  KQ_SRD_MATDO                   NVARCHAR2       NULL
+  KQ_TT_TONGTINHTRUNG            NVARCHAR2       NULL
+  KQ_SRD_TONGTINHTRUNG           NVARCHAR2       NULL
+  KQ_TT_DIDONGTIENTOI            NVARCHAR2       NULL
+  KQ_SRD_DIDONGTIENTOI           NVARCHAR2       NULL
+  KQ_TT_DIDONGKHONGTIENTOI       NVARCHAR2       NULL
+  KQ_SRD_DIDONGKHONGTIENTOI      NVARCHAR2       NULL
+  KQ_TT_TYLESONG                 NVARCHAR2       NULL
+  KQ_SRD_TYLESONG                NVARCHAR2       NULL
+  KQ_TT_TYLEDANGBT               NVARCHAR2       NULL
+  KQ_SRD_TYLEDANGBT              NVARCHAR2       NULL
+  TD_1                           NUMBER          NULL
+  TD_2                           NUMBER          NULL
+  TD_3                           NUMBER          NULL
+  TD_500T                        NUMBER          NULL
+  TD_500T_1M                     NUMBER          NULL
+  TD_1M_2M                       NUMBER          NULL
+  TD_2M_5M                       NUMBER          NULL
+  TD_5M                          NUMBER          NULL
+  TD_LYLESONG                    NUMBER          NULL
+  LOCTRUOCDONG                   NUMBER          NULL
+  TTSR_ICSI                      NUMBER          NULL
+  TTSR_THOAIHOA                  NUMBER          NULL
+  TTSR_KHONGDU                   NUMBER          NULL
+  NGAYTRUDONG                    DATE            NULL
+  NGAYRADONG                     DATE            NULL
+  THOIGIANTRU                    NVARCHAR2       NULL
+  GIAHANTRU                      NVARCHAR2       NULL
+  GHICHU                         NVARCHAR2       NULL
+  USERID                         NUMBER          NULL
+  NGAYUD                         DATE            NULL
+  ≡ƒôü PHIEUKHAMVV (~0 rows)
+
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+≡ƒôè MEDI.PHIEUKHAMVV
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+  MAVAOVIEN                      NUMBER          NULL
+  MAQL                           NUMBER          NOT NULL
+  MABN                           VARCHAR2        NULL
+  NGAY                           DATE            NULL
+  LYDOVAOVIEN                    NVARCHAR2       NULL
+  QUATRINHBENHLY                 NVARCHAR2       NULL
+  TS_BANTHAN                     NVARCHAR2       NULL
+  TS_GIADINH                     NVARCHAR2       NULL
+  TOANTHAN                       NVARCHAR2       NULL
+  CACBOPHAN                      NVARCHAR2       NULL
+  TOMTAT                         NVARCHAR2       NULL
+  NGAYUD                         DATE            NULL
+  ≡ƒôü PHIEU_CHANDOANNNTUVONG (~0 rows)
+
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+≡ƒôè MEDI.PHIEU_CHANDOANNNTUVONG
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+  MABN                           VARCHAR2        NULL
+  MAVAOVIEN                      NUMBER          NULL
+  MAQL                           NUMBER          NULL
+  MANGUOILAP                     VARCHAR2        NULL
+  USERID                         NUMBER          NULL
+  LISTCHANDOANRAVIEN             NVARCHAR2       NULL
+  LISTCHUOIBENHLY                NVARCHAR2       NULL
+  LISTBENHLYNGUYCO               NVARCHAR2       NULL
+  LISTBENHLYSUKIEN               NVARCHAR2       NULL
+  PHAUTHUA4TUAN                  NVARCHAR2       NULL
+  TENPHAUTHUAT                   NVARCHAR2       NULL
+  MAPHAUTHUAT                    NVARCHAR2       NULL
+  NGAYPHAUTHUAT                  DATE            NULL
+  TINHPHAPLY                     NVARCHAR2       NULL
+  MOTANNBENNGOAI                 NVARCHAR2       NULL
+  NNBENNGOAIICD                  NVARCHAR2       NULL
+  NOISAYRATAINAN                 VARCHAR2        NULL
+  DIADIEMKHAC                    NVARCHAR2       NULL
+  DATHAI                         VARCHAR2        NULL
+  SINHNON                        VARCHAR2        NULL
+  GIOXINVE                       VARCHAR2        NULL
+  TUOITHAI                       VARCHAR2        NULL
+  TUOIME                         VARCHAR2        NULL
+  CANNANG                        VARCHAR2        NULL
+  BENHLYANHHUONG                 NVARCHAR2       NULL
+  MAICDANHHUONG                  NVARCHAR2       NULL
+  PNMANGTHAIKHONG                VARCHAR2        NULL
+  XINVE                          VARCHAR2        NULL
+  BENHNANGMT                     VARCHAR2        NULL
+  KHAMNGHIEMTT                   VARCHAR2        NULL
+  NGAYUD                         DATE            NULL
+  NGAYTHU                        VARCHAR2        NULL
+  TTRAVIEN                       NVARCHAR2       NULL
+  NGAYLAP                        DATE            NULL
+  LOAITV                         NVARCHAR2       NULL
+  ≡ƒôü PHIEU_CUNGCAPTTNBHSTC (~0 rows)
+
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+≡ƒôè MEDI.PHIEU_CUNGCAPTTNBHSTC
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+  MABN                           VARCHAR2        NULL
+  MAVAOVIEN                      NUMBER          NULL
+  MAQL                           NUMBER          NULL
+  NGAY                           DATE            NULL
+  HOTENNB                        NVARCHAR2       NULL
+  QUANHENB                       NVARCHAR2       NULL
+  DIENTHOAI                      VARCHAR2        NULL
+  VANDENB                        NVARCHAR2       NULL
+  TLGAN                          NVARCHAR2       NULL
+  TLXA                           NVARCHAR2       NULL
+  KEHOACHDT                      NVARCHAR2       NULL
+  MABS                           VARCHAR2        NULL
+  YKIENNB                        NVARCHAR2       NULL
+  NGUOINHACHK                    VARCHAR2        NULL
+  ≡ƒôü PHIEU_LUONGIAHOATDONG (~0 rows)
+
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+≡ƒôè MEDI.PHIEU_LUONGIAHOATDONG
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+  ID                             NUMBER          NOT NULL
+  MABN                           VARCHAR2        NULL
+  MAVAOVIEN                      NUMBER          NULL
+  MAQL                           NUMBER          NULL
+  NGAY                           DATE            NULL
+  VANDONG                        NVARCHAR2       NULL
+  CHUCNANG                       NVARCHAR2       NULL
+  NHANTHUC                       NVARCHAR2       NULL
+  CNKHAC                         NVARCHAR2       NULL
+  THAMGIA                        NVARCHAR2       NULL
+  YEUTOMT                        NVARCHAR2       NULL
+  YEUTOCN                        NVARCHAR2       NULL
+  MABS                           VARCHAR2        NULL
+  ≡ƒôü PHIEU_TOMTAT_TT_BENHNANGXINVE (~0 rows)
+
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+≡ƒôè MEDI.PHIEU_TOMTAT_TT_BENHNANGXINVE
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+  MABN                           VARCHAR2        NULL
+  MAVAOVIEN                      NUMBER          NULL
+  MAQL                           NUMBER          NULL
+  MANGUOILAP                     VARCHAR2        NULL
+  USERID                         NUMBER          NULL
+  LISTCHANDOANRAVIEN             NVARCHAR2       NULL
+  LISTCHUOIBENHLY                NVARCHAR2       NULL
+  LISTBENHLYNGUYCO               NVARCHAR2       NULL
+  LISTBENHLYSUKIEN               NVARCHAR2       NULL
+  PHAUTHUA4TUAN                  NVARCHAR2       NULL
+  TENPHAUTHUAT                   NVARCHAR2       NULL
+  MAPHAUTHUAT                    NVARCHAR2       NULL
+  NGAYPHAUTHUAT                  DATE            NULL
+  TINHPHAPLY                     NVARCHAR2       NULL
+  MOTANNBENNGOAI                 NVARCHAR2       NULL
+  NNBENNGOAIICD                  NVARCHAR2       NULL
+  NOISAYRATAINAN                 VARCHAR2        NULL
+  DIADIEMKHAC                    NVARCHAR2       NULL
+  DATHAI                         VARCHAR2        NULL
+  SINHNON                        VARCHAR2        NULL
+  GIOXINVE                       VARCHAR2        NULL
+  TUOITHAI                       VARCHAR2        NULL
+  TUOIME                         VARCHAR2        NULL
+  CANNANG                        VARCHAR2        NULL
+  BENHLYANHHUONG                 NVARCHAR2       NULL
+  MAICDANHHUONG                  NVARCHAR2       NULL
+  PNMANGTHAIKHONG                VARCHAR2        NULL
+  XINVE                          VARCHAR2        NULL
+  BENHNANGMT                     VARCHAR2        NULL
+  NGAYUD                         DATE            NULL
+  NGAYTHU                        VARCHAR2        NULL
+  TTRAVIEN                       NVARCHAR2       NULL
+  NGAYLAP                        DATE            NULL
+≡ƒöî Oracle Database pool ─æ├ú ─æ├│ng.
