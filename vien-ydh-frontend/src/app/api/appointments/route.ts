@@ -1,40 +1,40 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+
+const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { patientName, phone, date, reason } = body;
+    const { patientName, patientPhone, patientDob, patientGender, departmentId, doctorId, appointmentDate, appointmentTime, symptoms } = body;
 
-    if (!patientName || !phone || !date) {
+    if (!patientName || !patientPhone) {
       return NextResponse.json({ error: "Thiếu thông tin bắt buộc" }, { status: 400 });
     }
 
-    const appointment = await prisma.appointment.create({
-      data: {
-        patientName,
-        phone,
-        date: new Date(date),
-        reason,
-        status: "PENDING",
-      },
+    // Proxy sang Backend Oracle API
+    const backendRes = await fetch(`${BACKEND_URL}/api/appointments`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ patientName, patientPhone, patientDob, patientGender, departmentId, doctorId, appointmentDate, appointmentTime, symptoms }),
     });
 
-    return NextResponse.json(appointment, { status: 201 });
+    const data = await backendRes.json();
+    return NextResponse.json(data, { status: backendRes.status });
   } catch (error) {
-    console.error("Lỗi khi tạo lịch khám:", error);
+    console.error("Lỗi proxy appointments POST:", error);
     return NextResponse.json({ error: "Lỗi máy chủ nội bộ" }, { status: 500 });
   }
 }
 
 export async function GET() {
   try {
-    const appointments = await prisma.appointment.findMany({
-      orderBy: { createdAt: "desc" },
+    const backendRes = await fetch(`${BACKEND_URL}/api/appointments?limit=100`, {
+      cache: "no-store",
     });
-    return NextResponse.json(appointments);
+    const data = await backendRes.json();
+    return NextResponse.json(data);
   } catch (error) {
-    console.error("Lỗi khi lấy danh sách đặt lịch:", error);
+    console.error("Lỗi proxy appointments GET:", error);
     return NextResponse.json({ error: "Lỗi máy chủ nội bộ" }, { status: 500 });
   }
 }
