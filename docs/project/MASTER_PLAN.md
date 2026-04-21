@@ -39,17 +39,33 @@ AI Agent hãy đọc kỹ file này. Khi hoàn thành xong một bước, hãy d
 * [x] 3. Code /src/app/dat-lich/page.tsx: Form đặt lịch khám đa bước (Step-by-step).
 * [x] 4. Xử lý Validation form Đặt lịch: Số điện thoại VN, bắt buộc điền các field cần thiết.
 
-## **GHI CHÚ CUỐI NGÀY (HANDOVER)**
+## **PHASE 5: CẢI TỔ GIAO DIỆN (UI/UX REDESIGN)** ✅ HOÀN THÀNH
 
-**Cập nhật: 2026-04-19 23:25 (GMT+7)**
+* [x] 1. Áp dụng kiến trúc Landing Page (Creative Agency Style).
+* [x] 2. Tích hợp Framer Motion cho Scroll Animations mượt mà.
+* [x] 3. Tích hợp ảnh AI (Đông y, Vườn y đạo) vào lưới Bento Grid.
+* [x] 4. Hoàn thiện Header & Footer chuẩn thông tin của Viện Y Dược Học Dân Tộc.
 
-**Toàn bộ dự án (Phase 1, 2, 3, 4) đã HOÀN THÀNH:**
-- Phase 1 & 2: Base UI, Header, Footer, Design System, Type SSOT.
-- Phase 3: Trang chủ (`HeroSection`, `FeaturedServices`, `FeaturedDoctors`, `mockData.ts`).
-- Phase 4: Các trang tính năng cốt lõi:
-  - `/duoc-lieu`: Tra cứu Dược Liệu bằng Component Client side (Tìm kiếm + Bộ lọc).
-  - `/dat-lich`: Đặt lịch khám bệnh Đa Bước (Step-by-step form) có xử lý Validation.
-- Đã tạo Flow documentation cho cả hai luồng nghiệp vụ trên trong `/docs/flows/`.
-- Mã nguồn đảm bảo 0 TypeScript errors.
+## **PHASE 6: XÂY DỰNG BACKEND & ADMIN DASHBOARD** ✅ HOÀN THÀNH
 
-**Dự án đã sẵn sàng để bàn giao cho người dùng.**
+* [x] 1. Cài đặt Prisma ORM và SQLite Database.
+* [x] 2. Thiết kế Schema cốt lõi: User, Category, Post, Appointment.
+* [x] 3. Xây dựng Route API `/api/appointments` nhận form liên hệ từ Landing Page.
+* [x] 4. Xây dựng trang quản trị `/admin` và `/admin/appointments` lấy dữ liệu thực từ Database.
+* [x] 5. Nối Form "Gửi Yêu Cầu" ở Landing Page với Database thành công.
+
+## **PHASE 7: PHÁT TRIỂN TÍNH NĂNG TIẾP THEO (Dự kiến)**
+
+* [ ] 1. Tính năng đăng bài viết (CMS/Tin tức) cho Admin.
+* [ ] 2. Tính năng xác thực đăng nhập (NextAuth) cho màn hình Admin.
+* [ ] 3. Nâng cấp Database từ SQLite sang PostgreSQL khi đưa lên môi trường thực tế.
+
+## **GHI CHÚ (HANDOVER - 2026-04-21)**
+
+**Toàn bộ hệ thống (Từ Phase 1 đến Phase 6) đã HOÀN THÀNH:**
+- Hệ thống đã biến thành một Fullstack Web App thực sự với kiến trúc chuẩn mực.
+- Cấu trúc thư mục được bảo toàn hoàn hảo.
+- Database đã sẵn sàng hoạt động tại file `dev.db`.
+- **Nhánh hiện tại:** Tất cả đã được gộp (Merge) vào nhánh `main` để làm nguồn duy nhất.
+
+**Dự án đã sẵn sàng cho các yêu cầu tiếp theo của bạn!**
