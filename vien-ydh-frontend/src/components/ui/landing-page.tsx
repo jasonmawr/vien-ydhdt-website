@@ -59,6 +59,39 @@ const itemFadeIn = {
 export function HospitalLandingPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [scrollY, setScrollY] = useState(0)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitSuccess, setSubmitSuccess] = useState(false)
+
+  const handleAppointmentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      patientName: formData.get("patientName"),
+      phone: formData.get("phone"),
+      reason: `${formData.get("specialty")} - ${formData.get("reason")}`,
+      date: new Date().toISOString(), // Lấy tạm ngày hiện tại vì form chưa có trường ngày
+    };
+
+    try {
+      const res = await fetch("/api/appointments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (res.ok) {
+        setSubmitSuccess(true);
+        e.currentTarget.reset();
+        setTimeout(() => setSubmitSuccess(false), 5000);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -584,33 +617,40 @@ export function HospitalLandingPage() {
               <p className="text-stone-500 mt-2 mb-8">
                 Điền thông tin vào form dưới đây, bộ phận CSKH sẽ liên hệ lại với bạn trong thời gian sớm nhất.
               </p>
-              <form className="space-y-5">
+              <form className="space-y-5" onSubmit={handleAppointmentSubmit}>
                 <div className="grid gap-5 sm:grid-cols-2">
                   <div className="space-y-2">
                     <label className="text-sm font-semibold text-stone-700">Họ và tên</label>
-                    <Input placeholder="Nhập họ và tên" className="rounded-xl h-12 bg-stone-50 border-stone-200 focus-visible:ring-primary-500" />
+                    <Input name="patientName" required placeholder="Nhập họ và tên" className="rounded-xl h-12 bg-stone-50 border-stone-200 focus-visible:ring-primary-500" />
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-semibold text-stone-700">Số điện thoại</label>
-                    <Input placeholder="Nhập số điện thoại" className="rounded-xl h-12 bg-stone-50 border-stone-200 focus-visible:ring-primary-500" />
+                    <Input name="phone" required placeholder="Nhập số điện thoại" className="rounded-xl h-12 bg-stone-50 border-stone-200 focus-visible:ring-primary-500" />
                   </div>
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-semibold text-stone-700">Chuyên khoa muốn khám</label>
-                  <select className="flex h-12 w-full rounded-xl border border-stone-200 bg-stone-50 px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500">
-                    <option>Chọn chuyên khoa...</option>
-                    <option>Châm cứu - Phục hồi</option>
-                    <option>Khám tổng quát</option>
-                    <option>Cấy chỉ trị liệu</option>
+                  <select name="specialty" className="flex h-12 w-full rounded-xl border border-stone-200 bg-stone-50 px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500">
+                    <option value="">Chọn chuyên khoa...</option>
+                    <option value="Châm cứu - Phục hồi">Châm cứu - Phục hồi</option>
+                    <option value="Khám tổng quát">Khám tổng quát</option>
+                    <option value="Cấy chỉ trị liệu">Cấy chỉ trị liệu</option>
                   </select>
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-semibold text-stone-700">Triệu chứng bệnh</label>
-                  <Textarea placeholder="Mô tả sơ lược tình trạng của bạn" className="min-h-[120px] rounded-xl bg-stone-50 border-stone-200 focus-visible:ring-primary-500 resize-none p-4" />
+                  <Textarea name="reason" placeholder="Mô tả sơ lược tình trạng của bạn" className="min-h-[120px] rounded-xl bg-stone-50 border-stone-200 focus-visible:ring-primary-500 resize-none p-4" />
                 </div>
+                
+                {submitSuccess && (
+                  <div className="p-4 bg-green-50 text-green-700 rounded-xl border border-green-200 text-sm font-medium">
+                    Gửi yêu cầu thành công! Viện sẽ liên hệ lại sớm nhất.
+                  </div>
+                )}
+                
                 <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="pt-2">
-                  <Button type="button" className="w-full rounded-xl bg-primary-600 hover:bg-primary-700 h-14 text-base font-bold shadow-md shadow-primary-500/20">
-                    Gửi Yêu Cầu
+                  <Button type="submit" disabled={isSubmitting} className="w-full rounded-xl bg-primary-600 hover:bg-primary-700 h-14 text-base font-bold shadow-md shadow-primary-500/20">
+                    {isSubmitting ? "Đang gửi..." : "Gửi Yêu Cầu"}
                   </Button>
                 </motion.div>
               </form>
