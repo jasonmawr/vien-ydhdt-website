@@ -59,20 +59,20 @@ AI Agent hãy đọc kỹ file này. Khi hoàn thành xong một bước, hãy d
 * [ ] 1. Tính năng đăng bài viết (CMS/Tin tức) cho Admin.
 * [ ] 2. Tính năng xác thực đăng nhập (JWT) cho Admin.
 
-## **PHASE 8: TÁI CẤU TRÚC MONOREPO + KẾT NỐI ORACLE DB THẬT** 🚧 ĐANG THỰC HIỆN
+## **PHASE 8: TÁI CẤU TRÚC MONOREPO + KẾT NỐI ORACLE DB THẬT** ✅ ĐÃ HOÀN THÀNH
 
 * [x] 1. Tạo `/backend/` với kiến trúc Modular Monolith (Express + oracledb).
 * [x] 2. Kết nối Oracle DB thật (192.168.1.113:1521 SID=medi) — **THÀNH CÔNG**.
 * [x] 3. Khám phá schema: 1269 bảng, tìm `MEDI.DMBS` (253 bác sĩ), `MEDI.DMCHUYENKHOA` (4 chuyên khoa).
 * [x] 4. API hoạt động: `GET /api/departments`, `GET /api/doctors`, `GET /api/doctors/:id/image` (stream BLOB ảnh).
-* [ ] 5. Refactor Frontend: thay Prisma bằng HTTP calls sang Backend API.
+* [x] 5. Refactor Frontend: xóa Prisma/SQLite, thay bằng HTTP calls sang Backend API.
 
 ## **GHI CHÚ (HANDOVER - 2026-04-21)**
 
 **Trạng thái hiện tại:**
-- Backend API Server đang chạy tại `http://localhost:4000` — kết nối Oracle DB thật.
-- Cấu trúc Monorepo: `/backend/` (Express+Oracle) + `/vien-ydh-frontend/` (Next.js).
-- **Nhánh hiện tại:** `feature/phase-8-monorepo-oracle`.
-- Bước tiếp theo: Refactor Frontend để gọi Backend API thay vì Prisma/SQLite.
+- **Hệ thống đã hoàn toàn decoupled:** Frontend (Next.js) gọi data qua REST API từ Backend (Express).
+- **Backend API Server** đang chạy tại `http://localhost:4000` — kết nối Oracle DB thật lấy dữ liệu sống.
+- **Frontend** đang chạy tại `http://localhost:3000`.
+- **Nhánh hiện tại:** `feature/phase-8-monorepo-oracle` (đã commit & push).
 
-**Dự án đang được phát triển theo đúng kế hoạch!**
+**Dự án đã hoàn tất chuyển đổi kiến trúc và sẵn sàng hoạt động với dữ liệu thực tế!**

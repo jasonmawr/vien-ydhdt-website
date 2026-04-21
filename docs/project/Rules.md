@@ -137,5 +137,9 @@ Bạn là một Senior Fullstack Developer, Software Architect và QA Engineer. 
 * Mỗi Phase mới = tạo nhánh `feature/phase-[N]-[tên]` từ `develop` trước khi bắt đầu code.
 * Commit sau mỗi task nhỏ hoàn chỉnh — không để 1 commit chứa quá nhiều thay đổi.
 * Trước commit: PHẢI chạy `npx tsc --noEmit` (0 errors) rồi mới commit.
-* Sau khi hoàn thành toàn bộ Phase: merge nhánh feature vào `develop`.
+* **Quy tắc hoàn thành Feature mới:** Khi làm xong 1 feature (Phase), PHẢI thực hiện chuỗi hành động sau:
+  1. **Double check** code (tsc, lint, build test).
+  2. Tạo **Pull Request** (hoặc merge chuẩn) để gộp nhánh `feature/*` vừa xong vào nhánh `develop`.
+  3. Cập nhật tài liệu (MASTER_PLAN.md, task.md) đúng tiến độ hiện tại.
+  4. Checkout sang nhánh `develop` lấy code mới nhất, sau đó tạo nhánh `feature/*` mới để làm feature tiếp theo.
 * Chỉ merge `develop` → `main` khi có milestone release (bàn với user).
