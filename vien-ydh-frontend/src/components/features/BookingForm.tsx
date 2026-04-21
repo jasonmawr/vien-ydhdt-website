@@ -3,18 +3,23 @@
 import { useState, useMemo, useEffect } from "react";
 import {
   ChevronRight, ChevronLeft, CheckCircle2,
-  Calendar as CalendarIcon, Clock, User, Phone, FileText, Loader2
+  Calendar as CalendarIcon, Clock, User, Phone, FileText, Loader2, ShieldCheck
 } from "lucide-react";
 import {
   getDepartments, getAllDoctors, createAppointment, getDoctorImageUrl, generatePaymentQR,
-  type DepartmentDTO, type DoctorDTO
+  getInsuranceTuyen,
+  type DepartmentDTO, type DoctorDTO, type InsuranceTuyenDTO
 } from "@/services/api";
 import { cn } from "@/lib/utils";
 
 type Step = 1 | 2 | 3 | 4 | 5 | 6;
 
-export default function BookingForm() {
-  const [step, setStep] = useState<Step>(1);
+interface BookingFormProps {
+  initialStep?: Step;
+}
+
+export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
+  const [step, setStep] = useState<Step>(initialStep);
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
@@ -25,6 +30,7 @@ export default function BookingForm() {
   // Data from API
   const [departments, setDepartments] = useState<DepartmentDTO[]>([]);
   const [allDoctors, setAllDoctors] = useState<DoctorDTO[]>([]);
+  const [insuranceTuyenList, setInsuranceTuyenList] = useState<InsuranceTuyenDTO[]>([]);
 
   const [formData, setFormData] = useState({
     departmentId: "",
@@ -35,16 +41,22 @@ export default function BookingForm() {
     patientPhone: "",
     patientDob: "",
     patientGender: "male",
+    patientIdNumber: "",
     symptoms: "",
+    // Đối tượng & BHYT
+    patientType: "dich-vu", // bhyt | dich-vu | chuyen-gia | nuoc-ngoai
+    bhytNumber: "",
+    bhytTuyen: "",
   });
 
   // Fetch departments & doctors on mount
   useEffect(() => {
     setIsLoading(true);
-    Promise.all([getDepartments(), getAllDoctors()])
-      .then(([depts, docs]) => {
+    Promise.all([getDepartments(), getAllDoctors(), getInsuranceTuyen()])
+      .then(([depts, docs, tuyen]) => {
         setDepartments(depts);
         setAllDoctors(docs);
+        setInsuranceTuyenList(tuyen);
       })
       .catch(console.error)
       .finally(() => setIsLoading(false));
@@ -344,6 +356,88 @@ export default function BookingForm() {
             ))}
           </div>
         </div>
+
+        <div>
+          <label htmlFor="patientIdNumber" className="mb-1.5 block text-sm font-medium text-gray-700">Số CMND/CCCD</label>
+          <input
+            id="patientIdNumber"
+            type="text"
+            className="block w-full rounded-xl border border-gray-200 bg-gray-50 py-2.5 px-3 text-sm focus:border-primary-800 focus:bg-white focus:ring-1 focus:ring-primary-800 outline-none"
+            placeholder="VD: 079123456789"
+            value={formData.patientIdNumber}
+            onChange={(e) => updateForm("patientIdNumber", e.target.value)}
+          />
+        </div>
+
+        {/* Đối tượng khám */}
+        <div className="sm:col-span-2 pt-4 border-t border-gray-100">
+          <label className="mb-3 block text-sm font-semibold text-gray-800">Đối tượng khám bệnh *</label>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {[
+              { value: "bhyt", label: "BHYT", desc: "Bảo hiểm Y tế", color: "emerald" },
+              { value: "dich-vu", label: "Dịch vụ", desc: "Không BHYT", color: "blue" },
+              { value: "chuyen-gia", label: "Chuyên gia", desc: "BS Chuyên gia", color: "purple" },
+              { value: "nuoc-ngoai", label: "Nước ngoài", desc: "Người nước ngoài", color: "amber" },
+            ].map((pt) => (
+              <label
+                key={pt.value}
+                className={cn(
+                  "flex flex-col items-center p-3 rounded-xl border-2 cursor-pointer transition-all text-center",
+                  formData.patientType === pt.value
+                    ? `border-${pt.color}-500 bg-${pt.color}-50 ring-2 ring-${pt.color}-200`
+                    : "border-gray-200 hover:border-gray-300 bg-white"
+                )}
+              >
+                <input
+                  type="radio"
+                  name="patientType"
+                  value={pt.value}
+                  checked={formData.patientType === pt.value}
+                  onChange={(e) => updateForm("patientType", e.target.value)}
+                  className="sr-only"
+                />
+                <span className="text-sm font-bold">{pt.label}</span>
+                <span className="text-xs text-gray-500 mt-1">{pt.desc}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        {/* Form BHYT (chỉ hiện khi chọn BHYT) */}
+        {formData.patientType === "bhyt" && (
+          <div className="sm:col-span-2 p-4 bg-emerald-50 rounded-xl border border-emerald-200 space-y-4">
+            <p className="text-sm font-semibold text-emerald-800 flex items-center gap-2">
+              <ShieldCheck className="h-4 w-4" />
+              Thông tin Bảo hiểm Y tế
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="mb-1 block text-xs font-medium text-gray-600">Số thẻ BHYT *</label>
+                <input
+                  type="text"
+                  maxLength={15}
+                  className="block w-full rounded-lg border border-emerald-200 bg-white py-2 px-3 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none font-mono"
+                  placeholder="VD: GD49632584585"
+                  value={formData.bhytNumber}
+                  onChange={(e) => updateForm("bhytNumber", e.target.value.toUpperCase())}
+                />
+              </div>
+              <div>
+                <label className="mb-1 block text-xs font-medium text-gray-600">Tuyến khám *</label>
+                <select
+                  className="block w-full rounded-lg border border-emerald-200 bg-white py-2 px-3 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none"
+                  value={formData.bhytTuyen}
+                  onChange={(e) => updateForm("bhytTuyen", e.target.value)}
+                >
+                  <option value="">-- Chọn tuyến --</option>
+                  {insuranceTuyenList.map((t) => (
+                    <option key={t.id} value={t.code}>{t.name}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className="sm:col-span-2">
           <label htmlFor="symptoms" className="mb-1.5 block text-sm font-medium text-gray-700">Triệu chứng (Không bắt buộc)</label>

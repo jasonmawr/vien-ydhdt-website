@@ -183,3 +183,55 @@ export async function generatePaymentQR(payload: { amount: number; orderInfo: st
     body: JSON.stringify(payload),
   });
 }
+
+// ─────────────────────────────────────────
+// Booking API (Đọc trực tiếp từ Oracle HIS)
+// ─────────────────────────────────────────
+
+export interface SpecialtyDTO {
+  id: number;
+  name: string;
+}
+
+export interface ExamPricingDTO {
+  id: number;
+  code: string;
+  name: string;
+  unit: string;
+  priceBHYT: number;
+  priceService: number;
+  priceForeign: number;
+  bhytPercent: number;
+}
+
+export interface InsuranceTuyenDTO {
+  id: number;
+  code: string;
+  name: string;
+  isTraiTuyen: boolean;
+}
+
+export interface PatientTypeDTO {
+  id: number;
+  name: string;
+}
+
+export async function getHISSpecialties(): Promise<SpecialtyDTO[]> {
+  const data = await apiFetch<{ success: boolean; data: SpecialtyDTO[] }>("/api/booking/specialties");
+  return data.data;
+}
+
+export async function getExamPricing(): Promise<ExamPricingDTO[]> {
+  const data = await apiFetch<{ success: boolean; data: ExamPricingDTO[] }>("/api/booking/pricing");
+  return data.data;
+}
+
+export async function getInsuranceTuyen(): Promise<InsuranceTuyenDTO[]> {
+  const data = await apiFetch<{ success: boolean; data: InsuranceTuyenDTO[] }>("/api/booking/insurance-tuyen");
+  return data.data;
+}
+
+export async function getPatientTypes(): Promise<PatientTypeDTO[]> {
+  const data = await apiFetch<{ success: boolean; data: PatientTypeDTO[] }>("/api/booking/patient-types");
+  return data.data;
+}
