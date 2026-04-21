@@ -1,91 +1,99 @@
 'use client';
 
-/**
- * @file Header.tsx
- * @description Thanh điều hướng chính của website Viện Y Dược Học Dân Tộc.
- *
- * Tính năng:
- * - Responsive: hamburger menu trên mobile, full nav trên desktop
- * - Sticky header với hiệu ứng backdrop blur khi scroll
- * - Nút "Đặt lịch khám" nổi bật (CTA)
- * - Logo + tên Viện
- * - Dropdown cho các mục có submenu
- *
- * @example
- * // Trong layout.tsx:
- * import Header from "@/components/layout/Header";
- * <Header />
- */
-
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Menu, X, Phone, ChevronDown, Calendar } from 'lucide-react';
+import { Menu, X, Search, ChevronDown, Calendar, Phone, Globe } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-// ─────────────────────────────────────────────────────────────
-// Cấu hình điều hướng — SSOT cho menu items
-// ─────────────────────────────────────────────────────────────
 interface NavItem {
   label: string;
   href: string;
   children?: { label: string; href: string }[];
 }
 
-const NAV_ITEMS: NavItem[] = [
-  { label: 'Trang chủ', href: '/' },
+const TOP_NAV_ITEMS = [
+  { label: 'Người bệnh & Cộng đồng', href: '/' },
+  { label: 'Chuyên gia y tế', href: '/chuyen-gia-y-te' },
+  { label: 'Đấu thầu', href: '/dau-thau' },
+  { label: 'Liên hệ', href: '/lien-he' },
+];
+
+const MAIN_NAV_ITEMS: NavItem[] = [
   {
     label: 'Giới thiệu',
     href: '/gioi-thieu',
     children: [
-      { label: 'Về Viện', href: '/gioi-thieu/ve-vien' },
-      { label: 'Lịch sử hình thành', href: '/gioi-thieu/lich-su' },
-      { label: 'Sứ mệnh & Tầm nhìn', href: '/gioi-thieu/su-menh' },
+      { label: 'Giới thiệu chung', href: '/gioi-thieu/chung' },
+      { label: 'Chức năng - Nhiệm vụ', href: '/gioi-thieu/chuc-nang' },
+      { label: 'Lịch sử hình thành và phát triển', href: '/gioi-thieu/lich-su' },
+      { label: 'Sơ đồ tổ chức', href: '/gioi-thieu/so-do' },
+      { label: 'Thành tích đạt được', href: '/gioi-thieu/thanh-tich' },
     ],
   },
   {
-    label: 'Chuyên khoa',
-    href: '/chuyen-khoa',
+    label: 'Tin tức',
+    href: '/tin-tuc',
     children: [
-      { label: 'Y học cổ truyền tổng hợp', href: '/chuyen-khoa/y-hoc-co-truyen' },
-      { label: 'Châm cứu & Vật lý trị liệu', href: '/chuyen-khoa/cham-cuu' },
-      { label: 'Dưỡng sinh & Phục hồi', href: '/chuyen-khoa/duong-sinh' },
+      { label: 'Thông tin trong nước', href: '/tin-tuc/trong-nuoc' },
+      { label: 'Thông tin Viện', href: '/tin-tuc/vien' },
+      { label: 'Thông báo', href: '/tin-tuc/thong-bao' },
+      { label: 'Hợp tác quốc tế', href: '/tin-tuc/quoc-te' },
     ],
   },
-  { label: 'Đội ngũ bác sĩ', href: '/bac-si' },
-  { label: 'Từ điển Dược liệu', href: '/duoc-lieu' },
-  { label: 'Tin tức', href: '/tin-tuc' },
-  { label: 'Liên hệ', href: '/lien-he' },
+  {
+    label: 'Khám chữa bệnh',
+    href: '/kham-chua-benh',
+    children: [
+      { label: 'Gương mặt tiêu biểu', href: '/kham-chua-benh/guong-mat-tieu-bieu' },
+      { label: 'Dịch vụ khám', href: '/dich-vu' },
+    ]
+  },
+  {
+    label: 'Sản phẩm thuốc',
+    href: '/thuoc-yhct',
+    children: [
+      { label: 'Thuốc do viện sản xuất', href: '/thuoc-yhct/do-vien-san-xuat' },
+      { label: 'Thuốc liên doanh liên kết', href: '/thuoc-yhct/lien-doanh' },
+    ],
+  },
+  {
+    label: 'Đào tạo - Chỉ đạo tuyến',
+    href: '/dao-tao',
+    children: [
+      { label: 'Chỉ đạo tuyến', href: '/dao-tao/chi-dao-tuyen' },
+      { label: 'Đào tạo liên tục', href: '/dao-tao/lien-tuc' },
+      { label: 'Cơ sở thực hành', href: '/dao-tao/co-so-thuc-hanh' },
+    ]
+  },
 ];
 
-// ─────────────────────────────────────────────────────────────
-// Component chính
-// ─────────────────────────────────────────────────────────────
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  // Detect scroll để thêm hiệu ứng header
+  const headerRef = useRef<HTMLElement>(null);
+  const searchRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Đóng dropdown khi click ra ngoài
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setActiveDropdown(null);
+      if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
+        setIsSearchOpen(false);
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Đóng mobile menu khi resize lên desktop
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1024) {
@@ -97,120 +105,132 @@ export default function Header() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Khoá scroll body khi mobile menu mở
   useEffect(() => {
     document.body.style.overflow = isMenuOpen ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
   }, [isMenuOpen]);
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      window.location.href = `/tim-kiem?q=${encodeURIComponent(searchQuery)}`;
+    }
+  };
+
   return (
-    <>
-      {/* ── Thanh thông báo phía trên ── */}
-      <div className="hidden bg-primary-800 text-white text-sm py-2 sm:block">
-        <div className="container-site flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <span className="opacity-90 truncate max-w-full">
-            🌿 Chào mừng đến với Viện Y Dược Học Dân Tộc
-          </span>
-          <a
-            href="tel:02838554269"
-            className="flex items-center gap-1.5 font-semibold hover:text-[#fcd34d] transition-colors"
-            aria-label="Gọi điện cho Viện Y Dược Học Dân Tộc"
-          >
-            <Phone className="h-3.5 w-3.5" aria-hidden="true" />
-            028 3855 4269
-          </a>
+    <header
+      ref={headerRef}
+      className={cn(
+        'sticky top-0 z-50 w-full transition-all duration-300',
+        scrolled ? 'shadow-md' : 'shadow-sm'
+      )}
+      role="banner"
+    >
+      {/* ── Tier 1: Top Bar ── */}
+      <div className="hidden lg:block bg-primary-900 text-primary-50 py-1.5 text-sm">
+        <div className="container-site flex items-center justify-between">
+          <div className="flex items-center gap-6">
+            {TOP_NAV_ITEMS.map((item, idx) => (
+              <Link
+                key={idx}
+                href={item.href}
+                className={cn(
+                  "hover:text-white transition-colors relative",
+                  idx === 0 && "font-semibold text-white after:content-[''] after:absolute after:-bottom-1.5 after:left-0 after:w-full after:h-0.5 after:bg-accent-500"
+                )}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </div>
+          <div className="flex items-center gap-4">
+            <a href="tel:0964392632" className="flex items-center gap-1.5 hover:text-white transition-colors">
+              <Phone className="h-4 w-4" />
+              <span>Hotline: 0964 392 632</span>
+            </a>
+            <div className="h-4 w-px bg-primary-700"></div>
+            <button className="flex items-center gap-1.5 hover:text-white transition-colors">
+              <Globe className="h-4 w-4" />
+              <span>VN</span>
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* ── Header chính ── */}
-      <header
-        className={cn(
-          'sticky top-0 z-50 w-full transition-all duration-300',
-          scrolled
-            ? 'bg-white/95 shadow-md backdrop-blur-md'
-            : 'bg-white shadow-sm'
-        )}
-        role="banner"
-      >
-        <div className="container-site" ref={dropdownRef}>
+      {/* ── Tier 2: Main Bar ── */}
+      <div className="bg-white">
+        <div className="container-site">
           <div className="flex h-16 items-center justify-between lg:h-20">
-
-            {/* ── Logo ── */}
+            {/* Logo */}
             <Link
               href="/"
-              className="flex items-center gap-3 group"
+              className="flex items-center gap-3 group shrink-0"
               aria-label="Viện Y Dược Học Dân Tộc — Về trang chủ"
             >
-              <div
-                className="relative flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-sm transition-transform duration-200 group-hover:scale-105 overflow-hidden"
-                aria-hidden="true"
-              >
-                <Image 
-                  src="/images/logo.png" 
-                  alt="Logo Viện" 
-                  fill 
-                  sizes="(max-width: 768px) 48px, 48px"
+              <div className="relative flex h-10 w-10 lg:h-12 lg:w-12 items-center justify-center rounded-lg bg-gray-50 transition-all group-hover:bg-gray-100 overflow-hidden shrink-0">
+                <Image
+                  src="/images/logo.png"
+                  alt="Logo Viện"
+                  fill
+                  sizes="(max-width: 1024px) 40px, 48px"
                   className="object-contain p-1"
                 />
               </div>
               <div className="leading-tight">
-                <p className="text-xs font-medium text-[#6b7280] sm:text-sm">VIỆN</p>
-                <p
-                  className="font-heading text-sm font-bold text-primary-800 sm:text-base lg:text-lg"
-                  style={{ fontFamily: 'var(--font-merriweather)' }}
-                >
-                  Y Dược Học Dân Tộc
+                <p className="text-[10px] font-medium text-gray-500 lg:text-xs">VIỆN Y DƯỢC</p>
+                <p className="font-sans text-sm font-bold text-primary-800 lg:text-lg">
+                  Học Dân Tộc TP.HCM
                 </p>
               </div>
             </Link>
 
-            {/* ── Nav desktop ── */}
+            {/* Nav Desktop */}
             <nav
-              className="hidden items-center gap-1 lg:flex"
+              className="hidden items-center gap-1 xl:gap-2 lg:flex"
               aria-label="Điều hướng chính"
+              onMouseLeave={() => setActiveDropdown(null)}
             >
-              {NAV_ITEMS.map((item) => (
-                <div key={item.href} className="relative">
+              {MAIN_NAV_ITEMS.map((item) => (
+                <div
+                  key={item.href}
+                  className="relative group h-20 flex items-center"
+                  onMouseEnter={() => item.children && setActiveDropdown(item.href)}
+                >
                   {item.children ? (
-                    // Menu có dropdown
                     <button
-                      onClick={() =>
-                        setActiveDropdown(activeDropdown === item.href ? null : item.href)
-                      }
-                      className="flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium text-[#374151] transition-colors hover:bg-[#ecfdf5] hover:text-primary-800"
+                      className={cn(
+                        "flex items-center gap-1 px-3 py-2 text-[15px] font-semibold transition-all rounded-md",
+                        activeDropdown === item.href
+                          ? "text-primary-700 bg-primary-50"
+                          : "text-gray-700 hover:text-primary-700 hover:bg-gray-50"
+                      )}
                       aria-expanded={activeDropdown === item.href}
-                      aria-haspopup="true"
                     >
                       {item.label}
                       <ChevronDown
                         className={cn(
-                          'h-3.5 w-3.5 transition-transform duration-200',
+                          'h-4 w-4 transition-transform',
                           activeDropdown === item.href && 'rotate-180'
                         )}
-                        aria-hidden="true"
                       />
                     </button>
                   ) : (
                     <Link
                       href={item.href}
-                      className="rounded-md px-3 py-2 text-sm font-medium text-[#374151] transition-colors hover:bg-[#ecfdf5] hover:text-primary-800"
+                      className="px-3 py-2 text-[15px] font-semibold text-gray-700 transition-all hover:text-primary-700 hover:bg-gray-50 rounded-md"
                     >
                       {item.label}
                     </Link>
                   )}
 
-                  {/* Dropdown menu */}
+                  {/* Dropdown */}
                   {item.children && activeDropdown === item.href && (
-                    <div
-                      className="absolute left-0 top-full mt-1 min-w-52 rounded-xl border border-[#d1fae5] bg-white py-2 shadow-xl"
-                      role="menu"
-                    >
+                    <div className="absolute left-0 top-[70px] w-64 bg-white rounded-b-xl shadow-card-premium border-t-2 border-primary-500 py-3 z-50 animate-fade-in-up" style={{ animationDuration: '0.2s' }}>
                       {item.children.map((child) => (
                         <Link
                           key={child.href}
                           href={child.href}
-                          className="block px-4 py-2.5 text-sm text-[#374151] transition-colors hover:bg-[#ecfdf5] hover:text-primary-800"
-                          role="menuitem"
+                          className="block px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors"
                           onClick={() => setActiveDropdown(null)}
                         >
                           {child.label}
@@ -222,119 +242,154 @@ export default function Header() {
               ))}
             </nav>
 
-            {/* ── Nút CTA + Hamburger ── */}
-            <div className="flex items-center gap-3">
+            {/* Right Actions */}
+            <div className="flex items-center gap-3 shrink-0">
+              {/* Search Toggle */}
+              <div className="relative hidden md:block" ref={searchRef}>
+                {isSearchOpen ? (
+                  <form onSubmit={handleSearch} className="absolute right-0 top-1/2 -translate-y-1/2 w-64 animate-scale-in">
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Tìm kiếm..."
+                      className="w-full rounded-full border border-gray-200 bg-gray-50 pl-4 pr-10 py-2 text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
+                      autoFocus
+                    />
+                    <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary-600">
+                      <Search className="h-4 w-4" />
+                    </button>
+                  </form>
+                ) : (
+                  <button
+                    onClick={() => setIsSearchOpen(true)}
+                    className="flex h-10 w-10 items-center justify-center rounded-full text-gray-600 hover:bg-gray-100 transition-colors"
+                    aria-label="Mở tìm kiếm"
+                  >
+                    <Search className="h-5 w-5" />
+                  </button>
+                )}
+              </div>
+
+              {/* Mobile Search Button */}
+              <button
+                onClick={() => setIsSearchOpen(!isSearchOpen)}
+                className="md:hidden flex h-10 w-10 items-center justify-center rounded-full text-gray-600 hover:bg-gray-100"
+              >
+                <Search className="h-5 w-5" />
+              </button>
+
+              {/* CTA */}
               <Link
                 href="/dat-lich"
-                className="btn-primary hidden gap-2 py-2.5 text-sm sm:inline-flex"
-                aria-label="Đặt lịch khám tại Viện Y Dược Học Dân Tộc"
+                className="hidden sm:inline-flex btn-accent !px-5 !py-2.5"
               >
-                <Calendar className="h-4 w-4" aria-hidden="true" />
                 Đặt lịch khám
               </Link>
 
-              {/* Hamburger button — mobile only */}
+              {/* Hamburger */}
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="flex h-10 w-10 items-center justify-center rounded-lg text-[#374151] transition-colors hover:bg-[#ecfdf5] hover:text-primary-800 lg:hidden"
-                aria-expanded={isMenuOpen}
-                aria-controls="mobile-menu"
-                aria-label={isMenuOpen ? 'Đóng menu điều hướng' : 'Mở menu điều hướng'}
-              >
-                {isMenuOpen ? (
-                  <X className="h-6 w-6" aria-hidden="true" />
-                ) : (
-                  <Menu className="h-6 w-6" aria-hidden="true" />
+                className={cn(
+                  "flex h-10 w-10 items-center justify-center rounded-full lg:hidden transition-colors",
+                  isMenuOpen ? "bg-primary-600 text-white" : "text-gray-600 hover:bg-gray-100"
                 )}
+                aria-label={isMenuOpen ? 'Đóng menu' : 'Mở menu'}
+              >
+                {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </button>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* ── Mobile Menu ── */}
-        <div
-          id="mobile-menu"
-          className={cn(
-            'overflow-hidden border-t border-[#d1fae5] bg-white transition-all duration-300 ease-in-out lg:hidden',
-            isMenuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
-          )}
-          aria-hidden={!isMenuOpen}
-        >
-          <nav
-            className="container-site space-y-1 py-4"
-            aria-label="Điều hướng mobile"
-          >
-            {NAV_ITEMS.map((item) => (
-              <div key={item.href}>
-                {item.children ? (
-                  <>
-                    <button
-                      onClick={() =>
-                        setActiveDropdown(activeDropdown === item.href ? null : item.href)
-                      }
-                      className="flex w-full items-center justify-between rounded-lg px-4 py-3 text-left text-base font-medium text-[#374151] transition-colors hover:bg-[#ecfdf5] hover:text-primary-800"
-                      aria-expanded={activeDropdown === item.href}
-                    >
-                      {item.label}
-                      <ChevronDown
-                        className={cn(
-                          'h-4 w-4 transition-transform duration-200',
-                          activeDropdown === item.href && 'rotate-180'
-                        )}
-                        aria-hidden="true"
-                      />
-                    </button>
-                    {activeDropdown === item.href && (
-                      <div className="ml-4 mt-1 space-y-1 border-l-2 border-[#a7f3d0] pl-4">
-                        {item.children.map((child) => (
-                          <Link
-                            key={child.href}
-                            href={child.href}
-                            className="block rounded-lg px-3 py-2.5 text-sm text-[#374151] transition-colors hover:bg-[#ecfdf5] hover:text-primary-800"
-                            onClick={() => { setIsMenuOpen(false); setActiveDropdown(null); }}
-                          >
-                            {child.label}
-                          </Link>
-                        ))}
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <Link
-                    href={item.href}
-                    className="block rounded-lg px-4 py-3 text-base font-medium text-[#374151] transition-colors hover:bg-[#ecfdf5] hover:text-primary-800"
-                    onClick={() => { setIsMenuOpen(false); setActiveDropdown(null); }}
+      {/* Mobile Search Bar Expand */}
+      {isSearchOpen && (
+        <div className="md:hidden border-t border-gray-100 bg-white p-4">
+          <form onSubmit={handleSearch} className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Nhập từ khóa tìm kiếm..."
+              className="w-full rounded-lg border border-gray-200 bg-gray-50 pl-10 pr-4 py-3 outline-none focus:border-primary-500"
+              autoFocus
+            />
+          </form>
+        </div>
+      )}
+
+      {/* Mobile Menu */}
+      <div
+        className={cn(
+          'fixed inset-x-0 top-[64px] bg-white border-t border-gray-100 transition-all duration-300 lg:hidden overflow-y-auto max-h-[calc(100vh-64px)] z-40',
+          isMenuOpen ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 pointer-events-none'
+        )}
+      >
+        <div className="bg-primary-50 px-4 py-3 flex gap-4 overflow-x-auto whitespace-nowrap scrollbar-hide">
+          {TOP_NAV_ITEMS.map((item, idx) => (
+            <Link key={idx} href={item.href} className="text-sm font-semibold text-primary-800">
+              {item.label}
+            </Link>
+          ))}
+        </div>
+        <nav className="container-site py-2 space-y-1">
+          {MAIN_NAV_ITEMS.map((item) => (
+            <div key={item.href}>
+              {item.children ? (
+                <>
+                  <button
+                    onClick={() => setActiveDropdown(activeDropdown === item.href ? null : item.href)}
+                    className="flex w-full items-center justify-between px-4 py-3 text-base font-semibold text-gray-800 border-b border-gray-50"
                   >
                     {item.label}
-                  </Link>
-                )}
-              </div>
-            ))}
-
-            {/* CTA trong mobile menu */}
-            <div className="pt-3 pb-2">
-              <Link
-                href="/dat-lich"
-                className="btn-primary w-full justify-center"
-                onClick={() => { setIsMenuOpen(false); setActiveDropdown(null); }}
-                aria-label="Đặt lịch khám tại Viện Y Dược Học Dân Tộc"
-              >
-                <Calendar className="h-5 w-5" aria-hidden="true" />
-                Đặt lịch khám ngay
-              </Link>
+                    <ChevronDown className={cn('h-5 w-5 transition-transform text-gray-400', activeDropdown === item.href && 'rotate-180')} />
+                  </button>
+                  {activeDropdown === item.href && (
+                    <div className="bg-gray-50 px-4 py-2 space-y-1">
+                      {item.children.map((child) => (
+                        <Link
+                          key={child.href}
+                          href={child.href}
+                          className="block py-2.5 text-[15px] text-gray-600 hover:text-primary-700"
+                          onClick={() => { setIsMenuOpen(false); setActiveDropdown(null); }}
+                        >
+                          {child.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </>
+              ) : (
+                <Link
+                  href={item.href}
+                  className="block px-4 py-3 text-base font-semibold text-gray-800 border-b border-gray-50"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              )}
             </div>
-
-            <a
-              href="tel:02838554269"
-              className="flex items-center justify-center gap-2 rounded-lg border border-primary-800 px-4 py-3 text-base font-medium text-primary-800 transition-colors hover:bg-[#ecfdf5]"
-              aria-label="Gọi điện cho Viện Y Dược Học Dân Tộc"
+          ))}
+          <div className="p-4 space-y-3">
+            <Link
+              href="/dat-lich"
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary-600 px-4 py-3 text-base font-semibold text-white"
+              onClick={() => setIsMenuOpen(false)}
             >
-              <Phone className="h-5 w-5" aria-hidden="true" />
-              028 3855 4269
+              Đặt lịch khám ngay
+            </Link>
+            <a
+              href="tel:0964392632"
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-gray-100 px-4 py-3 text-base font-semibold text-primary-800"
+            >
+              <Phone className="h-5 w-5" />
+              Hotline: 0964 392 632
             </a>
-          </nav>
-        </div>
-      </header>
-    </>
+          </div>
+        </nav>
+      </div>
+    </header>
   );
 }

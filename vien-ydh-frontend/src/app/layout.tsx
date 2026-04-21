@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { Merriweather, Plus_Jakarta_Sans } from "next/font/google";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
 import "./globals.css";
 
 /**
@@ -78,11 +76,9 @@ export default function RootLayout({
       className={`${merriweather.variable} ${plusJakartaSans.variable}`}
     >
       <body className="flex min-h-screen flex-col bg-[#fbf9f6] antialiased">
-        <Header />
         <main id="main-content" className="flex-1" role="main">
           {children}
         </main>
-        <Footer />
       </body>
     </html>
   );
