@@ -6,18 +6,21 @@ import {
   Calendar as CalendarIcon, Clock, User, Phone, FileText, Loader2
 } from "lucide-react";
 import {
-  getDepartments, getAllDoctors, createAppointment, getDoctorImageUrl,
+  getDepartments, getAllDoctors, createAppointment, getDoctorImageUrl, generatePaymentQR,
   type DepartmentDTO, type DoctorDTO
 } from "@/services/api";
 import { cn } from "@/lib/utils";
 
-type Step = 1 | 2 | 3 | 4 | 5;
+type Step = 1 | 2 | 3 | 4 | 5 | 6;
 
 export default function BookingForm() {
   const [step, setStep] = useState<Step>(1);
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
+  const [qrUrl, setQrUrl] = useState("");
+  const [orderId, setOrderId] = useState("");
+  const [appointmentId, setAppointmentId] = useState("");
 
   // Data from API
   const [departments, setDepartments] = useState<DepartmentDTO[]>([]);
@@ -98,21 +101,35 @@ export default function BookingForm() {
 
     setIsSubmitting(true);
     try {
-      const result = await createAppointment({
-        patientName: formData.patientName,
-        patientPhone: formData.patientPhone,
-        patientDob: formData.patientDob,
-        patientGender: formData.patientGender,
-        departmentId: formData.departmentId,
-        doctorId: formData.doctorId !== "any" ? formData.doctorId : undefined,
-        appointmentDate: formData.appointmentDate,
-        appointmentTime: formData.appointmentTime,
-        symptoms: formData.symptoms,
-      });
+      if (step === 4) {
+        // Gọi API sinh mã QR thanh toán
+        const qrRes = await generatePaymentQR({ amount: 150000, orderInfo: `Kham benh ${formData.patientPhone}` });
+        if (qrRes.success) {
+          setQrUrl(qrRes.data.qrCodeUrl);
+          setOrderId(qrRes.data.orderId);
+          setStep(5);
+        } else {
+          alert("Không thể tạo mã thanh toán.");
+        }
+      } else if (step === 5) {
+        // Giả lập KH đã quét và IPN báo thành công -> Ghi vào DB
+        const result = await createAppointment({
+          patientName: formData.patientName,
+          patientPhone: formData.patientPhone,
+          patientDob: formData.patientDob,
+          patientGender: formData.patientGender,
+          departmentId: formData.departmentId,
+          doctorId: formData.doctorId !== "any" ? formData.doctorId : undefined,
+          appointmentDate: formData.appointmentDate,
+          appointmentTime: formData.appointmentTime,
+          symptoms: formData.symptoms,
+        });
 
-      if (result.success) {
-        setSuccessMessage(result.message);
-        setStep(5);
+        if (result.success) {
+          setSuccessMessage(result.message);
+          setAppointmentId(result.data?.id || orderId);
+          setStep(6);
+        }
       }
     } catch (err) {
       console.error("Đặt lịch thất bại:", err);
@@ -348,6 +365,27 @@ export default function BookingForm() {
     </div>
   );
 
+  const renderStep5 = () => (
+    <div className="space-y-6 animate-fade-in-up flex flex-col items-center text-center">
+      <h3 className="text-xl font-bold text-[#1a1a1a] mb-2">5. Thanh Toán Lệ Phí Khám</h3>
+      <p className="text-sm text-gray-500 mb-6">Sử dụng App Ngân hàng hoặc Ví điện tử quét mã VietQR bên dưới</p>
+      
+      <div className="bg-white p-4 border-2 border-dashed border-primary-300 rounded-2xl shadow-sm inline-block">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={qrUrl} alt="VietinBank QR Code" className="w-64 h-64 object-contain" />
+      </div>
+
+      <div className="mt-4 bg-blue-50 text-blue-800 p-4 rounded-xl text-sm max-w-sm">
+        <p className="font-semibold">Số tiền: 150,000 VNĐ</p>
+        <p>Mã đơn: <span className="font-mono">{orderId}</span></p>
+      </div>
+      
+      <p className="text-xs text-gray-400 mt-4 italic max-w-md">
+        (Hệ thống sẽ tự động chuyển sang trang Vé Khám Điện Tử khi thanh toán thành công qua VietinBank IPN. Trong lúc Dev, hãy bấm nút Xác nhận bên dưới để giả lập IPN).
+      </p>
+    </div>
+  );
+
   const renderSuccess = () => (
     <div className="text-center py-12 animate-fade-in-up">
       <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100">
@@ -380,6 +418,23 @@ export default function BookingForm() {
           </div>
         </div>
       </div>
+      
+      {/* Số Thứ Tự Khám (Tự sinh) */}
+      <div className="mt-6 mx-auto bg-gradient-to-br from-primary-800 to-emerald-700 text-white p-6 rounded-2xl max-w-[280px] flex flex-col items-center shadow-lg">
+        <p className="text-xs font-bold uppercase mb-1 opacity-80 tracking-wider">Số Thứ Tự Khám</p>
+        <p className="text-5xl font-black tabular-nums">
+          {String(Math.abs(Number(appointmentId?.replace(/\D/g, "").slice(-3)) || 1)).padStart(3, "0")}
+        </p>
+        <div className="mt-3 pt-3 border-t border-white/20 w-full text-center">
+          <p className="text-xs opacity-70">Mã phiếu</p>
+          <p className="text-sm font-mono font-semibold">{appointmentId}</p>
+        </div>
+      </div>
+      <p className="text-sm text-gray-500 mt-4 max-w-sm mx-auto">
+        Vui lòng ghi nhớ <strong>Số Thứ Tự</strong> và đến viện đúng ngày giờ đã hẹn. 
+        Đưa <strong>Mã Phiếu</strong> cho nhân viên tiếp nhận để được phục vụ nhanh nhất.
+      </p>
+
       <div className="mt-8">
         <button onClick={() => window.location.reload()} className="btn-outline">
           Đặt lịch mới
@@ -391,26 +446,26 @@ export default function BookingForm() {
   return (
     <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
       {/* Progress Bar */}
-      {step < 5 && (
+      {step < 6 && (
         <div className="bg-gray-50 px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            {[1, 2, 3, 4].map((i) => (
+          <div className="flex items-center gap-1 sm:gap-2">
+            {[1, 2, 3, 4, 5].map((i) => (
               <div key={i} className="flex items-center">
                 <div className={cn(
                   "flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold transition-colors",
                   step === i ? "bg-primary-800 text-white ring-4 ring-emerald-100" :
-                  step > i ? "bg-emerald-100 text-primary-800" : "bg-gray-200 text-gray-500"
+                  step > i ? "bg-emerald-100 text-primary-800" : "bg-gray-200 text-gray-500 hidden sm:flex"
                 )}>
                   {step > i ? <CheckCircle2 className="h-5 w-5" /> : i}
                 </div>
-                {i < 4 && (
-                  <div className={cn("h-1 w-8 sm:w-16 transition-colors", step > i ? "bg-emerald-200" : "bg-gray-200")} />
+                {i < 5 && (
+                  <div className={cn("h-1 w-4 sm:w-12 transition-colors", step > i ? "bg-emerald-200" : "bg-gray-200 hidden sm:block")} />
                 )}
               </div>
             ))}
           </div>
-          <div className="text-sm font-medium text-gray-500 hidden sm:block">
-            Bước {step}/4
+          <div className="text-sm font-medium text-gray-500">
+            Bước {step}/5
           </div>
         </div>
       )}
@@ -420,18 +475,19 @@ export default function BookingForm() {
         {step === 2 && renderStep2()}
         {step === 3 && renderStep3()}
         {step === 4 && renderStep4()}
-        {step === 5 && renderSuccess()}
+        {step === 5 && renderStep5()}
+        {step === 6 && renderSuccess()}
 
         {/* Footer Actions */}
-        {step < 5 && (
+        {step < 6 && (
           <div className="mt-10 flex items-center justify-between border-t border-gray-100 pt-6">
             <button
               type="button"
               onClick={handlePrev}
-              disabled={step === 1}
+              disabled={step === 1 || step === 5}
               className={cn(
                 "flex items-center gap-2 text-sm font-medium transition-colors",
-                step === 1 ? "text-gray-300 cursor-not-allowed" : "text-gray-600 hover:text-primary-800"
+                (step === 1 || step === 5) ? "text-gray-300 cursor-not-allowed" : "text-gray-600 hover:text-primary-800"
               )}
             >
               <ChevronLeft className="h-4 w-4" />
@@ -451,7 +507,7 @@ export default function BookingForm() {
                 Tiếp tục
                 <ChevronRight className="h-4 w-4" />
               </button>
-            ) : (
+            ) : step === 4 ? (
               <button
                 type="submit"
                 disabled={!isStepValid() || isSubmitting}
@@ -463,10 +519,29 @@ export default function BookingForm() {
                 {isSubmitting ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    Đang gửi...
+                    Đang tạo mã QR...
                   </>
                 ) : (
-                  "Xác nhận đặt lịch"
+                  "Tiến hành Thanh toán"
+                )}
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={handleSubmit}
+                disabled={isSubmitting}
+                className={cn(
+                  "btn-accent px-8 shadow-lg flex items-center gap-2",
+                  isSubmitting && "opacity-50 cursor-not-allowed"
+                )}
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Đang xác nhận...
+                  </>
+                ) : (
+                  "Đã thanh toán (Giả lập IPN)"
                 )}
               </button>
             )}

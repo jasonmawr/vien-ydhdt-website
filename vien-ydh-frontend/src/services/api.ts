@@ -169,3 +169,17 @@ export async function getAppointments(token: string, limit = 50): Promise<Appoin
   );
   return data.data;
 }
+
+// ─────────────────────────────────────────
+// Payment API
+// ─────────────────────────────────────────
+
+export async function generatePaymentQR(payload: { amount: number; orderInfo: string }) {
+  return apiFetch<{
+    success: boolean;
+    data: { qrCodeUrl: string; orderId: string };
+  }>("/api/payment/generate-qr", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}

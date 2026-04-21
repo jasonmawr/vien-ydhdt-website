@@ -13,6 +13,7 @@ import departmentsRouter from "./modules/departments/departments.router";
 import doctorsRouter from "./modules/doctors/doctors.router";
 import appointmentsRouter from "./modules/appointments/appointments.router";
 import { authRouter } from "./modules/auth/auth.router";
+import { paymentRouter } from "./modules/payment/payment.router";
 import { ensureWebUsersTable } from "./modules/auth/auth.service";
 
 dotenv.config();
@@ -54,6 +55,7 @@ app.use("/api/departments", departmentsRouter);
 app.use("/api/doctors", doctorsRouter);
 app.use("/api/appointments", appointmentsRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/payment", paymentRouter);
 
 // ──────────────────────────────────────────
 // 404 Handler
