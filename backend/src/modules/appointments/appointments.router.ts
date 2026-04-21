@@ -5,6 +5,7 @@
  */
 import { Router, type Request, type Response } from "express";
 import { createAppointment, getAllAppointments } from "./appointments.service";
+import { requireAdmin } from "../auth/auth.middleware";
 
 const router = Router();
 
@@ -30,7 +31,7 @@ router.post("/", async (req: Request, res: Response) => {
 });
 
 // GET /api/appointments — Lấy danh sách (dành cho Admin)
-router.get("/", async (req: Request, res: Response) => {
+router.get("/", requireAdmin, async (req: Request, res: Response) => {
   try {
     const limit = Number(req.query.limit) || 50;
     const appointments = await getAllAppointments(limit);

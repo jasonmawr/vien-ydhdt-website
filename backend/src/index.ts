@@ -12,6 +12,8 @@ import { initDatabase } from "./shared/database";
 import departmentsRouter from "./modules/departments/departments.router";
 import doctorsRouter from "./modules/doctors/doctors.router";
 import appointmentsRouter from "./modules/appointments/appointments.router";
+import { authRouter } from "./modules/auth/auth.router";
+import { ensureWebUsersTable } from "./modules/auth/auth.service";
 
 dotenv.config();
 
@@ -51,6 +53,7 @@ app.get("/health", (_req, res) => {
 app.use("/api/departments", departmentsRouter);
 app.use("/api/doctors", doctorsRouter);
 app.use("/api/appointments", appointmentsRouter);
+app.use("/api/auth", authRouter);
 
 // ──────────────────────────────────────────
 // 404 Handler
@@ -74,6 +77,7 @@ async function start() {
   try {
     console.log("🔄 Đang khởi tạo Oracle connection pool...");
     await initDatabase();
+    await ensureWebUsersTable();
 
     app.listen(PORT, () => {
       console.log(`\n🚀 Backend API Server đang chạy tại: http://localhost:${PORT}`);
@@ -83,7 +87,8 @@ async function start() {
       console.log(`   GET  /api/doctors/:id`);
       console.log(`   GET  /api/doctors/:id/image`);
       console.log(`   POST /api/appointments`);
-      console.log(`   GET  /api/appointments`);
+      console.log(`   GET  /api/appointments (Protected)`);
+      console.log(`   POST /api/auth/login`);
     });
   } catch (err) {
     console.error("❌ Không thể khởi động server:", err);
