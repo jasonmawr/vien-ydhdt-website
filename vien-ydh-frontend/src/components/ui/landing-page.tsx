@@ -659,10 +659,10 @@ export function HospitalLandingPage() {
             <div>
               <h3 className="text-lg font-bold text-white mb-6">Chuyên Khoa & Dịch Vụ</h3>
               <nav className="flex flex-col space-y-4">
-                <Link href="#" className="text-stone-400 hover:text-primary-400 transition-colors">Khám Bệnh Ban Đầu</Link>
-                <Link href="#" className="text-stone-400 hover:text-primary-400 transition-colors">Châm Cứu - Phục Hồi</Link>
-                <Link href="#" className="text-stone-400 hover:text-primary-400 transition-colors">Cấy Chỉ Trị Liệu</Link>
-                <Link href="#" className="text-stone-400 hover:text-primary-400 transition-colors">Bảng Giá Dịch Vụ</Link>
+                <Link href="/dat-lich" className="text-stone-400 hover:text-primary-400 transition-colors">Khám Bệnh Ban Đầu</Link>
+                <Link href="/tra-cuu" className="text-stone-400 hover:text-primary-400 transition-colors">Tra Cứu Lịch Sử Khám</Link>
+                <Link href="/dat-lich" className="text-stone-400 hover:text-primary-400 transition-colors">Đặt Lịch Cấy Chỉ</Link>
+                <Link href="/bang-gia" className="text-stone-400 hover:text-primary-400 transition-colors">Bảng Giá Dịch Vụ</Link>
               </nav>
             </div>
           </div>
