@@ -1,10 +1,13 @@
 import Link from "next/link";
 import { CalendarCheck, ArrowRight } from "lucide-react";
-import { DOCTORS_DATA } from "@/services/mockData";
+import { prisma } from "@/lib/prisma";
 import { formatCurrency } from "@/lib/utils";
 
-export default function FeaturedDoctors() {
-  const featuredDoctors = DOCTORS_DATA.filter((doc) => doc.isFeatured).slice(0, 4);
+export default async function FeaturedDoctors() {
+  const featuredDoctors = await prisma.doctor.findMany({
+    where: { isFeatured: true },
+    take: 4,
+  });
 
   return (
     <section className="section-padding bg-white">

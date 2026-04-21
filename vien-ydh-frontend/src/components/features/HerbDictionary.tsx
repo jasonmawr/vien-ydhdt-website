@@ -2,18 +2,16 @@
 
 import { useState, useMemo } from "react";
 import { Search, Filter, Beaker } from "lucide-react";
-import { HERBS_DATA } from "@/services/mockData";
 import { cn } from "@/lib/utils";
 
-// Lấy danh sách các danh mục duy nhất từ dữ liệu mock
-const categories = ["Tất cả", ...Array.from(new Set(HERBS_DATA.map((herb) => herb.category)))];
-
-export default function HerbDictionary() {
+export default function HerbDictionary({ initialHerbs }: { initialHerbs: any[] }) {
+  const categories = useMemo(() => ["Tất cả", ...Array.from(new Set(initialHerbs.map((herb) => herb.category)))], [initialHerbs]);
+  
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Tất cả");
 
   const filteredHerbs = useMemo(() => {
-    return HERBS_DATA.filter((herb) => {
+    return initialHerbs.filter((herb) => {
       const matchesSearch = 
         herb.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
         herb.latinName.toLowerCase().includes(searchTerm.toLowerCase());
@@ -100,7 +98,7 @@ export default function HerbDictionary() {
                     Công dụng chính
                   </h4>
                   <div className="flex flex-wrap gap-1.5">
-                    {herb.benefits.slice(0, 3).map((benefit) => (
+                    {herb.benefits.slice(0, 3).map((benefit: string) => (
                       <span key={benefit} className="inline-flex items-center rounded-md bg-[#fbf9f6] px-2 py-1 text-xs font-medium text-[#d97706] ring-1 ring-inset ring-[#d97706]/20">
                         {benefit}
                       </span>

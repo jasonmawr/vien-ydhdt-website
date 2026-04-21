@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, Leaf, Activity, Stethoscope, Heart, Brain, Syringe, Eye, Bone } from "lucide-react";
-import { DEPARTMENTS_DATA } from "@/services/mockData";
+import { prisma } from "@/lib/prisma";
 
 const ICONS: Record<string, any> = {
   Stethoscope,
@@ -13,7 +13,10 @@ const ICONS: Record<string, any> = {
   ClipboardPlus: Leaf,
 };
 
-export default function FeaturedServices() {
+export default async function FeaturedServices() {
+  const departments = await prisma.department.findMany({
+    take: 4,
+  });
   return (
     <section className="pt-32 pb-16 lg:pt-40 lg:pb-24 bg-gray-50">
       <div className="container-site">
@@ -39,7 +42,7 @@ export default function FeaturedServices() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          {DEPARTMENTS_DATA.map((dept) => {
+          {departments.map((dept) => {
             const IconComponent = ICONS[dept.icon] || Leaf;
 
             return (

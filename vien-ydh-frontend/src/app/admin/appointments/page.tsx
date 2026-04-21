@@ -35,12 +35,12 @@ export default async function AppointmentsPage() {
               appointments.map((apt) => (
                 <tr key={apt.id} className="border-b border-stone-100 hover:bg-stone-50 transition">
                   <td className="p-4 font-medium text-stone-800">{apt.patientName}</td>
-                  <td className="p-4 text-stone-600">{apt.phone}</td>
+                  <td className="p-4 text-stone-600">{apt.patientPhone}</td>
                   <td className="p-4 text-stone-600">
-                    {new Date(apt.date).toLocaleDateString("vi-VN")}
+                    {apt.appointmentDate ? new Date(apt.appointmentDate).toLocaleDateString("vi-VN") : "Chưa hẹn"}
                   </td>
-                  <td className="p-4 text-stone-600 max-w-xs truncate" title={apt.reason || ""}>
-                    {apt.reason || <span className="text-stone-400 italic">Không có</span>}
+                  <td className="p-4 text-stone-600 max-w-xs truncate" title={apt.symptoms || ""}>
+                    {apt.symptoms || <span className="text-stone-400 italic">Không có</span>}
                   </td>
                   <td className="p-4">
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">

@@ -6,14 +6,6 @@ Tái thiết kế hệ thống website của Viện Y Dược Học Dân Tộc c
 
 Mục tiêu: Đẹp, tốc độ tải chớp nhoáng, tối ưu hóa quy trình Đặt lịch khám và Tra cứu thông tin y khoa.
 
-## **2\. HỆ THỐNG MÀU SẮC & TYPOGRAPHY (DESIGN SYSTEM)**
-
-* **Màu chủ đạo (Primary):** Xanh Lục Ngọc Bích \- \#109173 (Tailwind custom token: primary-800).  
-* **Màu điểm nhấn (Accent):** Vàng Kim Loại \- \#d97706 (Tailwind: amber-600).  
-* **Màu nền (Background):** Giấy Dó (Trắng ngà) \- \#fbf9f6.  
-* **Font chữ:** \- Tiêu đề (Headings): Merriweather (Serif, thể hiện sự uy tín, học thuật).  
-  * Văn bản (Body): Plus Jakarta Sans (Dễ đọc trên mọi thiết bị).
-
 ## **3\. CÁC TÍNH NĂNG CỐT LÕI (CORE FEATURES)**
 
 1. **Trang chủ (Homepage):** Banner, Khung tìm kiếm/Tra cứu nhanh, Danh sách Chuyên khoa, Bác sĩ tiêu biểu, Tin tức nổi bật.  

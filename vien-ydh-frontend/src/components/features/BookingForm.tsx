@@ -2,13 +2,13 @@
 
 import { useState, useMemo } from "react";
 import { ChevronRight, ChevronLeft, CheckCircle2, Calendar as CalendarIcon, Clock, User, Phone, FileText } from "lucide-react";
-import { DEPARTMENTS_DATA, DOCTORS_DATA } from "@/services/mockData";
 import { cn } from "@/lib/utils";
 
 type Step = 1 | 2 | 3 | 4 | 5;
 
-export default function BookingForm() {
+export default function BookingForm({ departments, doctors }: { departments: any[], doctors: any[] }) {
   const [step, setStep] = useState<Step>(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     departmentId: "",
     doctorId: "",
@@ -23,12 +23,12 @@ export default function BookingForm() {
 
   // Derived data
   const availableDoctors = useMemo(() => {
-    if (!formData.departmentId) return DOCTORS_DATA;
-    return DOCTORS_DATA.filter((doc) => doc.departmentId === formData.departmentId);
-  }, [formData.departmentId]);
+    if (!formData.departmentId) return doctors;
+    return doctors.filter((doc) => doc.departmentId === formData.departmentId);
+  }, [formData.departmentId, doctors]);
 
-  const selectedDoctor = DOCTORS_DATA.find((d) => d.id === formData.doctorId);
-  const selectedDept = DEPARTMENTS_DATA.find((d) => d.id === formData.departmentId);
+  const selectedDoctor = doctors.find((d) => d.id === formData.doctorId);
+  const selectedDept = departments.find((d) => d.id === formData.departmentId);
 
   // Generate next 7 days for Date selection (skip Sunday)
   const availableDates = useMemo(() => {
@@ -64,13 +64,27 @@ export default function BookingForm() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isStepValid()) {
-      // API Call mock
-      setTimeout(() => {
-        setStep(5);
-      }, 1000);
+      setIsSubmitting(true);
+      try {
+        const res = await fetch("/api/appointments", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData)
+        });
+        if (res.ok) {
+          setStep(5);
+        } else {
+          alert("Có lỗi xảy ra khi đặt lịch. Vui lòng thử lại sau.");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Không thể kết nối đến máy chủ.");
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -81,7 +95,7 @@ export default function BookingForm() {
     <div className="space-y-4 animate-fade-in-up">
       <h3 className="text-xl font-bold text-[#1a1a1a] mb-4">1. Chọn Chuyên Khoa</h3>
       <div className="grid gap-4 sm:grid-cols-2">
-        {DEPARTMENTS_DATA.map((dept) => (
+        {departments.map((dept) => (
           <div
             key={dept.id}
             onClick={() => { updateForm("departmentId", dept.id); updateForm("doctorId", ""); }}
@@ -395,13 +409,13 @@ export default function BookingForm() {
             ) : (
               <button
                 type="submit"
-                disabled={!isStepValid()}
+                disabled={!isStepValid() || isSubmitting}
                 className={cn(
                   "btn-accent px-8 shadow-lg",
-                  !isStepValid() && "opacity-50 cursor-not-allowed"
+                  (!isStepValid() || isSubmitting) && "opacity-50 cursor-not-allowed"
                 )}
               >
-                Xác nhận đặt lịch
+                {isSubmitting ? "Đang xử lý..." : "Xác nhận đặt lịch"}
               </button>
             )}
           </div>

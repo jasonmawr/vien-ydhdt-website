@@ -1,12 +1,19 @@
 import type { Metadata } from "next";
 import HerbDictionary from "@/components/features/HerbDictionary";
+import { prisma } from "@/lib/prisma";
 
 export const metadata: Metadata = {
   title: "Từ Điển Dược Liệu",
   description: "Tra cứu thông tin chi tiết, công dụng và cách dùng của các vị thuốc Đông y tại Viện Y Dược Học Dân Tộc.",
 };
 
-export default function DuocLieuPage() {
+export default async function DuocLieuPage() {
+  const herbs = await prisma.herb.findMany();
+  const parsedHerbs = herbs.map(herb => ({
+    ...herb,
+    benefits: JSON.parse(herb.benefits)
+  }));
+
   return (
     <div className="bg-[#fbf9f6] min-h-screen pb-20">
       {/* Header Banner */}
@@ -27,7 +34,7 @@ export default function DuocLieuPage() {
       {/* Main Content */}
       <section className="section-padding -mt-8 relative z-20">
         <div className="container-site">
-          <HerbDictionary />
+          <HerbDictionary initialHerbs={parsedHerbs} />
         </div>
       </section>
     </div>

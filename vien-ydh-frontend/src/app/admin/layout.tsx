@@ -24,13 +24,17 @@ export default function AdminLayout({
             <CalendarDays size={20} />
             <span>Lịch Khám</span>
           </Link>
-          <Link href="#" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-stone-800 text-stone-300 hover:text-white transition">
-            <FileText size={20} />
-            <span>Bài Viết</span>
-          </Link>
-          <Link href="#" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-stone-800 text-stone-300 hover:text-white transition">
+          <Link href="/admin/doctors" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-stone-800 text-stone-300 hover:text-white transition">
             <Users size={20} />
-            <span>Bệnh Nhân</span>
+            <span>Bác Sĩ</span>
+          </Link>
+          <Link href="/admin/departments" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-stone-800 text-stone-300 hover:text-white transition">
+            <LayoutDashboard size={20} />
+            <span>Chuyên Khoa</span>
+          </Link>
+          <Link href="/admin/herbs" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-stone-800 text-stone-300 hover:text-white transition">
+            <FileText size={20} />
+            <span>Dược Liệu</span>
           </Link>
         </nav>
         

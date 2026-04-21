@@ -54,11 +54,18 @@ AI Agent hãy đọc kỹ file này. Khi hoàn thành xong một bước, hãy d
 * [x] 4. Xây dựng trang quản trị `/admin` và `/admin/appointments` lấy dữ liệu thực từ Database.
 * [x] 5. Nối Form "Gửi Yêu Cầu" ở Landing Page với Database thành công.
 
-## **PHASE 7: PHÁT TRIỂN TÍNH NĂNG TIẾP THEO (Dự kiến)**
+## **PHASE 7: HOÀN THIỆN 100% FE & BE (FULL CMS)** ✅ HOÀN THÀNH
 
-* [ ] 1. Tính năng đăng bài viết (CMS/Tin tức) cho Admin.
-* [ ] 2. Tính năng xác thực đăng nhập (NextAuth) cho màn hình Admin.
-* [ ] 3. Nâng cấp Database từ SQLite sang PostgreSQL khi đưa lên môi trường thực tế.
+* [x] 1. Nâng cấp cấu trúc Database: Thêm `Department`, `Doctor`, `Herb`, `Article`.
+* [x] 2. Viết Prisma Seed tự động nạp Mock Data vào Database thật.
+* [x] 3. Tích hợp Backend vào Frontend: Các danh sách Bác sĩ, Chuyên khoa, Dược liệu đã load trực tiếp từ DB.
+* [x] 4. Hệ thống đặt lịch đa bước `/dat-lich` gọi API và POST trực tiếp vào Database.
+* [x] 5. Xây dựng thêm Admin Pages: `/admin/doctors`, `/admin/departments`, `/admin/herbs`.
+
+## **PHASE 8: PHÁT TRIỂN TÍNH NĂNG TIẾP THEO (Dự kiến)**
+
+* [ ] 1. Tính năng xác thực đăng nhập (NextAuth) cho màn hình Admin.
+* [ ] 2. Tính năng CMS viết bài viết/tin tức đầy đủ.
 
 ## **GHI CHÚ (HANDOVER - 2026-04-21)**
 

@@ -4,6 +4,7 @@ generator client {
 
 datasource db {
   provider = "sqlite"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -16,36 +17,90 @@ model User {
   updatedAt DateTime @updatedAt
 }
 
-model Category {
-  id          String   @id @default(cuid())
+model Department {
+  id          String   @id
   name        String
   slug        String   @unique
-  description String?
-  posts       Post[]
+  description String
+  icon        String
+  doctorCount Int      @default(0)
+  doctors     Doctor[]
+  appointments Appointment[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
 
-model Post {
-  id          String   @id @default(cuid())
-  title       String
+model Doctor {
+  id           String   @id
+  slug         String   @unique
+  fullName     String
+  degree       String
+  specialty    String
+  departmentId String
+  department   Department @relation(fields: [departmentId], references: [id])
+  bio          String
+  experience   Int
+  imageUrl     String
+  consultFee   Int
+  rating       Float
+  reviewCount  Int
+  isFeatured   Boolean  @default(false)
+  schedule     String?  
+  appointments Appointment[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Herb {
+  id          String   @id
   slug        String   @unique
+  name        String
+  latinName   String
+  category    String
+  description String
+  benefits    String   
+  usage       String
+  caution     String
+  imageUrl    String
+  isFeatured  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Article {
+  id          String   @id
+  slug        String   @unique
+  title       String
+  excerpt     String
   content     String
-  excerpt     String?
-  published   Boolean  @default(false)
-  categoryId  String?
-  category    Category? @relation(fields: [categoryId], references: [id])
+  category    String
+  author      String
+  authorTitle String
+  imageUrl    String
+  readingTime Int
+  tags        String   
+  isFeatured  Boolean  @default(false)
+  viewCount   Int      @default(0)
+  publishedAt DateTime
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
 
 model Appointment {
-  id          String   @id @default(cuid())
-  patientName String
-  phone       String
-  date        DateTime
-  reason      String?
-  status      String   @default("PENDING")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id              String   @id @default(cuid())
+  patientName     String
+  patientPhone    String
+  patientDob      String?  
+  patientGender   String?  
+  departmentId    String?
+  department      Department? @relation(fields: [departmentId], references: [id])
+  doctorId        String?
+  doctor          Doctor?     @relation(fields: [doctorId], references: [id])
+  appointmentDate DateTime?
+  appointmentTime String?
+  symptoms        String?
+  status          String   @default("PENDING")
+  notes           String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }

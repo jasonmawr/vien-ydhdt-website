@@ -1,12 +1,16 @@
 import type { Metadata } from "next";
 import BookingForm from "@/components/features/BookingForm";
+import { prisma } from "@/lib/prisma";
 
 export const metadata: Metadata = {
   title: "Đặt Lịch Khám",
   description: "Đặt lịch khám bệnh trực tuyến tại Viện Y Dược Học Dân Tộc. Quy trình nhanh chóng, tiện lợi, không phải chờ đợi lâu.",
 };
 
-export default function DatLichPage() {
+export default async function DatLichPage() {
+  const departments = await prisma.department.findMany();
+  const doctors = await prisma.doctor.findMany();
+
   return (
     <div className="bg-[#fbf9f6] min-h-screen pb-20">
       {/* Header Banner */}
@@ -27,7 +31,7 @@ export default function DatLichPage() {
       {/* Main Content */}
       <section className="section-padding -mt-12 relative z-20">
         <div className="container-site max-w-4xl">
-          <BookingForm />
+          <BookingForm departments={departments} doctors={doctors} />
         </div>
       </section>
     </div>
