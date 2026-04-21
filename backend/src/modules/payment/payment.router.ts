@@ -1,5 +1,5 @@
 import { Router, type Request, type Response } from "express";
-import { createHisPatient, createHisAdmission, pushToDoctorQueue } from "../his/his-integration.service";
+import { createHisPatient, createHisAdmission, createAppointmentRecord, confirmHisPayment } from "../his/his-integration.service";
 import { verifyIPNSignature, generateVietinBankQR } from "./vietinbank.service";
 import { v4 as uuidv4 } from "uuid";
 
@@ -55,10 +55,15 @@ paymentRouter.post("/webhook", async (req: Request, res: Response) => {
       const patientId = await createHisPatient(fakePatientData);
       const admissionId = await createHisAdmission({
         patientId,
+        departmentId: "KHOA_KHAM_BENH", // Should map to actual MAKP from order
+        amount: payload.amount
+      });
+      await createAppointmentRecord({
+        patientId,
         departmentId: "KHOA_KHAM_BENH",
         amount: payload.amount
       });
-      await pushToDoctorQueue(admissionId, "BS_CHIDINH");
+      await confirmHisPayment(admissionId, payload.amount);
 
       console.log(`[Webhook] Tích hợp HIS hoàn tất cho giao dịch: ${payload.orderId}`);
 

@@ -20,7 +20,7 @@ export interface HISAdmissionData {
 }
 
 /**
- * [DRAFT] Tạo hồ sơ bệnh nhân trong HIS (VD: bảng MEDI.BENHNHAN)
+ * [DRAFT] Tạo hồ sơ bệnh nhân trong HIS (Bảng MEDI.BENHNHAN)
  * CẦN CHỜ SẾP CUNG CẤP CẤU TRÚC SQL / STORED PROCEDURE CHUẨN CỦA BỆNH VIỆN
  */
 export async function createHisPatient(data: HISPatientData): Promise<string> {
@@ -31,20 +31,34 @@ export async function createHisPatient(data: HISPatientData): Promise<string> {
 }
 
 /**
- * [DRAFT] Tạo phiếu tiếp nhận và viện phí (VD: bảng MEDI.XN_VIENPHI)
+ * [DRAFT] Đăng ký chờ khám (Ghi vào bảng MEDI.TIEPDON)
+ * Bảng TIEPDON chứa danh sách chờ khám thực tế tại phòng khám (MAKP).
+ * Sau khi ghi vào đây, tên bệnh nhân sẽ tự động hiển thị trên màn hình gọi số của phòng khám.
  */
 export async function createHisAdmission(data: HISAdmissionData): Promise<string> {
   // TODO: Thay thế bằng SQL chuẩn
+  // 1. SELECT MAX(MAVAOVIEN), MAX(MAQL) FROM MEDI.TIEPDON ... (Sinh mã)
+  // 2. INSERT INTO MEDI.TIEPDON(MABN, MAVAOVIEN, MAQL, MAKP, NGAY, MADOITUONG, ...) 
+  //    VALUES (data.patientId, ..., data.departmentId, SYSDATE, ...)
   console.log("[HIS Integration] Đang tạo phiếu tiếp nhận/viện phí HIS...", data);
   const fakeAdmissionId = `TN_${Date.now()}`;
   return fakeAdmissionId;
 }
 
 /**
- * [DRAFT] Đẩy bệnh nhân vào danh sách chờ khám (VD: bảng MEDI.KHAMBENH)
+ * [DRAFT] Lưu thông tin Hẹn Khám (Ghi vào bảng MEDI.W_HEN)
+ * Để phục vụ công tác tra cứu và thống kê lượng bệnh nhân đặt lịch online.
  */
-export async function pushToDoctorQueue(admissionId: string, doctorId: string): Promise<boolean> {
+export async function createAppointmentRecord(data: HISAdmissionData): Promise<boolean> {
+  console.log(`[HIS Integration] Đã ghi nhận lịch hẹn vào W_HEN cho bệnh nhân ${data.patientId}`);
+  return true;
+}
+
+/**
+ * [DRAFT] Thanh toán viện phí Online (Ghi vào bảng MEDI.XN_VIENPHI hoặc tương đương)
+ */
+export async function confirmHisPayment(admissionId: string, amount: number): Promise<boolean> {
   // TODO: Thay thế bằng SQL chuẩn
-  console.log(`[HIS Integration] Đã đẩy phiếu ${admissionId} vào phòng bác sĩ ${doctorId}`);
+  console.log(`[HIS Integration] Đã xác nhận thanh toán ${amount} cho phiếu ${admissionId}`);
   return true;
 }
