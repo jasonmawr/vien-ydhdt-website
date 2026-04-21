@@ -40,7 +40,7 @@ Truy cập tại: **http://localhost:3000**
 
 | Vai trò | Màu | Hex |
 |---|---|---|
-| Màu chủ đạo (Primary) | Xanh Thảo Dược | `#065f46` |
+| Màu chủ đạo (Primary) | Xanh Lục Ngọc Bích | `#109173` |
 | Màu điểm nhấn (Accent) | Vàng Kim Loại | `#d97706` |
 | Màu nền (Background) | Giấy Dó | `#fbf9f6` |
 

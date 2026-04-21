@@ -1,73 +1,80 @@
 import Link from "next/link";
-import { ArrowRight, Leaf, Activity, Stethoscope, Heart } from "lucide-react";
+import { ArrowRight, Leaf, Activity, Stethoscope, Heart, Brain, Syringe, Eye, Bone } from "lucide-react";
 import { DEPARTMENTS_DATA } from "@/services/mockData";
-import { cn } from "@/lib/utils";
 
-const ICONS = {
+const ICONS: Record<string, any> = {
   Stethoscope,
   Activity,
   Heart,
-  ClipboardPlus: Leaf, // Fallback
+  Brain,
+  Syringe,
+  Eye,
+  Bone,
+  ClipboardPlus: Leaf,
 };
 
 export default function FeaturedServices() {
   return (
-    <section className="section-padding bg-white">
+    <section className="pt-32 pb-16 lg:pt-40 lg:pb-24 bg-gray-50">
       <div className="container-site">
-        <div className="text-center mb-12 animate-fade-in-up">
-          <div className="inline-flex items-center justify-center rounded-full bg-[#ecfdf5] px-3 py-1 mb-4">
-            <span className="text-sm font-semibold text-[#065f46]">Dịch Vụ Cốt Lõi</span>
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 mb-3">
+              <span className="w-8 h-1 bg-primary-600 rounded-full"></span>
+              <span className="text-sm font-bold uppercase tracking-widest text-primary-700">Chuyên khoa</span>
+            </div>
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900">
+              Đa dạng chuyên khoa điều trị
+            </h2>
           </div>
-          <h2 className="section-title">Chuyên Khoa Nổi Bật</h2>
-          <div className="divider-herb"></div>
-          <p className="section-subtitle">
-            Khám phá các dịch vụ y tế kết hợp hoàn hảo giữa tinh hoa Y học cổ truyền và Y học hiện đại.
-          </p>
+          <Link
+            href="/chuyen-khoa"
+            className="inline-flex items-center gap-2 font-semibold text-primary-700 hover:text-primary-800 group"
+          >
+            <span>Xem tất cả</span>
+            <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary-100 group-hover:bg-primary-200 transition-colors">
+              <ArrowRight className="h-4 w-4" />
+            </span>
+          </Link>
         </div>
 
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-          {DEPARTMENTS_DATA.map((dept, index) => {
-            const IconComponent = ICONS[dept.icon as keyof typeof ICONS] || Leaf;
-            
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          {DEPARTMENTS_DATA.map((dept) => {
+            const IconComponent = ICONS[dept.icon] || Leaf;
+
             return (
-              <div 
-                key={dept.id} 
-                className="card group p-8 animate-fade-in-up flex flex-col h-full border border-gray-100"
-                style={{ animationDelay: `${index * 0.1}s` }}
+              <div
+                key={dept.id}
+                className="group flex flex-col h-full rounded-xl border border-gray-200 bg-white p-6 transition-all duration-300 hover:border-primary-300 hover:shadow-lg hover:-translate-y-1"
               >
-                <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-[#ecfdf5] text-[#065f46] transition-colors duration-300 group-hover:bg-[#065f46] group-hover:text-white">
-                  <IconComponent className="h-8 w-8" strokeWidth={1.5} />
+                <div className="mb-5 flex justify-between items-start">
+                  <div className="inline-flex h-14 w-14 items-center justify-center rounded-xl bg-primary-50 text-primary-600 transition-colors duration-300 group-hover:bg-primary-600 group-hover:text-white">
+                    <IconComponent className="h-7 w-7" strokeWidth={1.5} />
+                  </div>
+                  <span className="text-xs font-bold text-gray-400 bg-gray-100 px-2.5 py-1 rounded-md">{dept.doctorCount} Bác sĩ</span>
                 </div>
-                
-                <h3 className="mb-3 font-heading text-xl font-bold text-[#1a1a1a]">
-                  {dept.name}
-                </h3>
-                
-                <p className="mb-6 text-[#6b7280] flex-1">
-                  {dept.description}
-                </p>
-                
-                <div className="mt-auto flex items-center justify-between border-t border-gray-100 pt-5">
-                  <span className="text-sm font-medium text-[#065f46]">
-                    {dept.doctorCount} Bác sĩ
-                  </span>
-                  <Link 
-                    href={`/chuyen-khoa/${dept.slug}`} 
-                    className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-50 text-[#065f46] transition-transform group-hover:bg-[#ecfdf5] group-hover:-rotate-45"
-                    aria-label={`Tìm hiểu thêm về ${dept.name}`}
-                  >
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
+
+                <div className="flex flex-1 flex-col">
+                  <h3 className="mb-3 font-sans text-lg font-bold text-gray-900 group-hover:text-primary-700 transition-colors">
+                    {dept.name}
+                  </h3>
+                  <p className="mb-6 flex-1 text-sm leading-relaxed text-gray-600">
+                    {dept.description}
+                  </p>
+
+                  <div className="mt-auto pt-4 border-t border-gray-100">
+                    <Link
+                      href={`/chuyen-khoa/${dept.slug}`}
+                      className="inline-flex items-center gap-2 text-sm font-bold text-primary-600 transition-all hover:text-primary-800"
+                    >
+                      <span>Tìm hiểu thêm</span>
+                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    </Link>
+                  </div>
                 </div>
               </div>
             );
           })}
-        </div>
-
-        <div className="mt-12 text-center">
-          <Link href="/chuyen-khoa" className="btn-outline">
-            Xem tất cả chuyên khoa
-          </Link>
         </div>
       </div>
     </section>

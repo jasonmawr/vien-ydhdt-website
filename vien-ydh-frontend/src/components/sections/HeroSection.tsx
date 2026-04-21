@@ -1,83 +1,77 @@
+'use client';
+
 import Link from "next/link";
-import { Calendar, ShieldPlus, ChevronRight } from "lucide-react";
+import { ChevronRight, Calendar, Search, Stethoscope, FileText, Phone } from "lucide-react";
 
 export default function HeroSection() {
   return (
-    <section className="relative overflow-hidden bg-[#065f46] text-white">
-      {/* Background Pattern / Overlay */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute -left-20 top-0 h-96 w-96 rounded-full bg-white blur-3xl"></div>
-        <div className="absolute -right-20 bottom-0 h-96 w-96 rounded-full bg-[#d97706] blur-3xl"></div>
+    <section className="relative bg-primary-900 text-white overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 z-0 opacity-20">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff1a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff1a_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
+      </div>
+      
+      <div className="absolute inset-0 bg-gradient-to-r from-primary-900 via-primary-800/90 to-transparent z-0"></div>
+
+      <div className="relative z-10 container-site pt-20 pb-40 lg:pt-32 lg:pb-48">
+        <div className="max-w-3xl">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary-800/80 border border-primary-700 mb-6 backdrop-blur-sm">
+            <span className="w-2 h-2 rounded-full bg-accent-500 animate-pulse"></span>
+            <span className="text-sm font-medium text-primary-50">Đơn vị y tế xuất sắc</span>
+          </div>
+
+          <h1 className="mb-6 text-4xl font-bold leading-tight lg:text-6xl tracking-tight">
+            Chăm sóc sức khỏe<br />
+            <span className="text-primary-300">toàn diện</span> & <span className="text-primary-300">chuyên sâu</span>
+          </h1>
+
+          <p className="mb-10 text-lg text-primary-100 max-w-xl leading-relaxed">
+            Kết hợp tinh hoa y học cổ truyền và công nghệ y học hiện đại, mang đến giải pháp điều trị tối ưu và trải nghiệm chăm sóc tốt nhất cho người bệnh.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-4">
+            <Link
+              href="/dat-lich"
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-accent-600 px-8 py-4 text-base font-bold text-white transition-all hover:bg-accent-700 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+            >
+              <Calendar className="h-5 w-5" />
+              <span>Đặt lịch khám ngay</span>
+            </Link>
+
+            <Link
+              href="/tim-bac-si"
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-white/10 px-8 py-4 text-base font-bold text-white transition-all hover:bg-white/20 border border-white/20 backdrop-blur-md"
+            >
+              <Search className="h-5 w-5" />
+              <span>Tìm Bác sĩ</span>
+            </Link>
+          </div>
+        </div>
       </div>
 
-      <div className="container-site relative z-10 py-16 lg:py-24">
-        <div className="grid gap-12 lg:grid-cols-2 lg:gap-8 items-center">
-          
-          {/* Content Left */}
-          <div className="max-w-2xl animate-fade-in-up">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-[#a7f3d0] backdrop-blur-sm">
-              <ShieldPlus className="h-4 w-4" />
-              <span>Hơn 50 năm chăm sóc sức khỏe cộng đồng</span>
-            </div>
-            
-            <h1 className="mb-6 font-heading text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl text-white">
-              Tinh hoa <span className="text-[#fcd34d]">Y học Cổ truyền</span> <br className="hidden sm:block" />
-              Chăm sóc sức khỏe toàn diện
-            </h1>
-            
-            <p className="mb-8 text-lg leading-relaxed text-emerald-50 sm:text-xl">
-              Viện Y Dược Học Dân Tộc tự hào mang đến các liệu pháp điều trị tự nhiên, 
-              kết hợp hài hòa giữa y học cổ truyền dân tộc và khoa học kỹ thuật hiện đại.
-            </p>
-            
-            <div className="flex flex-col gap-4 sm:flex-row">
-              <Link href="/dat-lich" className="btn-accent text-lg shadow-lg shadow-amber-900/20 px-8 py-4">
-                <Calendar className="h-5 w-5" />
-                Đặt lịch khám ngay
-              </Link>
-              <Link href="/chuyen-khoa" className="btn-outline border-white/30 text-white hover:bg-white/10 hover:border-white px-8 py-4">
-                Tìm hiểu chuyên khoa
-                <ChevronRight className="h-5 w-5" />
-              </Link>
-            </div>
-
-            <div className="mt-10 flex items-center gap-6 text-sm font-medium text-emerald-100/80">
-              <div className="flex items-center gap-2">
-                <div className="flex -space-x-2">
-                  <div className="h-8 w-8 rounded-full border-2 border-[#065f46] bg-emerald-300"></div>
-                  <div className="h-8 w-8 rounded-full border-2 border-[#065f46] bg-emerald-400"></div>
-                  <div className="h-8 w-8 rounded-full border-2 border-[#065f46] bg-emerald-500"></div>
-                </div>
-                <span>120+ Bác sĩ giỏi</span>
-              </div>
-              <div className="h-4 w-px bg-white/20"></div>
-              <div>Hỗ trợ BHYT</div>
-            </div>
-          </div>
-
-          {/* Image Right */}
-          <div className="relative hidden lg:block animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
-            <div className="relative mx-auto w-full max-w-lg aspect-square rounded-[2rem] bg-gradient-to-tr from-emerald-800 to-emerald-600 p-2 shadow-2xl rotate-3 hover:rotate-0 transition-transform duration-500">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img 
-                src="https://images.unsplash.com/photo-1576091160550-2173ff9e5ee5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
-                alt="Bác sĩ Viện Y Dược Học Dân Tộc đang khám bệnh" 
-                className="w-full h-full object-cover rounded-[1.75rem] opacity-90 mix-blend-overlay"
-              />
-              <div className="absolute -bottom-6 -left-6 rounded-2xl bg-white p-6 shadow-xl w-64 text-emerald-900 -rotate-3">
-                <div className="flex items-center gap-4 mb-3">
-                  <div className="h-12 w-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
-                    <ShieldPlus className="h-6 w-6" />
+      {/* Floating Quick Action Cards (Overlapping the bottom) */}
+      <div className="absolute bottom-0 left-0 right-0 translate-y-1/2 z-20 hidden md:block">
+        <div className="container-site">
+          <div className="grid grid-cols-4 gap-4 lg:gap-6 px-4 lg:px-8">
+            {[
+              { title: 'Khám bệnh', icon: Stethoscope, href: '/dich-vu/kham-benh', desc: 'Đăng ký khám ngoại trú' },
+              { title: 'Điều trị nội trú', icon: FileText, href: '/dich-vu/noi-tru', desc: 'Quy trình và thủ tục' },
+              { title: 'Bảng giá dịch vụ', icon: Search, href: '/dich-vu/bang-gia', desc: 'Minh bạch chi phí' },
+              { title: 'Hỗ trợ người bệnh', icon: Phone, href: '/ho-tro', desc: 'Tư vấn & giải đáp' },
+            ].map((item, idx) => {
+              const Icon = item.icon;
+              return (
+                <Link key={idx} href={item.href} className="group relative bg-white rounded-xl shadow-card-premium p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-float border-b-4 border-transparent hover:border-primary-500 overflow-hidden">
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-primary-50 rounded-bl-full -z-10 transition-transform group-hover:scale-150"></div>
+                  <div className="h-12 w-12 rounded-lg bg-primary-100 text-primary-700 flex items-center justify-center mb-4 group-hover:bg-primary-600 group-hover:text-white transition-colors">
+                    <Icon className="h-6 w-6" />
                   </div>
-                  <div>
-                    <p className="font-bold text-lg">Uy tín</p>
-                    <p className="text-sm text-emerald-600">Hàng đầu Việt Nam</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+                  <h3 className="text-lg font-bold text-gray-900 mb-1">{item.title}</h3>
+                  <p className="text-sm text-gray-500 font-medium">{item.desc}</p>
+                </Link>
+              )
+            })}
           </div>
-
         </div>
       </div>
     </section>

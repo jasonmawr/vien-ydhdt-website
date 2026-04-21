@@ -1,13 +1,9 @@
-import HeroSection from "@/components/sections/HeroSection";
-import FeaturedServices from "@/components/sections/FeaturedServices";
-import FeaturedDoctors from "@/components/sections/FeaturedDoctors";
+import { HospitalLandingPage } from "@/components/ui/landing-page";
 
 export default function Home() {
   return (
     <>
-      <HeroSection />
-      <FeaturedServices />
-      <FeaturedDoctors />
+      <HospitalLandingPage />
     </>
   );
 }

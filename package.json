@@ -1,0 +1,12 @@
+{
+  "name": "vien-ydhdt-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "npm run dev --prefix vien-ydh-frontend",
+    "build": "npm run build --prefix vien-ydh-frontend",
+    "start": "npm run start --prefix vien-ydh-frontend",
+    "lint": "npm run lint --prefix vien-ydh-frontend",
+    "postinstall": "npm install --prefix vien-ydh-frontend"
+  }
+}
