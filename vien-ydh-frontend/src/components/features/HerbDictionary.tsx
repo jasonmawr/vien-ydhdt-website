@@ -2,11 +2,12 @@
 
 import { useState, useMemo } from "react";
 import { Search, Filter, Beaker } from "lucide-react";
-import { HERBS_DATA } from "@/services/mockData";
+import { HERBS_DATA } from "@/services/herbs-static";
 import { cn } from "@/lib/utils";
 
-// Lấy danh sách các danh mục duy nhất từ dữ liệu mock
+// Lấy danh sách các danh mục duy nhất
 const categories = ["Tất cả", ...Array.from(new Set(HERBS_DATA.map((herb) => herb.category)))];
+
 
 export default function HerbDictionary() {
   const [searchTerm, setSearchTerm] = useState("");

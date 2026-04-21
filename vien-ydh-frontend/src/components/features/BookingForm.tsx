@@ -1,14 +1,28 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { ChevronRight, ChevronLeft, CheckCircle2, Calendar as CalendarIcon, Clock, User, Phone, FileText } from "lucide-react";
-import { DEPARTMENTS_DATA, DOCTORS_DATA } from "@/services/mockData";
+import { useState, useMemo, useEffect } from "react";
+import {
+  ChevronRight, ChevronLeft, CheckCircle2,
+  Calendar as CalendarIcon, Clock, User, Phone, FileText, Loader2
+} from "lucide-react";
+import {
+  getDepartments, getAllDoctors, createAppointment, getDoctorImageUrl,
+  type DepartmentDTO, type DoctorDTO
+} from "@/services/api";
 import { cn } from "@/lib/utils";
 
 type Step = 1 | 2 | 3 | 4 | 5;
 
 export default function BookingForm() {
   const [step, setStep] = useState<Step>(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+
+  // Data from API
+  const [departments, setDepartments] = useState<DepartmentDTO[]>([]);
+  const [allDoctors, setAllDoctors] = useState<DoctorDTO[]>([]);
+
   const [formData, setFormData] = useState({
     departmentId: "",
     doctorId: "",
@@ -21,24 +35,36 @@ export default function BookingForm() {
     symptoms: "",
   });
 
+  // Fetch departments & doctors on mount
+  useEffect(() => {
+    setIsLoading(true);
+    Promise.all([getDepartments(), getAllDoctors()])
+      .then(([depts, docs]) => {
+        setDepartments(depts);
+        setAllDoctors(docs);
+      })
+      .catch(console.error)
+      .finally(() => setIsLoading(false));
+  }, []);
+
   // Derived data
   const availableDoctors = useMemo(() => {
-    if (!formData.departmentId) return DOCTORS_DATA;
-    return DOCTORS_DATA.filter((doc) => doc.departmentId === formData.departmentId);
-  }, [formData.departmentId]);
+    if (!formData.departmentId) return allDoctors.slice(0, 8);
+    return allDoctors.filter(
+      (doc) => doc.departmentId === Number(formData.departmentId)
+    );
+  }, [formData.departmentId, allDoctors]);
 
-  const selectedDoctor = DOCTORS_DATA.find((d) => d.id === formData.doctorId);
-  const selectedDept = DEPARTMENTS_DATA.find((d) => d.id === formData.departmentId);
+  const selectedDoctor = allDoctors.find((d) => d.id === formData.doctorId);
+  const selectedDept = departments.find((d) => String(d.id) === formData.departmentId);
 
-  // Generate next 7 days for Date selection (skip Sunday)
+  // Generate next 5 working days (skip Sunday)
   const availableDates = useMemo(() => {
     const dates = [];
     let d = new Date();
-    d.setDate(d.getDate() + 1); // Start from tomorrow
+    d.setDate(d.getDate() + 1);
     while (dates.length < 5) {
-      if (d.getDay() !== 0) { // Not Sunday
-        dates.push(new Date(d));
-      }
+      if (d.getDay() !== 0) dates.push(new Date(d));
       d.setDate(d.getDate() + 1);
     }
     return dates;
@@ -47,7 +73,7 @@ export default function BookingForm() {
   const handleNext = () => setStep((s) => Math.min(s + 1, 5) as Step);
   const handlePrev = () => setStep((s) => Math.max(s - 1, 1) as Step);
 
-  const updateForm = (key: string, value: any) => {
+  const updateForm = (key: string, value: string) => {
     setFormData((prev) => ({ ...prev, [key]: value }));
   };
 
@@ -56,47 +82,76 @@ export default function BookingForm() {
       case 1: return !!formData.departmentId;
       case 2: return !!formData.doctorId;
       case 3: return !!formData.appointmentDate && !!formData.appointmentTime;
-      case 4: 
-        return formData.patientName.length > 2 && 
-               /^(0|\+84)[3|5|7|8|9][0-9]{8}$/.test(formData.patientPhone) && 
-               !!formData.patientDob;
+      case 4:
+        return (
+          formData.patientName.length > 2 &&
+          /^(0|\+84)[3|5|7|8|9][0-9]{8}$/.test(formData.patientPhone) &&
+          !!formData.patientDob
+        );
       default: return true;
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (isStepValid()) {
-      // API Call mock
-      setTimeout(() => {
+    if (!isStepValid()) return;
+
+    setIsSubmitting(true);
+    try {
+      const result = await createAppointment({
+        patientName: formData.patientName,
+        patientPhone: formData.patientPhone,
+        patientDob: formData.patientDob,
+        patientGender: formData.patientGender,
+        departmentId: formData.departmentId,
+        doctorId: formData.doctorId !== "any" ? formData.doctorId : undefined,
+        appointmentDate: formData.appointmentDate,
+        appointmentTime: formData.appointmentTime,
+        symptoms: formData.symptoms,
+      });
+
+      if (result.success) {
+        setSuccessMessage(result.message);
         setStep(5);
-      }, 1000);
+      }
+    } catch (err) {
+      console.error("Đặt lịch thất bại:", err);
+      alert("Đã xảy ra lỗi. Vui lòng thử lại sau.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  // ---------------------------------------------------------
+  // ─────────────────────────────────────────
   // Render Steps
-  // ---------------------------------------------------------
+  // ─────────────────────────────────────────
+
   const renderStep1 = () => (
     <div className="space-y-4 animate-fade-in-up">
       <h3 className="text-xl font-bold text-[#1a1a1a] mb-4">1. Chọn Chuyên Khoa</h3>
-      <div className="grid gap-4 sm:grid-cols-2">
-        {DEPARTMENTS_DATA.map((dept) => (
-          <div
-            key={dept.id}
-            onClick={() => { updateForm("departmentId", dept.id); updateForm("doctorId", ""); }}
-            className={cn(
-              "cursor-pointer rounded-xl border p-4 transition-all",
-              formData.departmentId === dept.id
-                ? "border-primary-800 bg-[#ecfdf5] ring-1 ring-primary-800"
-                : "border-gray-200 bg-white hover:border-primary-800/30 hover:bg-gray-50"
-            )}
-          >
-            <h4 className="font-semibold text-[#1a1a1a]">{dept.name}</h4>
-            <p className="text-sm text-gray-500 mt-1 line-clamp-2">{dept.description}</p>
-          </div>
-        ))}
-      </div>
+      {isLoading ? (
+        <div className="flex items-center justify-center py-10">
+          <Loader2 className="h-8 w-8 animate-spin text-primary-700" />
+        </div>
+      ) : (
+        <div className="grid gap-4 sm:grid-cols-2">
+          {departments.map((dept) => (
+            <div
+              key={dept.id}
+              onClick={() => { updateForm("departmentId", String(dept.id)); updateForm("doctorId", ""); }}
+              className={cn(
+                "cursor-pointer rounded-xl border p-4 transition-all",
+                formData.departmentId === String(dept.id)
+                  ? "border-primary-800 bg-[#ecfdf5] ring-1 ring-primary-800"
+                  : "border-gray-200 bg-white hover:border-primary-800/30 hover:bg-gray-50"
+              )}
+            >
+              <h4 className="font-semibold text-[#1a1a1a]">{dept.name}</h4>
+              <p className="text-sm text-gray-500 mt-1 line-clamp-2">{dept.description}</p>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 
@@ -115,7 +170,7 @@ export default function BookingForm() {
         >
           <span className="font-semibold">Bác sĩ khám nhanh nhất</span>
         </div>
-        {availableDoctors.map((doc) => (
+        {availableDoctors.slice(0, 7).map((doc) => (
           <div
             key={doc.id}
             onClick={() => updateForm("doctorId", doc.id)}
@@ -127,10 +182,14 @@ export default function BookingForm() {
             )}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={doc.imageUrl} alt={doc.fullName} className="h-16 w-16 rounded-full object-cover bg-gray-100" />
+            <img
+              src={getDoctorImageUrl(doc.id)}
+              alt={doc.fullName}
+              className="h-16 w-16 rounded-full object-cover bg-gray-100 flex-shrink-0"
+            />
             <div>
               <h4 className="font-semibold text-[#1a1a1a]">{doc.degree} {doc.fullName}</h4>
-              <p className="text-sm text-primary-800">{doc.specialty}</p>
+              <p className="text-sm text-primary-800">{doc.specialty ?? "Y học cổ truyền"}</p>
             </div>
           </div>
         ))}
@@ -140,18 +199,18 @@ export default function BookingForm() {
 
   const renderStep3 = () => (
     <div className="space-y-6 animate-fade-in-up">
-      <h3 className="text-xl font-bold text-[#1a1a1a] mb-4">3. Chọn Ngày & Giờ</h3>
-      
+      <h3 className="text-xl font-bold text-[#1a1a1a] mb-4">3. Chọn Ngày &amp; Giờ</h3>
+
       <div>
         <label className="mb-2 block text-sm font-semibold text-gray-700">Ngày khám</label>
         <div className="grid gap-3 grid-cols-2 sm:grid-cols-5">
           {availableDates.map((date) => {
             const dateStr = date.toISOString().split("T")[0];
             const isSelected = formData.appointmentDate === dateStr;
-            const dayName = new Intl.DateTimeFormat('vi-VN', { weekday: 'short' }).format(date);
+            const dayName = new Intl.DateTimeFormat("vi-VN", { weekday: "short" }).format(date);
             const dayNum = date.getDate();
             const monthNum = date.getMonth() + 1;
-            
+
             return (
               <div
                 key={dateStr}
@@ -200,7 +259,7 @@ export default function BookingForm() {
   const renderStep4 = () => (
     <div className="space-y-4 animate-fade-in-up">
       <h3 className="text-xl font-bold text-[#1a1a1a] mb-4">4. Thông Tin Bệnh Nhân</h3>
-      
+
       <div className="grid gap-5 sm:grid-cols-2">
         <div className="sm:col-span-2">
           <label htmlFor="patientName" className="mb-1.5 block text-sm font-medium text-gray-700">Họ và tên *</label>
@@ -212,7 +271,7 @@ export default function BookingForm() {
               id="patientName"
               type="text"
               required
-              className="block w-full rounded-xl border-gray-200 bg-gray-50 py-2.5 pl-10 pr-3 text-sm focus:border-primary-800 focus:bg-white focus:ring-1 focus:ring-primary-800"
+              className="block w-full rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-10 pr-3 text-sm focus:border-primary-800 focus:bg-white focus:ring-1 focus:ring-primary-800 outline-none"
               placeholder="VD: Nguyễn Văn A"
               value={formData.patientName}
               onChange={(e) => updateForm("patientName", e.target.value)}
@@ -230,7 +289,7 @@ export default function BookingForm() {
               id="patientPhone"
               type="tel"
               required
-              className="block w-full rounded-xl border-gray-200 bg-gray-50 py-2.5 pl-10 pr-3 text-sm focus:border-primary-800 focus:bg-white focus:ring-1 focus:ring-primary-800"
+              className="block w-full rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-10 pr-3 text-sm focus:border-primary-800 focus:bg-white focus:ring-1 focus:ring-primary-800 outline-none"
               placeholder="VD: 0912345678"
               value={formData.patientPhone}
               onChange={(e) => updateForm("patientPhone", e.target.value)}
@@ -244,7 +303,7 @@ export default function BookingForm() {
             id="patientDob"
             type="date"
             required
-            className="block w-full rounded-xl border-gray-200 bg-gray-50 py-2.5 px-3 text-sm focus:border-primary-800 focus:bg-white focus:ring-1 focus:ring-primary-800"
+            className="block w-full rounded-xl border border-gray-200 bg-gray-50 py-2.5 px-3 text-sm focus:border-primary-800 focus:bg-white focus:ring-1 focus:ring-primary-800 outline-none"
             value={formData.patientDob}
             onChange={(e) => updateForm("patientDob", e.target.value)}
           />
@@ -253,7 +312,7 @@ export default function BookingForm() {
         <div className="sm:col-span-2">
           <label className="mb-1.5 block text-sm font-medium text-gray-700">Giới tính</label>
           <div className="flex gap-4">
-            {["male", "female"].map((g) => (
+            {(["male", "female"] as const).map((g) => (
               <label key={g} className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="radio"
@@ -278,7 +337,7 @@ export default function BookingForm() {
             <textarea
               id="symptoms"
               rows={3}
-              className="block w-full rounded-xl border-gray-200 bg-gray-50 py-2.5 pl-10 pr-3 text-sm focus:border-primary-800 focus:bg-white focus:ring-1 focus:ring-primary-800"
+              className="block w-full rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-10 pr-3 text-sm focus:border-primary-800 focus:bg-white focus:ring-1 focus:ring-primary-800 outline-none"
               placeholder="Mô tả ngắn gọn vấn đề sức khỏe của bạn..."
               value={formData.symptoms}
               onChange={(e) => updateForm("symptoms", e.target.value)}
@@ -296,7 +355,7 @@ export default function BookingForm() {
       </div>
       <h3 className="mb-2 font-heading text-2xl font-bold text-[#1a1a1a]">Đặt Lịch Thành Công!</h3>
       <p className="mb-8 text-gray-600 max-w-md mx-auto">
-        Cảm ơn bạn đã tin tưởng Viện Y Dược Học Dân Tộc. Thông tin lịch khám đã được gửi vào số điện thoại của bạn. Nhân viên y tế sẽ gọi điện xác nhận trong thời gian sớm nhất.
+        {successMessage || "Cảm ơn bạn đã tin tưởng Viện Y Dược Học Dân Tộc. Nhân viên y tế sẽ gọi điện xác nhận trong thời gian sớm nhất."}
       </p>
       <div className="inline-block text-left bg-gray-50 rounded-2xl p-6 border border-gray-100 min-w-[300px]">
         <div className="flex items-center gap-3 mb-3 pb-3 border-b border-gray-200">
@@ -378,7 +437,7 @@ export default function BookingForm() {
               <ChevronLeft className="h-4 w-4" />
               Quay lại
             </button>
-            
+
             {step < 4 ? (
               <button
                 type="button"
@@ -395,13 +454,20 @@ export default function BookingForm() {
             ) : (
               <button
                 type="submit"
-                disabled={!isStepValid()}
+                disabled={!isStepValid() || isSubmitting}
                 className={cn(
-                  "btn-accent px-8 shadow-lg",
-                  !isStepValid() && "opacity-50 cursor-not-allowed"
+                  "btn-accent px-8 shadow-lg flex items-center gap-2",
+                  (!isStepValid() || isSubmitting) && "opacity-50 cursor-not-allowed"
                 )}
               >
-                Xác nhận đặt lịch
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Đang gửi...
+                  </>
+                ) : (
+                  "Xác nhận đặt lịch"
+                )}
               </button>
             )}
           </div>

@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { ArrowRight, Leaf, Activity, Stethoscope, Heart, Brain, Syringe, Eye, Bone } from "lucide-react";
-import { DEPARTMENTS_DATA } from "@/services/mockData";
+import { getDepartments } from "@/services/api";
 
-const ICONS: Record<string, any> = {
+const ICONS: Record<string, React.ComponentType<{ className?: string; strokeWidth?: number }>> = {
   Stethoscope,
   Activity,
   Heart,
@@ -10,10 +10,28 @@ const ICONS: Record<string, any> = {
   Syringe,
   Eye,
   Bone,
-  ClipboardPlus: Leaf,
 };
 
-export default function FeaturedServices() {
+// Map tên chuyên khoa → icon phù hợp
+function getIconForDepartment(name: string) {
+  const n = name.toLowerCase();
+  if (n.includes("nội")) return Stethoscope;
+  if (n.includes("ngoại")) return Activity;
+  if (n.includes("nhi")) return Heart;
+  if (n.includes("sản") || n.includes("phụ")) return Brain;
+  if (n.includes("mắt") || n.includes("nhãn")) return Eye;
+  if (n.includes("xương") || n.includes("cơ")) return Bone;
+  return Leaf;
+}
+
+export default async function FeaturedServices() {
+  let departments: Awaited<ReturnType<typeof getDepartments>> = [];
+  try {
+    departments = await getDepartments();
+  } catch {
+    // Backend chưa chạy — sẽ hiển thị empty state
+  }
+
   return (
     <section className="pt-32 pb-16 lg:pt-40 lg:pb-24 bg-gray-50">
       <div className="container-site">
@@ -38,44 +56,50 @@ export default function FeaturedServices() {
           </Link>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          {DEPARTMENTS_DATA.map((dept) => {
-            const IconComponent = ICONS[dept.icon] || Leaf;
+        {departments.length === 0 ? (
+          <p className="text-center text-gray-500 py-10">Đang tải danh sách chuyên khoa...</p>
+        ) : (
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {departments.map((dept) => {
+              const IconComponent = getIconForDepartment(dept.name);
 
-            return (
-              <div
-                key={dept.id}
-                className="group flex flex-col h-full rounded-xl border border-gray-200 bg-white p-6 transition-all duration-300 hover:border-primary-300 hover:shadow-lg hover:-translate-y-1"
-              >
-                <div className="mb-5 flex justify-between items-start">
-                  <div className="inline-flex h-14 w-14 items-center justify-center rounded-xl bg-primary-50 text-primary-600 transition-colors duration-300 group-hover:bg-primary-600 group-hover:text-white">
-                    <IconComponent className="h-7 w-7" strokeWidth={1.5} />
+              return (
+                <div
+                  key={dept.id}
+                  className="group flex flex-col h-full rounded-xl border border-gray-200 bg-white p-6 transition-all duration-300 hover:border-primary-300 hover:shadow-lg hover:-translate-y-1"
+                >
+                  <div className="mb-5 flex justify-between items-start">
+                    <div className="inline-flex h-14 w-14 items-center justify-center rounded-xl bg-primary-50 text-primary-600 transition-colors duration-300 group-hover:bg-primary-600 group-hover:text-white">
+                      <IconComponent className="h-7 w-7" strokeWidth={1.5} />
+                    </div>
+                    <span className="text-xs font-bold text-gray-400 bg-gray-100 px-2.5 py-1 rounded-md">
+                      {dept.doctorCount > 0 ? `${dept.doctorCount} Bác sĩ` : "Chuyên khoa"}
+                    </span>
                   </div>
-                  <span className="text-xs font-bold text-gray-400 bg-gray-100 px-2.5 py-1 rounded-md">{dept.doctorCount} Bác sĩ</span>
-                </div>
 
-                <div className="flex flex-1 flex-col">
-                  <h3 className="mb-3 font-sans text-lg font-bold text-gray-900 group-hover:text-primary-700 transition-colors">
-                    {dept.name}
-                  </h3>
-                  <p className="mb-6 flex-1 text-sm leading-relaxed text-gray-600">
-                    {dept.description}
-                  </p>
+                  <div className="flex flex-1 flex-col">
+                    <h3 className="mb-3 font-sans text-lg font-bold text-gray-900 group-hover:text-primary-700 transition-colors">
+                      {dept.name}
+                    </h3>
+                    <p className="mb-6 flex-1 text-sm leading-relaxed text-gray-600">
+                      {dept.description}
+                    </p>
 
-                  <div className="mt-auto pt-4 border-t border-gray-100">
-                    <Link
-                      href={`/chuyen-khoa/${dept.slug}`}
-                      className="inline-flex items-center gap-2 text-sm font-bold text-primary-600 transition-all hover:text-primary-800"
-                    >
-                      <span>Tìm hiểu thêm</span>
-                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                    </Link>
+                    <div className="mt-auto pt-4 border-t border-gray-100">
+                      <Link
+                        href={`/chuyen-khoa/${dept.slug}`}
+                        className="inline-flex items-center gap-2 text-sm font-bold text-primary-600 transition-all hover:text-primary-800"
+                      >
+                        <span>Tìm hiểu thêm</span>
+                        <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                      </Link>
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     </section>
   );
