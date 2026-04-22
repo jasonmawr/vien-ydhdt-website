@@ -251,7 +251,13 @@ VIETINBANK_CERT_PATH=<optional, mặc định đọc từ docs/>
 | 10 | VietinBank VietQR + Booking 5-step + STT | ✅ Hoàn thành |
 | **11** | **Advanced Booking Engine (3 luồng, BHYT, HIS APIs)** | **✅ Hoàn thành** |
 | **12** | **HIS Write (INSERT W_HEN khi thanh toán OK)** | ⏳ Chờ IT cung cấp SQL/Stored Procedure chuẩn |
-| 13 | Trợ lý AI Viện Y Dược (RAG + LLM) | 📋 Lên kế hoạch |
+| **13** | **Trợ lý AI Y Dược (Google Gemini + RAG)** | **✅ Hoàn thành (2026-04-22)** |
+| | — Floating Chat Widget (premium UI, suggested questions) | ✅ |
+| | — Knowledge Base bệnh viện (dịch vụ, giá, giờ, quy trình) | ✅ |
+| | — Google Gemini 2.0 Flash API integration | ✅ |
+| | — Session management (in-memory, 30min TTL) | ✅ |
+| | — Graceful fallback khi chưa có API key | ✅ |
+| | — Ẩn chatbot trên trang Admin | ✅ |
 | **14** | **CMS Admin Dashboard toàn diện** | **✅ Hoàn thành (2026-04-22)** |
 | | — CRUD Bài viết (Tạo/Sửa/Xóa, Tiptap Rich Editor) | ✅ |
 | | — Quản lý Bác sĩ (HIS → Web Profile, Avatar, Bio) | ✅ |
@@ -294,7 +300,7 @@ npm run dev            # → http://localhost:3000
 - `main` — Production
 - `develop` — Staging
 - `feature/phase-XX-*` — Feature branches
-- **Nhánh hiện tại:** `feature/phase-14-cms`
+- **Nhánh hiện tại:** `feature/phase-13-ai-chatbot`
 
 ---
 
@@ -322,6 +328,9 @@ npm run dev            # → http://localhost:3000
 | DELETE | /api/cms/posts/:id | Xóa bài viết | ❌ (cần thêm JWT) |
 | GET | /api/cms/doctors/:mabs | Web profile bác sĩ (SQLite) | ❌ |
 | POST | /api/cms/doctors | Upsert web profile bác sĩ (SQLite) | ❌ |
+| POST | /api/chatbot/message | Gửi tin nhắn cho AI Chatbot | ❌ |
+| GET | /api/chatbot/history | Lịch sử chat theo session | ❌ |
+| GET | /api/chatbot/health | Trạng thái chatbot (API key check) | ❌ |
 
 ---
 
@@ -355,6 +364,10 @@ VIETINBANK_ACCOUNT=
 PORT=4000
 ALLOWED_ORIGINS=http://localhost:3000
 NODE_ENV=development
+
+# Google Gemini AI (Phase 13)
+# Lấy tại: https://aistudio.google.com/apikey
+GEMINI_API_KEY=<your-gemini-api-key>
 ```
 
 ### Quy ước Phát triển

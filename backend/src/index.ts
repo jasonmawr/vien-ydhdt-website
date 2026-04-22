@@ -16,6 +16,7 @@ import { authRouter } from "./modules/auth/auth.router";
 import { paymentRouter } from "./modules/payment/payment.router";
 import { bookingRouter } from "./modules/booking/booking.router";
 import { cmsRouter } from "./modules/cms/cms.router";
+import chatbotRouter from "./modules/chatbot/chatbot.router";
 import { ensureWebUsersTable } from "./modules/auth/auth.service";
 import { getWebDb } from "./shared/sqlite";
 
@@ -61,6 +62,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/payment", paymentRouter);
 app.use("/api/booking", bookingRouter);
 app.use("/api/cms", cmsRouter);
+app.use("/api/chatbot", chatbotRouter);
 
 // ──────────────────────────────────────────
 // 404 Handler
@@ -98,6 +100,8 @@ async function start() {
       console.log(`   POST /api/appointments`);
       console.log(`   GET  /api/appointments (Protected)`);
       console.log(`   POST /api/auth/login`);
+      console.log(`   POST /api/chatbot/message`);
+      console.log(`   GET  /api/chatbot/health`);
     });
   } catch (err) {
     console.error("❌ Không thể khởi động server:", err);
