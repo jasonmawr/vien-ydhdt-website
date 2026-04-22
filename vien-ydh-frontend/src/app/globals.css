@@ -9,6 +9,7 @@
    1. GOOGLE FONTS
    ------------------------------------------------------------- */
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 /* -------------------------------------------------------------
    2. DESIGN TOKENS — BVDaihoc Style (Light Blue Primary)
