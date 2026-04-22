@@ -46,12 +46,42 @@ export async function createHisAdmission(data: HISAdmissionData): Promise<string
 }
 
 /**
- * [DRAFT] Lưu thông tin Hẹn Khám (Ghi vào bảng MEDI.W_HEN)
- * Để phục vụ công tác tra cứu và thống kê lượng bệnh nhân đặt lịch online.
+ * Lưu thông tin Hẹn Khám (Ghi vào bảng MEDI.LICH_KHAM_ONLINE)
+ * Bảng này được phần mềm Viện quét định kỳ để sinh phiếu Tiếp Đón.
  */
-export async function createAppointmentRecord(data: HISAdmissionData): Promise<boolean> {
-  console.log(`[HIS Integration] Đã ghi nhận lịch hẹn vào W_HEN cho bệnh nhân ${data.patientId}`);
-  return true;
+export async function createAppointmentRecord(data: HISAdmissionData & HISPatientData): Promise<boolean> {
+  const conn = await getConnection();
+  try {
+    const maHoSo = `WEB${Date.now().toString().slice(-6)}`;
+    
+    // Auto-generate next ID sequence or use Max(ID) + 1 if sequence doesn't exist
+    // LICH_KHAM_ONLINE ID is NUMBER
+    const idRes = await conn.execute(`SELECT NVL(MAX(ID), 0) + 1 as NEXT_ID FROM MEDI.LICH_KHAM_ONLINE`);
+    const nextId = (idRes.rows as any[])[0]?.NEXT_ID || 1;
+
+    await conn.execute(`
+      INSERT INTO MEDI.LICH_KHAM_ONLINE (
+        ID, MAHOSO, HOTEN, SDT, MABS, MAKP, NGAYKHAM, TRANGTHAI, NGAYTAO
+      ) VALUES (
+        :id, :maHoSo, :hoten, :sdt, :mabs, :makp, SYSDATE, 0, SYSDATE
+      )
+    `, {
+      id: nextId,
+      maHoSo,
+      hoten: data.fullName,
+      sdt: data.phone,
+      mabs: data.doctorId || '',
+      makp: data.departmentId || '01' // Default MAKP
+    });
+    
+    console.log(`[HIS Integration] Đã ghi nhận lịch hẹn vào LICH_KHAM_ONLINE (Mã HS: ${maHoSo}) cho bệnh nhân ${data.fullName}`);
+    return true;
+  } catch (err) {
+    console.error("[HIS Integration] Lỗi ghi lịch khám online:", err);
+    return false; // Phục hồi êm đẹp nếu HIS lỗi
+  } finally {
+    await conn.close();
+  }
 }
 
 /**

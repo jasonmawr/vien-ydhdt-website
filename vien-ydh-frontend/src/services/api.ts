@@ -223,6 +223,11 @@ export async function getHISSpecialties(): Promise<SpecialtyDTO[]> {
   return data.data;
 }
 
+export async function getHISDoctors(): Promise<any[]> {
+  const data = await apiFetch<{ success: boolean; data: any[] }>("/api/booking/doctors");
+  return data.data;
+}
+
 export async function getExamPricing(): Promise<ExamPricingDTO[]> {
   const data = await apiFetch<{ success: boolean; data: ExamPricingDTO[] }>("/api/booking/pricing");
   return data.data;

@@ -42,6 +42,19 @@ export async function createAppointment(
       }
     );
 
+    // [HIS WRITE - Phase 12] Ghi vào LICH_KHAM_ONLINE của phần mềm Bệnh viện
+    const { createAppointmentRecord } = await import("../his/his-integration.service");
+    await createAppointmentRecord({
+      patientId: id, // Mapping local ID as reference
+      departmentId: data.departmentId || "01",
+      doctorId: data.doctorId,
+      amount: 150000,
+      fullName: data.patientName,
+      phone: data.patientPhone,
+      dob: data.patientDob,
+      gender: data.patientGender
+    });
+
     return {
       success: true,
       message: "Đặt lịch thành công! Nhân viên sẽ liên hệ xác nhận trong thời gian sớm nhất.",

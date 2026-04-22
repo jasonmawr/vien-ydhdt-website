@@ -55,6 +55,18 @@ async function initWebDb(db: Database<sqlite3.Database, sqlite3.Statement>) {
     )
   `);
 
+  // Tạo bảng hồ sơ bác sĩ (mở rộng thông tin từ HIS)
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS web_doctors (
+      mabs TEXT PRIMARY KEY, -- Khớp với Mã Bác Sĩ của HIS
+      avatar_url TEXT,
+      bio TEXT,
+      experience_years INTEGER,
+      special_titles TEXT,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
   // Thêm dữ liệu mẫu nếu bảng posts trống
   const row = await db.get('SELECT COUNT(*) as count FROM posts');
   if (row.count === 0) {

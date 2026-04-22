@@ -5,7 +5,7 @@ import { Search, Edit } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { getSpecialties } from "@/services/api";
+import { getHISDoctors } from "@/services/api";
 
 interface Doctor {
   MABS: string;
@@ -26,19 +26,8 @@ export default function AdminDoctorsPage() {
 
   const fetchDoctors = async () => {
     try {
-      // getSpecialties already returns HIS doctors. Let's use it for now
-      // Actually, we need an endpoint to get all doctors directly if we want a flat list.
-      // We can fetch from /api/booking/specialties which has departments -> doctors
-      const data = await getSpecialties();
-      const allDocs: Doctor[] = [];
-      data.forEach(dept => {
-        dept.doctors.forEach(doc => {
-          if (!allDocs.find(d => d.MABS === doc.MABS)) {
-            allDocs.push(doc);
-          }
-        });
-      });
-      setDoctors(allDocs);
+      const data = await getHISDoctors();
+      setDoctors(data);
     } catch (error) {
       console.error(error);
     } finally {

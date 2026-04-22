@@ -4,9 +4,21 @@ import {
   getExamPricing,
   getInsuranceTuyen,
   getPatientTypes,
+  getDoctors,
 } from "./booking.service";
 
 export const bookingRouter = Router();
+
+// GET /api/booking/doctors
+bookingRouter.get("/doctors", async (_req, res) => {
+  try {
+    const data = await getDoctors();
+    res.json({ success: true, data });
+  } catch (err) {
+    console.error("[Booking] getDoctors error:", err);
+    res.status(500).json({ success: false, error: "Lỗi lấy danh mục bác sĩ" });
+  }
+});
 
 // GET /api/booking/specialties
 bookingRouter.get("/specialties", async (_req, res) => {
