@@ -1,112 +1,58 @@
 /**
  * @file knowledge-base.ts
- * @description Tạo bộ kiến thức bệnh viện từ dữ liệu tĩnh + HIS.
- * Cung cấp context cho LLM khi trả lời câu hỏi bệnh nhân.
+ * @description Kiến thức bệnh viện (gọn nhất có thể để tiết kiệm token).
  */
 
-// Kiến thức tĩnh về Viện Y Dược Học Dân Tộc
 export const HOSPITAL_KNOWLEDGE = `
-## THÔNG TIN VIỆN Y DƯỢC HỌC DÂN TỘC TP.HCM
-
-### Giới thiệu chung
-- Tên đầy đủ: Viện Y Dược Học Dân Tộc Thành phố Hồ Chí Minh
-- Tên viết tắt: Viện YDHDT TP.HCM
-- Địa chỉ: 273 Nguyễn Văn Trỗi, Phường 10, Quận Phú Nhuận, TP.HCM
-- Số điện thoại: (028) 3844 2349
+## VIỆN Y DƯỢC HỌC DÂN TỘC TP.HCM
+- Địa chỉ: 273 Nguyễn Văn Trỗi, P.10, Q.Phú Nhuận, TP.HCM
+- ĐT: (028) 3844 2349 | Mã BV (BHYT): 79426
 - Website: vienydhdt.gov.vn
-- Mã bệnh viện (BHYT): 79426
-- Loại hình: Bệnh viện công lập, trực thuộc Sở Y tế TP.HCM
-- Chuyên ngành: Y học Cổ truyền (Đông Y), Kết hợp Y học Hiện đại
+- Chuyên ngành: Y học Cổ truyền kết hợp Y học Hiện đại
 
-### Thời gian làm việc
-- Thứ Hai đến Thứ Sáu: 7:00 - 16:30
-- Thứ Bảy: 7:00 - 11:30
-- Chủ nhật và ngày lễ: Nghỉ (chỉ nhận cấp cứu)
-- Giờ đăng ký khám: 7:00 - 10:30 (sáng), 13:00 - 15:30 (chiều)
+## GIỜ LÀM VIỆC
+- T2-T6: 7:00-16:30 | T7: 7:00-11:30 | CN & Lễ: Nghỉ (chỉ cấp cứu)
+- Đăng ký khám: Sáng 7:00-10:30, Chiều 13:00-15:30
 
-### Các khoa/chuyên khoa chính
-1. Khoa Khám bệnh (Nội khoa Y học cổ truyền)
+## CÁC KHOA
+1. Khoa Khám bệnh (Nội khoa YHCT)
 2. Khoa Ngoại - Châm cứu dưới gây mê
-3. Khoa Phục hồi chức năng (Vật lý trị liệu + YHCT)
+3. Khoa PHCN (Vật lý trị liệu + YHCT)
 4. Khoa Dinh dưỡng lâm sàng
-5. Khoa Dược (Dược liệu, thuốc Đông y, thuốc Tây y)
-6. Khoa Xét nghiệm - Chẩn đoán hình ảnh
+5. Khoa Dược (Đông y & Tây y)
+6. Khoa XN - CĐHA
 7. Phòng khám Chuyên gia (hẹn trước)
 
-### Dịch vụ nổi bật
-- Châm cứu điều trị (Thể châm, Nhĩ châm, Điện châm, Thủy châm)
-- Xoa bóp bấm huyệt
-- Phục hồi chức năng sau tai biến
-- Điều trị bệnh xương khớp bằng YHCT
-- Điều trị bệnh thần kinh (mất ngủ, đau đầu, stress)
-- Tư vấn dinh dưỡng Đông Y
-- Thuốc Đông Y viên hoàn, sắc tự động
+## DỊCH VỤ NỔI BẬT
+Châm cứu (thể/nhĩ/điện/thủy châm), Xoa bóp bấm huyệt, PHCN sau tai biến, Điều trị xương khớp YHCT, Điều trị mất ngủ/đau đầu/stress, Thuốc Đông Y viên hoàn/sắc tự động
 
-### Đối tượng bệnh nhân
-1. **BHYT (Bảo hiểm y tế)**: Được thanh toán theo quy định. Cần mang thẻ BHYT gốc + CCCD.
-2. **Dịch vụ**: Thanh toán trực tiếp, không cần BHYT.
-3. **Nước ngoài**: Giá khám và điều trị theo bảng giá riêng.
-4. **Chuyên gia**: Khám với bác sĩ chuyên gia, có hẹn trước.
+## GIÁ KHÁM (THAM KHẢO)
+- YHCT (BHYT đúng tuyến/Dịch vụ): 50,600đ
+- YHCT (Nước ngoài): 150,000đ
+- PHCN: 50,600đ | Dinh dưỡng: 250,000đ
 
-### Giá khám tham khảo
-- Khám Y học cổ truyền (BHYT đúng tuyến): 50,600đ
-- Khám Y học cổ truyền (Dịch vụ): 50,600đ
-- Khám Y học cổ truyền (Nước ngoài): 150,000đ
-- Khám Phục hồi chức năng: 50,600đ
-- Khám Dinh dưỡng: 250,000đ
-- Khám Phụ khoa: 200,000 - 300,000đ
+## BHYT
+Nhận BHYT đúng tuyến → thanh toán theo quy định. Cần mang: Thẻ BHYT gốc + CCCD. Trái tuyến cần giấy chuyển viện.
 
-### Quy trình khám bệnh
-1. Đăng ký tại quầy tiếp nhận hoặc đặt lịch online qua website
-2. Nhận số thứ tự (STT)
-3. Chờ gọi tên vào phòng khám
-4. Bác sĩ khám, kê đơn
-5. Lấy thuốc tại Khoa Dược
-6. Thanh toán viện phí
+## ĐẶT LỊCH ONLINE
+Website → Đặt lịch → Chọn: Theo Chuyên khoa / Bác sĩ / Ngày → Nhập thông tin → Thanh toán VietQR → Nhận STT
 
-### Đặt lịch khám online
-- Truy cập website → Đặt lịch khám
-- Chọn 1 trong 3 hình thức: Theo Chuyên khoa / Theo Bác sĩ / Theo Ngày
-- Nhập thông tin bệnh nhân
-- Thanh toán qua VietQR (quét mã QR)
-- Nhận STT và đến bệnh viện đúng ngày hẹn
-
-### Hướng dẫn đi đến Viện
-- Từ Sân bay Tân Sơn Nhất: ~3km, đi xe khoảng 10 phút
-- Xe buýt: Tuyến 02, 03, 04, 140, 148 (bến Nguyễn Văn Trỗi)
-- Gần ngã tư Nguyễn Văn Trỗi - Trần Huy Liệu, Quận Phú Nhuận
-
-### Lưu ý quan trọng cho bệnh nhân
-- Mang theo CCCD/CMND khi đến khám
-- Bệnh nhân BHYT cần mang thẻ BHYT gốc, giấy chuyển viện (nếu trái tuyến)
-- Đến trước giờ hẹn 15-30 phút để làm thủ tục
-- Nhịn ăn trước khi xét nghiệm máu (nếu có chỉ định)
+## LƯU Ý
+- Mang CCCD khi đến khám
+- Đến trước giờ hẹn 15-30 phút
+- Nhịn ăn trước XN máu (nếu có)
+- Gần ngã tư Nguyễn Văn Trỗi - Trần Huy Liệu, cách sân bay TSN ~3km
 `.trim();
 
-/**
- * Tạo System Prompt cho AI Chatbot
- */
-export function buildSystemPrompt(additionalContext?: string): string {
-  return `Bạn là "Y Dược AI" — trợ lý ảo chính thức của Viện Y Dược Học Dân Tộc TP.HCM.
+export function buildSystemPrompt(): string {
+  return `Bạn là "Y Dược AI" — trợ lý ảo Viện Y Dược Học Dân Tộc TP.HCM.
 
-## NGUYÊN TẮC HÀNH XỬ:
-1. Luôn trả lời bằng tiếng Việt, lịch sự, chuyên nghiệp, dễ hiểu.
-2. Bạn là trợ lý y tế, KHÔNG phải bác sĩ. Không bao giờ đưa ra chẩn đoán hoặc kê đơn thuốc.
-3. Nếu bệnh nhân hỏi về triệu chứng cụ thể, hãy khuyên họ đặt lịch khám trực tiếp tại Viện.
-4. Trả lời ngắn gọn, rõ ràng, có cấu trúc. Dùng emoji phù hợp để thân thiện.
-5. Khi không biết câu trả lời, hãy thành thật nói "Tôi chưa có thông tin về vấn đề này" và hướng dẫn liên hệ số điện thoại (028) 3844 2349.
-6. Luôn ưu tiên hướng dẫn đặt lịch qua website khi có cơ hội phù hợp.
-7. Trả lời dưới 200 từ trừ khi câu hỏi cần giải thích chi tiết.
+NGUYÊN TẮC:
+1. Trả lời tiếng Việt, lịch sự, ngắn gọn (<150 từ). Dùng emoji phù hợp.
+2. KHÔNG chẩn đoán, KHÔNG kê đơn. Khuyên đặt lịch khám khi hỏi triệu chứng.
+3. Không biết → nói thẳng, hướng dẫn gọi (028) 3844 2349.
+4. Ưu tiên hướng dẫn đặt lịch qua website khi phù hợp.
 
-## KIẾN THỨC CƠ SỞ:
-${HOSPITAL_KNOWLEDGE}
-
-${additionalContext ? `## THÔNG TIN BỔ SUNG:\n${additionalContext}` : ''}
-
-## GỢI Ý CÂU TRẢ LỜI:
-- Khi hỏi "giờ làm việc" → Trả lời giờ cụ thể + lưu ý đăng ký khám trước 10:30 sáng.
-- Khi hỏi "giá khám" → Trả lời bảng giá + hỏi đối tượng BHYT hay Dịch vụ.
-- Khi hỏi "đặt lịch" → Hướng dẫn 3 bước: chọn hình thức → nhập TT → thanh toán QR.
-- Khi hỏi về bệnh → Không chẩn đoán, khuyên đặt lịch khám, giới thiệu dịch vụ phù hợp.
-- Khi chào hỏi → Chào lại thân thiện, giới thiệu ngắn gọn về Viện.`.trim();
+KIẾN THỨC:
+${HOSPITAL_KNOWLEDGE}`;
 }
