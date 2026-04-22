@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { LayoutDashboard, CalendarDays, FileText, Settings, Users } from "lucide-react";
 import { LogoutButton } from "./LogoutButton";
 
@@ -17,26 +20,26 @@ export default function AdminLayout({
         </div>
         
         <nav className="flex-1 px-4 py-6 space-y-2">
-          <Link href="/admin" className="flex items-center gap-3 px-4 py-3 rounded-lg bg-stone-800 text-white">
+          <Link href="/admin" className={`flex items-center gap-3 px-4 py-3 rounded-lg transition ${usePathname() === '/admin' ? 'bg-stone-800 text-white' : 'text-stone-400 hover:bg-stone-800 hover:text-white'}`}>
             <LayoutDashboard size={20} />
             <span>Tổng Quan</span>
           </Link>
-          <Link href="/admin/appointments" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-stone-800 text-stone-300 hover:text-white transition">
+          <Link href="/admin/appointments" className={`flex items-center gap-3 px-4 py-3 rounded-lg transition ${usePathname().includes('/appointments') ? 'bg-stone-800 text-white' : 'text-stone-400 hover:bg-stone-800 hover:text-white'}`}>
             <CalendarDays size={20} />
             <span>Lịch Khám</span>
           </Link>
-          <Link href="#" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-stone-800 text-stone-300 hover:text-white transition">
+          <Link href="/admin" className="flex items-center gap-3 px-4 py-3 rounded-lg text-stone-400 hover:bg-stone-800 hover:text-white transition">
             <FileText size={20} />
-            <span>Bài Viết</span>
+            <span>Bài Viết (Sắp ra mắt)</span>
           </Link>
-          <Link href="#" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-stone-800 text-stone-300 hover:text-white transition">
+          <Link href="/admin" className="flex items-center gap-3 px-4 py-3 rounded-lg text-stone-400 hover:bg-stone-800 hover:text-white transition">
             <Users size={20} />
-            <span>Bệnh Nhân</span>
+            <span>Bệnh Nhân (Sắp ra mắt)</span>
           </Link>
         </nav>
         
         <div className="p-4 border-t border-stone-800">
-          <Link href="#" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-stone-800 text-stone-300 hover:text-white transition">
+          <Link href="/admin" className="flex items-center gap-3 px-4 py-3 rounded-lg text-stone-400 hover:bg-stone-800 hover:text-white transition">
             <Settings size={20} />
             <span>Cài Đặt</span>
           </Link>

@@ -10,16 +10,16 @@ const JWT_EXPIRES_IN = "24h";
 export async function ensureWebUsersTable() {
   const conn = await getConnection();
   try {
-    // Check if table exists
-    const checkSql = `
-      SELECT count(*) as count
-      FROM user_tables
-      WHERE table_name = 'WEB_USERS'
-    `;
-    const checkResult = await conn.execute<{ count: number }>(checkSql);
-    const count = checkResult.rows?.[0]?.count || 0;
+    // Check if table exists by trying to select from it
+    try {
+      await conn.execute(`SELECT COUNT(*) FROM WEB_USERS WHERE ROWNUM = 1`);
+      // Bảng đã tồn tại, không cần tạo
+      return;
+    } catch {
+      // Bảng chưa có -> tạo mới
+    }
 
-    if (count === 0) {
+    {
       console.log("🛠️ Bảng WEB_USERS chưa tồn tại. Đang tạo mới...");
       const createSql = `
         CREATE TABLE WEB_USERS (
