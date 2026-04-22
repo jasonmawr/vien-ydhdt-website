@@ -14,6 +14,10 @@ import {
 
 const router = Router();
 
+// In-memory cache ảnh bác sĩ — tránh gọi Oracle BLOB liên tục
+const imageCache = new Map<string, { buffer: Buffer; contentType: string; cachedAt: number }>();
+const IMAGE_CACHE_TTL = 3600_000; // 1 giờ
+
 // GET /api/doctors?featured=true&limit=8&department=1
 router.get("/", async (req: Request, res: Response) => {
   try {
@@ -50,14 +54,28 @@ router.get("/:id", async (req: Request, res: Response) => {
   }
 });
 
-// GET /api/doctors/:id/image — Stream ảnh BLOB từ Oracle
+// GET /api/doctors/:id/image — Stream ảnh BLOB từ Oracle (có cache)
 router.get("/:id/image", async (req: Request, res: Response) => {
   try {
-    const imageBuffer = await getDoctorImage(req.params.id);
+    const id = req.params.id;
+
+    // Kiểm tra cache trước
+    const cached = imageCache.get(id);
+    if (cached && Date.now() - cached.cachedAt < IMAGE_CACHE_TTL) {
+      res.set({
+        "Content-Type": cached.contentType,
+        "Cache-Control": "public, max-age=86400",
+        "Content-Length": cached.buffer.length.toString(),
+        "X-Cache": "HIT",
+      });
+      res.send(cached.buffer);
+      return;
+    }
+
+    const imageBuffer = await getDoctorImage(id);
 
     if (!imageBuffer) {
-      // Trả về placeholder nếu không có ảnh
-      res.redirect("/placeholder-doctor.jpg");
+      res.status(204).end(); // No Content — tránh redirect loop
       return;
     }
 
@@ -69,15 +87,19 @@ router.get("/:id/image", async (req: Request, res: Response) => {
       contentType = "image/gif";
     }
 
+    // Lưu vào cache
+    imageCache.set(id, { buffer: imageBuffer, contentType, cachedAt: Date.now() });
+
     res.set({
       "Content-Type": contentType,
-      "Cache-Control": "public, max-age=86400", // Cache 1 ngày
+      "Cache-Control": "public, max-age=86400",
       "Content-Length": imageBuffer.length.toString(),
+      "X-Cache": "MISS",
     });
     res.send(imageBuffer);
   } catch (err) {
     console.error("[doctors] GET /:id/image:", err);
-    res.redirect("/placeholder-doctor.jpg");
+    res.status(204).end();
   }
 });
 
