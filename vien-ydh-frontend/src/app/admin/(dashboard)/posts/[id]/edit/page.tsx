@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState, use } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Save, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { RichTextEditor } from "@/components/ui/RichTextEditor";
-import { createPost, getCategories } from "@/services/api";
+import { getPostById, updatePost, getCategories } from "@/services/api";
 
 const FALLBACK_CATEGORIES = [
   "Y học cổ truyền",
@@ -16,22 +16,26 @@ const FALLBACK_CATEGORIES = [
   "Hướng dẫn bệnh nhân",
 ];
 
-export default function CreatePostPage() {
+export default function EditPostPage({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = use(params);
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [categories, setCategories] = useState<string[]>(FALLBACK_CATEGORIES);
   const [formData, setFormData] = useState({
     title: "",
     slug: "",
     category: "Y học cổ truyền",
     excerpt: "",
-    content: "<p>Bắt đầu viết nội dung bài báo tại đây...</p>",
+    content: "",
     thumbnail: "",
+    status: "published",
   });
 
   useEffect(() => {
     fetchCategories();
-  }, []);
+    fetchPost();
+  }, [resolvedParams.id]);
 
   const fetchCategories = async () => {
     try {
@@ -42,16 +46,30 @@ export default function CreatePostPage() {
     }
   };
 
+  const fetchPost = async () => {
+    try {
+      const post = await getPostById(Number(resolvedParams.id));
+      setFormData({
+        title: post.title,
+        slug: post.slug,
+        category: post.category,
+        excerpt: post.excerpt || "",
+        content: post.content,
+        thumbnail: post.thumbnail || "",
+        status: post.status,
+      });
+    } catch (error) {
+      console.error(error);
+      alert("Không tìm thấy bài viết.");
+      router.push("/admin/posts");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => {
-      const newData = { ...prev, [name]: value };
-      // Auto-generate slug from title
-      if (name === "title" && !prev.slug) {
-        newData.slug = value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)+/g, "");
-      }
-      return newData;
-    });
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleEditorChange = (html: string) => {
@@ -66,7 +84,7 @@ export default function CreatePostPage() {
 
     setIsSubmitting(true);
     try {
-      await createPost({ ...formData, status });
+      await updatePost(Number(resolvedParams.id), { ...formData, status });
       alert(status === 'published' ? "Đã xuất bản bài viết thành công!" : "Đã lưu bản nháp thành công!");
       router.push("/admin/posts");
     } catch (error) {
@@ -77,6 +95,14 @@ export default function CreatePostPage() {
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="bg-white rounded-2xl shadow-sm border border-stone-200 p-6 max-w-5xl mx-auto">
+        <div className="text-center py-20 text-stone-500">Đang tải bài viết...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-stone-200 p-6 max-w-5xl mx-auto">
       <div className="flex items-center justify-between mb-8 pb-6 border-b border-stone-200">
@@ -85,8 +111,8 @@ export default function CreatePostPage() {
             <ArrowLeft size={18} />
           </Button>
           <div>
-            <h2 className="text-xl font-bold text-stone-800">Soạn bài viết mới</h2>
-            <p className="text-stone-500 text-sm">Tạo tin tức, thông báo hoặc bài viết y khoa</p>
+            <h2 className="text-xl font-bold text-stone-800">Chỉnh sửa bài viết</h2>
+            <p className="text-stone-500 text-sm">Cập nhật nội dung bài viết #{resolvedParams.id}</p>
           </div>
         </div>
         <div className="flex gap-3">
@@ -103,7 +129,7 @@ export default function CreatePostPage() {
             disabled={isSubmitting}
             className="bg-primary-600 hover:bg-primary-700 text-white flex items-center gap-2"
           >
-            <Send size={16} /> Xuất bản ngay
+            <Send size={16} /> Xuất bản
           </Button>
         </div>
       </div>

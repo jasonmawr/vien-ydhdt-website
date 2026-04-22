@@ -6,7 +6,10 @@
  * để đảm bảo hoạt động cả trên PC lẫn mobile devices trong mạng LAN.
  */
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
+// Trên Server (SSR), fetch phải có full URL (localhost:4000).
+// Trên Client (Trình duyệt), fetch phải dùng đường dẫn tương đối ("") để Next.js Rewrites tự động trỏ về backend thông qua IP truy cập hiện tại.
+const isServer = typeof window === 'undefined';
+const API_BASE_URL = isServer ? (process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000") : "";
 
 // ─────────────────────────────────────────
 // Types (mirror từ backend)
@@ -272,8 +275,9 @@ export interface PaginatedPosts {
   };
 }
 
-export async function getPosts(category?: string, search?: string, limit = 10, offset = 0): Promise<PaginatedPosts> {
+export async function getPosts(category?: string, search?: string, limit = 10, offset = 0, admin = false): Promise<PaginatedPosts> {
   let url = `/api/cms/posts?limit=${limit}&offset=${offset}`;
+  if (admin) url += `&admin=1`;
   if (category && category !== "Tất cả") url += `&category=${encodeURIComponent(category)}`;
   if (search) url += `&search=${encodeURIComponent(search)}`;
   
@@ -284,12 +288,34 @@ export async function getPosts(category?: string, search?: string, limit = 10, o
   };
 }
 
+export async function getPostById(id: number): Promise<PostDTO> {
+  const response = await apiFetch<{ success: boolean; data: PostDTO }>(`/api/cms/posts/${id}`);
+  return response.data;
+}
+
 export async function createPost(data: Partial<PostDTO>): Promise<{ id: number; message: string }> {
   const response = await apiFetch<{ success: boolean; data: { id: number; message: string } }>("/api/cms/posts", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data)
   });
+  return response.data;
+}
+
+export async function updatePost(id: number, data: Partial<PostDTO>): Promise<void> {
+  await apiFetch<{ success: boolean }>(`/api/cms/posts/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(data)
+  });
+}
+
+export async function deletePost(id: number): Promise<void> {
+  await apiFetch<{ success: boolean }>(`/api/cms/posts/${id}`, {
+    method: "DELETE"
+  });
+}
+
+export async function getCategories(): Promise<string[]> {
+  const response = await apiFetch<{ success: boolean; data: string[] }>("/api/cms/categories");
   return response.data;
 }
 

@@ -25,6 +25,7 @@ export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
       }),
     ],
     content,
+    immediatelyRender: false,
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML());
     },

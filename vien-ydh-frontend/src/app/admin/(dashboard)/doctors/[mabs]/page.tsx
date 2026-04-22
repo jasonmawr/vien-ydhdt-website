@@ -6,12 +6,14 @@ import { ArrowLeft, Save, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { RichTextEditor } from "@/components/ui/RichTextEditor";
-import { getWebDoctor, updateWebDoctor } from "@/services/api";
+import { getWebDoctor, updateWebDoctor, getDoctorById, getDoctorImageUrl } from "@/services/api";
 
 export default function EditDoctorPage({ params }: { params: Promise<{ mabs: string }> }) {
   const resolvedParams = use(params);
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [hisName, setHisName] = useState("");
   const [formData, setFormData] = useState({
     mabs: resolvedParams.mabs,
     avatar_url: "",
@@ -21,23 +23,36 @@ export default function EditDoctorPage({ params }: { params: Promise<{ mabs: str
   });
 
   useEffect(() => {
-    fetchDoctorWebProfile();
+    fetchData();
   }, [resolvedParams.mabs]);
 
-  const fetchDoctorWebProfile = async () => {
+  const fetchData = async () => {
     try {
-      const data = await getWebDoctor(resolvedParams.mabs, localStorage.getItem('token') || '');
-      if (data) {
-        setFormData(prev => ({
-          ...prev,
-          avatar_url: data.avatar_url || "",
-          special_titles: data.special_titles || "",
-          experience_years: data.experience_years ? data.experience_years.toString() : "",
-          bio: data.bio || prev.bio
-        }));
+      // Lấy thông tin HIS
+      try {
+        const hisDoctor = await getDoctorById(resolvedParams.mabs);
+        if (hisDoctor) setHisName(hisDoctor.fullName);
+      } catch {
+        // HIS có thể không sẵn sàng
       }
-    } catch (error) {
-      console.error(error);
+
+      // Lấy Web Profile từ SQLite
+      try {
+        const data = await getWebDoctor(resolvedParams.mabs, '');
+        if (data) {
+          setFormData(prev => ({
+            ...prev,
+            avatar_url: data.avatar_url || "",
+            special_titles: data.special_titles || "",
+            experience_years: data.experience_years ? data.experience_years.toString() : "",
+            bio: data.bio || prev.bio
+          }));
+        }
+      } catch {
+        // Chưa có web profile → form trống, chờ admin điền
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -57,7 +72,7 @@ export default function EditDoctorPage({ params }: { params: Promise<{ mabs: str
         ...formData,
         experience_years: formData.experience_years ? parseInt(formData.experience_years) : null
       };
-      await updateWebDoctor(payload, localStorage.getItem('token') || '');
+      await updateWebDoctor(payload, '');
       alert("Đã cập nhật hồ sơ bác sĩ thành công!");
       router.push("/admin/doctors");
     } catch (error) {
@@ -68,16 +83,26 @@ export default function EditDoctorPage({ params }: { params: Promise<{ mabs: str
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="bg-white rounded-2xl shadow-sm border border-stone-200 p-6 max-w-4xl mx-auto">
+        <div className="text-center py-20 text-stone-500">Đang tải hồ sơ bác sĩ...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-stone-200 p-6 max-w-4xl mx-auto">
       <div className="flex items-center justify-between mb-8 pb-6 border-b border-stone-200">
         <div className="flex items-center gap-4">
-          <Button variant="outline" size="sm" onClick={() => router.back()} className="h-10 w-10 p-0 rounded-full">
+          <Button variant="outline" size="sm" onClick={() => router.push("/admin/doctors")} className="h-10 w-10 p-0 rounded-full">
             <ArrowLeft size={18} />
           </Button>
           <div>
-            <h2 className="text-xl font-bold text-stone-800">Hồ sơ Web Bác sĩ: <span className="text-primary-600">{resolvedParams.mabs}</span></h2>
-            <p className="text-stone-500 text-sm">Các thông tin này sẽ kết hợp với dữ liệu HIS để hiển thị trên web.</p>
+            <h2 className="text-xl font-bold text-stone-800">
+              Hồ sơ Web: <span className="text-primary-600">{hisName || resolvedParams.mabs}</span>
+            </h2>
+            <p className="text-stone-500 text-sm">Mã BS: {resolvedParams.mabs} — Các thông tin này sẽ kết hợp với dữ liệu HIS để hiển thị trên web.</p>
           </div>
         </div>
         <Button 
@@ -85,7 +110,7 @@ export default function EditDoctorPage({ params }: { params: Promise<{ mabs: str
           disabled={isSubmitting}
           className="bg-primary-600 hover:bg-primary-700 text-white flex items-center gap-2"
         >
-          <Save size={16} /> Lưu Thay Đổi
+          <Save size={16} /> {isSubmitting ? "Đang lưu..." : "Lưu Thay Đổi"}
         </Button>
       </div>
 
@@ -95,7 +120,15 @@ export default function EditDoctorPage({ params }: { params: Promise<{ mabs: str
             {formData.avatar_url ? (
               <img src={formData.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
             ) : (
-              <User size={48} className="text-stone-300" />
+              <img 
+                src={getDoctorImageUrl(resolvedParams.mabs)} 
+                alt="Avatar HIS"
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = 'none';
+                }}
+              />
             )}
           </div>
           <div className="flex-1 space-y-4">
@@ -105,7 +138,7 @@ export default function EditDoctorPage({ params }: { params: Promise<{ mabs: str
                 name="avatar_url"
                 value={formData.avatar_url}
                 onChange={handleChange}
-                placeholder="https://example.com/avatar.jpg" 
+                placeholder="https://example.com/avatar.jpg — Để trống sẽ dùng ảnh từ HIS" 
               />
             </div>
             <div className="grid grid-cols-2 gap-4">

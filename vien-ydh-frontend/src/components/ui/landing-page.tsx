@@ -69,9 +69,10 @@ export function HospitalLandingPage() {
       try {
         const docs = await getAllDoctors();
         // Lấy 8 bác sĩ đầu tiên làm featured
-        setFeaturedDoctors(docs.slice(0, 8));
-      } catch (err) {
-        console.error("Failed to load featured doctors", err);
+        setFeaturedDoctors(docs?.slice(0, 8) || []);
+      } catch {
+        // Không block trang chủ nếu backend chưa sẵn sàng
+        setFeaturedDoctors([]);
       }
     };
     fetchDoctors();
@@ -703,6 +704,7 @@ export function HospitalLandingPage() {
           <div className="flex gap-6 mt-4 md:mt-0">
             <Link href="/lien-he" className="hover:text-white transition-colors">Chính sách bảo mật</Link>
             <Link href="/lien-he" className="hover:text-white transition-colors">Điều khoản sử dụng</Link>
+            <Link href="/admin/login" className="hover:text-white transition-colors text-primary-400">Cổng nội bộ</Link>
           </div>
         </div>
       </footer>
