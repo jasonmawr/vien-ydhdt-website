@@ -240,12 +240,12 @@ VIETINBANK_CERT_PATH=<optional, mặc định đọc từ docs/>
 | 9 | Admin JWT Auth + Cookies | ✅ Hoàn thành |
 | 10 | VietinBank VietQR + Booking 5-step + STT | ✅ Hoàn thành |
 | **11** | **Advanced Booking Engine (3 luồng, BHYT, HIS APIs)** | **✅ Hoàn thành** |
-| **12** | **HIS Write (INSERT W_HEN khi thanh toán OK)** | ⏳ Tiếp theo |
+| **12** | **HIS Write (INSERT W_HEN khi thanh toán OK)** | ⏳ Chờ IT cung cấp SQL/Stored Procedure chuẩn |
 | 13 | Trợ lý AI Viện Y Dược (RAG + LLM) | 📋 Lên kế hoạch |
-| 14 | CMS Quản lý Bài viết Y khoa | 📋 Lên kế hoạch |
+| 14 | CMS Quản lý Bài viết Y khoa (Tiptap + SQLite) | ✅ Hoàn thành |
 | 15 | Bảng giá Dịch vụ (Dynamic từ HIS) | ✅ Hoàn thành |
 | 16 | Trang Tra cứu & Cập nhật Landing Page | ✅ Hoàn thành |
-| 17 | SEO + Performance Optimization | 📋 Lên kế hoạch |
+| 17 | SEO + Performance Optimization | ✅ Hoàn thành |
 | 18 | Mobile App (React Native / Flutter) | 📋 Giai đoạn 2 |
 | 19 | Đa ngôn ngữ (EN, 中文) | 📋 Giai đoạn 2 |
 | 20 | Deploy Production (IIS + SSL) | 📋 Giai đoạn cuối |

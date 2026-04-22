@@ -131,3 +131,25 @@ export async function getPatientTypes(): Promise<PatientType[]> {
     await conn.close();
   }
 }
+
+/**
+ * Lấy danh sách Bác sĩ từ MEDI.DMBS
+ */
+export async function getDoctors(): Promise<any[]> {
+  const conn = await getConnection();
+  try {
+    const result = await conn.execute(`
+      SELECT b.MABS, b.HOTEN, b.NHOM, n.TEN AS TENNHOM, k.TEN AS TENKP
+      FROM MEDI.DMBS b
+      LEFT JOIN MEDI.DMNHOM n ON b.NHOM = n.ID
+      LEFT JOIN MEDI.BTDKP_BV k ON b.MAKP = k.MAKP
+      WHERE b.HIDE IS NULL OR b.HIDE = 0
+    `);
+    return result.rows || [];
+  } catch (e) {
+    console.error("Lỗi getDoctors:", e);
+    return [];
+  } finally {
+    await conn.close();
+  }
+}
