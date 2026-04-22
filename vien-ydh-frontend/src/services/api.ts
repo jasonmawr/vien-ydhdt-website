@@ -2,10 +2,11 @@
  * @file api.ts
  * @description Centralized HTTP Client gọi sang Backend API (Express + Oracle).
  * Đây là SSOT duy nhất cho tất cả data fetching trong Frontend.
- * URL Backend: http://localhost:4000 (dev) | http://api.vienydhdt.gov.vn (prod)
+ * Tất cả requests đi qua Next.js rewrites proxy (/api/* → localhost:4000/api/*)
+ * để đảm bảo hoạt động cả trên PC lẫn mobile devices trong mạng LAN.
  */
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 
 // ─────────────────────────────────────────
 // Types (mirror từ backend)

@@ -56,6 +56,8 @@ vien-ydhdt-website/
 │   │   │   │   ├── bac-si/          # Luồng đặt theo Bác sĩ
 │   │   │   │   └── ngay/            # Luồng đặt theo Ngày
 │   │   │   ├── duoc-lieu/      # Trang dược liệu
+│   │   │   ├── tra-cuu/        # Trang tra cứu lịch sử khám
+│   │   │   ├── bang-gia/       # Bảng giá dịch vụ động từ HIS
 │   │   │   ├── admin/          # Admin Dashboard (Protected)
 │   │   │   │   ├── login/      # Đăng nhập Admin
 │   │   │   │   └── appointments/ # Quản lý lịch khám
@@ -241,8 +243,8 @@ VIETINBANK_CERT_PATH=<optional, mặc định đọc từ docs/>
 | **12** | **HIS Write (INSERT W_HEN khi thanh toán OK)** | ⏳ Tiếp theo |
 | 13 | Trợ lý AI Viện Y Dược (RAG + LLM) | 📋 Lên kế hoạch |
 | 14 | CMS Quản lý Bài viết Y khoa | 📋 Lên kế hoạch |
-| 15 | Bảng giá Dịch vụ (Dynamic từ HIS) | 📋 Lên kế hoạch |
-| 16 | Trang Giới thiệu + Đội ngũ | 📋 Lên kế hoạch |
+| 15 | Bảng giá Dịch vụ (Dynamic từ HIS) | ✅ Hoàn thành |
+| 16 | Trang Tra cứu & Cập nhật Landing Page | ✅ Hoàn thành |
 | 17 | SEO + Performance Optimization | 📋 Lên kế hoạch |
 | 18 | Mobile App (React Native / Flutter) | 📋 Giai đoạn 2 |
 | 19 | Đa ngôn ngữ (EN, 中文) | 📋 Giai đoạn 2 |

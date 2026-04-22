@@ -116,26 +116,28 @@ export function HospitalLandingPage() {
             </Link>
           </div>
           <nav className="hidden md:flex gap-6">
-            <Link href="#about" className="text-sm font-semibold text-stone-700 transition-colors hover:text-primary-600">
+            <Link href="/gioi-thieu" className="text-sm font-semibold text-stone-700 transition-colors hover:text-primary-600">
               Giới Thiệu
             </Link>
-            <Link href="#services" className="text-sm font-semibold text-stone-700 transition-colors hover:text-primary-600">
-              Khám Chữa Bệnh
+            <Link href="/dat-lich" className="text-sm font-semibold text-stone-700 transition-colors hover:text-primary-600">
+              Đặt Lịch Khám
             </Link>
-            <Link href="#news" className="text-sm font-semibold text-stone-700 transition-colors hover:text-primary-600">
+            <Link href="/tin-tuc" className="text-sm font-semibold text-stone-700 transition-colors hover:text-primary-600">
               Tin Tức
             </Link>
-            <Link href="#training" className="text-sm font-semibold text-stone-700 transition-colors hover:text-primary-600">
-              Đào Tạo & CĐT
+            <Link href="/bang-gia" className="text-sm font-semibold text-stone-700 transition-colors hover:text-primary-600">
+              Bảng Giá
             </Link>
-            <Link href="#products" className="text-sm font-semibold text-stone-700 transition-colors hover:text-primary-600">
-              Sản Phẩm YHCT
+            <Link href="/lien-he" className="text-sm font-semibold text-stone-700 transition-colors hover:text-primary-600">
+              Liên Hệ
             </Link>
           </nav>
           <div className="hidden md:flex items-center gap-3">
-            <Button variant="outline" size="sm" className="rounded-xl border-primary-200 text-primary-700 hover:bg-primary-50">
-              Hotline: 0964 392 632
-            </Button>
+            <a href="tel:0964392632">
+              <Button variant="outline" size="sm" className="rounded-xl border-primary-200 text-primary-700 hover:bg-primary-50">
+                0964 392 632
+              </Button>
+            </a>
             <Link href="/dat-lich">
               <Button size="sm" className="rounded-xl bg-primary-600 hover:bg-primary-700 text-white shadow-md">
                 Đặt Lịch Khám
@@ -178,15 +180,16 @@ export function HospitalLandingPage() {
             className="container-site grid gap-3 pb-8 pt-6"
           >
             {[
-              { id: "about", label: "Giới Thiệu" },
-              { id: "services", label: "Khám Chữa Bệnh" },
-              { id: "news", label: "Tin Tức" },
-              { id: "training", label: "Đào Tạo & CĐT" },
-              { id: "products", label: "Sản Phẩm YHCT" }
+              { href: "/gioi-thieu", label: "Giới Thiệu" },
+              { href: "/dat-lich", label: "Đặt Lịch Khám" },
+              { href: "/tin-tuc", label: "Tin Tức" },
+              { href: "/bang-gia", label: "Bảng Giá Dịch Vụ" },
+              { href: "/tra-cuu", label: "Tra Cứu Lịch Khám" },
+              { href: "/lien-he", label: "Liên Hệ" }
             ].map((item, index) => (
               <motion.div key={index} variants={itemFadeIn}>
                 <Link
-                  href={`#${item.id}`}
+                  href={item.href}
                   className="flex items-center justify-between rounded-xl px-4 py-3 text-lg font-semibold text-stone-800 hover:bg-stone-100 hover:text-primary-600 transition-colors"
                   onClick={toggleMenu}
                 >
@@ -196,9 +199,11 @@ export function HospitalLandingPage() {
               </motion.div>
             ))}
             <motion.div variants={itemFadeIn} className="flex flex-col gap-3 pt-6 px-2">
-              <Button variant="outline" className="w-full rounded-xl border-primary-200 text-primary-700 h-12 text-base font-semibold">
-                Hotline: 0964 392 632
-              </Button>
+              <a href="tel:0964392632" className="w-full">
+                <Button variant="outline" className="w-full rounded-xl border-primary-200 text-primary-700 h-12 text-base font-semibold">
+                  Gọi: 0964 392 632
+                </Button>
+              </a>
               <Link href="/dat-lich" onClick={toggleMenu} className="w-full">
                 <Button className="w-full rounded-xl bg-primary-600 hover:bg-primary-700 text-white h-12 text-base font-semibold">
                   Đặt Lịch Khám
@@ -671,10 +676,10 @@ export function HospitalLandingPage() {
             <div>
               <h3 className="text-lg font-bold text-white mb-6">Thông Tin Phụ Trợ</h3>
               <nav className="flex flex-col space-y-4">
-                <Link href="#" className="text-stone-400 hover:text-primary-400 transition-colors">Đào Tạo - Chỉ Đạo Tuyến</Link>
-                <Link href="#" className="text-stone-400 hover:text-primary-400 transition-colors">Nghiên Cứu Khoa Học</Link>
-                <Link href="#" className="text-stone-400 hover:text-primary-400 transition-colors">Sản Phẩm Thuốc YHCT</Link>
-                <Link href="#" className="text-stone-400 hover:text-primary-400 transition-colors">Tin Tức Hoạt Động</Link>
+                <Link href="/gioi-thieu" className="text-stone-400 hover:text-primary-400 transition-colors">Đào Tạo - Chỉ Đạo Tuyến</Link>
+                <Link href="/tin-tuc" className="text-stone-400 hover:text-primary-400 transition-colors">Nghiên Cứu Khoa Học</Link>
+                <Link href="/duoc-lieu" className="text-stone-400 hover:text-primary-400 transition-colors">Sản Phẩm Thuốc YHCT</Link>
+                <Link href="/tin-tuc" className="text-stone-400 hover:text-primary-400 transition-colors">Tin Tức Hoạt Động</Link>
               </nav>
             </div>
           </div>
@@ -696,8 +701,8 @@ export function HospitalLandingPage() {
         <div className="container-site py-6 flex flex-col md:flex-row items-center justify-between text-sm text-stone-500">
           <p>&copy; {new Date().getFullYear()} Viện Y Dược Học Dân Tộc TP.HCM. Bảo lưu mọi quyền.</p>
           <div className="flex gap-6 mt-4 md:mt-0">
-            <Link href="#" className="hover:text-white transition-colors">Chính sách bảo mật</Link>
-            <Link href="#" className="hover:text-white transition-colors">Điều khoản sử dụng</Link>
+            <Link href="/lien-he" className="hover:text-white transition-colors">Chính sách bảo mật</Link>
+            <Link href="/lien-he" className="hover:text-white transition-colors">Điều khoản sử dụng</Link>
           </div>
         </div>
       </footer>
