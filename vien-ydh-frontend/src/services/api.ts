@@ -6,7 +6,10 @@
  * để đảm bảo hoạt động cả trên PC lẫn mobile devices trong mạng LAN.
  */
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
+// Trên Server (SSR), fetch phải có full URL (localhost:4000).
+// Trên Client (Trình duyệt), fetch phải dùng đường dẫn tương đối ("") để Next.js Rewrites tự động trỏ về backend thông qua IP truy cập hiện tại.
+const isServer = typeof window === 'undefined';
+const API_BASE_URL = isServer ? (process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000") : "";
 
 // ─────────────────────────────────────────
 // Types (mirror từ backend)

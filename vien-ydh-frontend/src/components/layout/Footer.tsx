@@ -135,6 +135,7 @@ export default function Footer() {
           <div className="flex items-center gap-6">
             <Link href="/chinh-sach-bao-mat" className="hover:text-white transition-colors">Chính sách bảo mật</Link>
             <Link href="/quy-dinh" className="hover:text-white transition-colors">Điều khoản sử dụng</Link>
+            <Link href="/admin/login" className="hover:text-white transition-colors text-primary-400">Cổng nội bộ</Link>
           </div>
         </div>
       </div>

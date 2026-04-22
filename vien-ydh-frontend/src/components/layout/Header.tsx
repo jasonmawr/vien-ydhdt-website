@@ -281,6 +281,12 @@ export default function Header() {
 
               {/* CTA */}
               <Link
+                href="/tra-cuu"
+                className="hidden xl:inline-flex items-center px-4 py-2.5 text-sm font-semibold text-primary-700 bg-primary-50 rounded-lg hover:bg-primary-100 transition-colors"
+              >
+                Tra cứu lịch
+              </Link>
+              <Link
                 href="/dat-lich"
                 className="hidden sm:inline-flex btn-accent !px-5 !py-2.5"
               >
