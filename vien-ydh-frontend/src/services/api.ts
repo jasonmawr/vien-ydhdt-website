@@ -2,10 +2,11 @@
  * @file api.ts
  * @description Centralized HTTP Client gọi sang Backend API (Express + Oracle).
  * Đây là SSOT duy nhất cho tất cả data fetching trong Frontend.
- * URL Backend: http://localhost:4000 (dev) | http://api.vienydhdt.gov.vn (prod)
+ * Tất cả requests đi qua Next.js rewrites proxy (/api/* → localhost:4000/api/*)
+ * để đảm bảo hoạt động cả trên PC lẫn mobile devices trong mạng LAN.
  */
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 
 // ─────────────────────────────────────────
 // Types (mirror từ backend)
@@ -167,5 +168,72 @@ export async function getAppointments(token: string, limit = 50): Promise<Appoin
       },
     }
   );
+  return data.data;
+}
+
+// ─────────────────────────────────────────
+// Payment API
+// ─────────────────────────────────────────
+
+export async function generatePaymentQR(payload: { amount: number; orderInfo: string }) {
+  return apiFetch<{
+    success: boolean;
+    data: { qrCodeUrl: string; orderId: string };
+  }>("/api/payment/generate-qr", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+// ─────────────────────────────────────────
+// Booking API (Đọc trực tiếp từ Oracle HIS)
+// ─────────────────────────────────────────
+
+export interface SpecialtyDTO {
+  id: number;
+  name: string;
+}
+
+export interface ExamPricingDTO {
+  id: number;
+  code: string;
+  name: string;
+  unit: string;
+  priceBHYT: number;
+  priceService: number;
+  priceRequest: number;
+  priceExpert: number;
+  bhytPercent: number;
+}
+
+export interface InsuranceTuyenDTO {
+  id: number;
+  code: string;
+  name: string;
+  isTraiTuyen: boolean;
+}
+
+export interface PatientTypeDTO {
+  id: number;
+  name: string;
+}
+
+export async function getHISSpecialties(): Promise<SpecialtyDTO[]> {
+  const data = await apiFetch<{ success: boolean; data: SpecialtyDTO[] }>("/api/booking/specialties");
+  return data.data;
+}
+
+export async function getExamPricing(): Promise<ExamPricingDTO[]> {
+  const data = await apiFetch<{ success: boolean; data: ExamPricingDTO[] }>("/api/booking/pricing");
+  return data.data;
+}
+
+export async function getInsuranceTuyen(): Promise<InsuranceTuyenDTO[]> {
+  const data = await apiFetch<{ success: boolean; data: InsuranceTuyenDTO[] }>("/api/booking/insurance-tuyen");
+  return data.data;
+}
+
+export async function getPatientTypes(): Promise<PatientTypeDTO[]> {
+  const data = await apiFetch<{ success: boolean; data: PatientTypeDTO[] }>("/api/booking/patient-types");
   return data.data;
 }
