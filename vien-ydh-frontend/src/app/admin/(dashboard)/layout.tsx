@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, CalendarDays, FileText, Settings, Users } from "lucide-react";
+import { LayoutDashboard, CalendarDays, FileText, Settings, Users, User } from "lucide-react";
 import { LogoutButton } from "./LogoutButton";
 
 export default function AdminLayout({
@@ -35,6 +35,10 @@ export default function AdminLayout({
           <Link href="/admin/patients" className={`flex items-center gap-3 px-4 py-3 rounded-lg transition ${usePathname().includes('/patients') ? 'bg-stone-800 text-white' : 'text-stone-400 hover:bg-stone-800 hover:text-white'}`}>
             <Users size={20} />
             <span>Bệnh Nhân</span>
+          </Link>
+          <Link href="/admin/doctors" className={`flex items-center gap-3 px-4 py-3 rounded-lg transition ${usePathname().includes('/doctors') ? 'bg-stone-800 text-white' : 'text-stone-400 hover:bg-stone-800 hover:text-white'}`}>
+            <User size={20} />
+            <span>Hồ sơ Bác sĩ</span>
           </Link>
         </nav>
         

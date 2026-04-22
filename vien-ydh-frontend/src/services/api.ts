@@ -287,3 +287,22 @@ export async function createPost(data: Partial<PostDTO>): Promise<{ id: number; 
   });
   return response.data;
 }
+
+export async function getWebDoctor(mabs: string, token: string): Promise<any> {
+  const response = await apiFetch<{ success: boolean; data: any }>(`/api/cms/doctors/${mabs}`, {
+    headers: { "Authorization": `Bearer ${token}` }
+  });
+  return response.data;
+}
+
+export async function updateWebDoctor(data: any, token: string): Promise<any> {
+  const response = await apiFetch<{ success: boolean; message: string }>("/api/cms/doctors", {
+    method: "POST",
+    headers: { 
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}` 
+    },
+    body: JSON.stringify(data)
+  });
+  return response;
+}
