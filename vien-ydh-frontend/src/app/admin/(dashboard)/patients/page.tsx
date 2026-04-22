@@ -1,43 +1,42 @@
-"use client";
-
-import { useEffect, useState } from "react";
+import { getAppointments, type AppointmentRecord } from "@/services/api";
+import { cookies } from "next/headers";
 import { Search, Calendar, RefreshCw } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { type AppointmentRecord } from "@/services/api";
 
-export default function AdminPatientsPage() {
-  const [appointments, setAppointments] = useState<AppointmentRecord[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [search, setSearch] = useState("");
+export const dynamic = "force-dynamic";
 
-  useEffect(() => {
-    fetchAppointments();
-  }, []);
+export default async function AdminPatientsPage() {
+  let appointments: AppointmentRecord[] = [];
+  const cookieStore = await cookies();
+  const token = cookieStore.get("auth_token")?.value || "";
 
-  const fetchAppointments = async () => {
-    setIsLoading(true);
-    try {
-      const res = await fetch("/api/appointments?limit=200");
-      const data = await res.json();
-      if (data.success) {
-        setAppointments(data.data || []);
-      }
-    } catch (error) {
-      console.error("Lỗi tải danh sách bệnh nhân:", error);
-      setAppointments([]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const filtered = appointments.filter(a => 
-    a.PATIENT_NAME?.toLowerCase().includes(search.toLowerCase()) || 
-    a.PATIENT_PHONE?.includes(search)
-  );
+  try {
+    appointments = await getAppointments(token, 200);
+  } catch {
+    // Backend chưa sẵn sàng
+  }
 
   // Group by unique patients using phone number
-  const uniquePatients = Array.from(new Map(filtered.map(a => [a.PATIENT_PHONE, a])).values());
+  const uniquePatients = Array.from(
+    new Map(appointments.map(a => [a.PATIENT_PHONE, a])).values()
+  );
+
+  const statusColors: Record<string, string> = {
+    'PENDING': 'bg-yellow-100 text-yellow-700',
+    'pending': 'bg-yellow-100 text-yellow-700',
+    'confirmed': 'bg-green-100 text-green-700',
+    'CONFIRMED': 'bg-green-100 text-green-700',
+    'cancelled': 'bg-red-100 text-red-700',
+    'CANCELLED': 'bg-red-100 text-red-700',
+  };
+
+  const statusLabels: Record<string, string> = {
+    'PENDING': 'Chờ xác nhận',
+    'pending': 'Chờ xác nhận',
+    'confirmed': 'Đã xác nhận',
+    'CONFIRMED': 'Đã xác nhận',
+    'cancelled': 'Đã hủy',
+    'CANCELLED': 'Đã hủy',
+  };
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-stone-200 p-6">
@@ -46,28 +45,8 @@ export default function AdminPatientsPage() {
           <h2 className="text-xl font-bold text-stone-800">Danh sách Bệnh nhân</h2>
           <p className="text-stone-500 text-sm">
             Quản lý danh sách bệnh nhân đã đặt khám qua website.
-            {!isLoading && ` (${uniquePatients.length} bệnh nhân — ${appointments.length} lịch khám)`}
+            ({uniquePatients.length} bệnh nhân — {appointments.length} lịch khám)
           </p>
-        </div>
-        <Button 
-          variant="outline" 
-          onClick={fetchAppointments}
-          disabled={isLoading}
-          className="flex items-center gap-2"
-        >
-          <RefreshCw size={16} className={isLoading ? "animate-spin" : ""} /> Tải lại
-        </Button>
-      </div>
-
-      <div className="flex gap-4 mb-6">
-        <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-2.5 h-5 w-5 text-stone-400" />
-          <Input 
-            placeholder="Tìm kiếm tên hoặc số điện thoại..." 
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="pl-10 h-10 rounded-lg bg-stone-50 border-stone-200"
-          />
         </div>
       </div>
 
@@ -83,32 +62,19 @@ export default function AdminPatientsPage() {
             </tr>
           </thead>
           <tbody>
-            {isLoading ? (
-              <tr>
-                <td colSpan={5} className="text-center py-10">Đang tải dữ liệu...</td>
-              </tr>
-            ) : uniquePatients.length > 0 ? (
+            {uniquePatients.length > 0 ? (
               uniquePatients.map(patient => {
                 const patientVisits = appointments.filter(a => a.PATIENT_PHONE === patient.PATIENT_PHONE);
-                const statusColors: Record<string, string> = {
-                  'pending': 'bg-yellow-100 text-yellow-700',
-                  'confirmed': 'bg-green-100 text-green-700',
-                  'cancelled': 'bg-red-100 text-red-700',
-                };
-                const statusLabels: Record<string, string> = {
-                  'pending': 'Chờ xác nhận',
-                  'confirmed': 'Đã xác nhận',
-                  'cancelled': 'Đã hủy',
-                };
                 return (
                   <tr key={patient.PATIENT_PHONE || patient.ID} className="border-b border-stone-100 hover:bg-stone-50/50">
                     <td className="px-4 py-4 font-bold text-stone-900">{patient.PATIENT_NAME}</td>
                     <td className="px-4 py-4 font-medium text-stone-600">{patient.PATIENT_PHONE}</td>
-                    <td className="px-4 py-4 flex items-center gap-2 text-stone-600">
-                      <Calendar size={14} className="text-stone-400" />
+                    <td className="px-4 py-4 text-stone-600">
                       {patient.APPOINTMENT_DATE 
                         ? `${patient.APPOINTMENT_DATE} ${patient.APPOINTMENT_TIME || ''}` 
-                        : new Date(patient.CREATED_AT).toLocaleDateString('vi-VN')}
+                        : patient.CREATED_AT 
+                          ? new Date(patient.CREATED_AT).toLocaleDateString('vi-VN')
+                          : '—'}
                     </td>
                     <td className="px-4 py-4 font-bold text-primary-600">
                       {patientVisits.length} lần
@@ -124,9 +90,7 @@ export default function AdminPatientsPage() {
             ) : (
               <tr>
                 <td colSpan={5} className="text-center py-10 text-stone-500">
-                  {appointments.length === 0 
-                    ? "Chưa có bệnh nhân nào đặt khám. Khi bệnh nhân đặt lịch qua website, thông tin sẽ hiển thị ở đây." 
-                    : "Không tìm thấy bệnh nhân phù hợp."}
+                  Chưa có bệnh nhân nào đặt khám qua website.
                 </td>
               </tr>
             )}
