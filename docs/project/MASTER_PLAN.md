@@ -300,7 +300,7 @@ npm run dev            # → http://localhost:3000
 - `main` — Production
 - `develop` — Staging
 - `feature/phase-XX-*` — Feature branches
-- **Nhánh hiện tại:** `feature/phase-13-ai-chatbot`
+- **Nhánh hiện tại:** `feature/phase-17-seo`
 
 ---
 
