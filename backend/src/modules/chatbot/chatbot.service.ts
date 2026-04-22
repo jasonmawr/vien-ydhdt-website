@@ -93,6 +93,40 @@ function getSuggestedQuestions(reply: string, userMessage: string): string[] {
 }
 
 /**
+ * Gọi Gemini API với conversation history
+ */
+async function callGemini(history: ChatMessage[], message: string): Promise<string> {
+  const ai = getGenAI();
+  const model = ai.getGenerativeModel({
+    model: "gemini-flash-latest",
+    generationConfig: {
+      temperature: 0.7,
+      topP: 0.9,
+      topK: 40,
+      maxOutputTokens: 1024,
+    },
+  });
+
+  const systemPrompt = buildSystemPrompt();
+
+  const chatHistory = history.slice(0, -1).map((msg) => ({
+    role: msg.role === "assistant" ? ("model" as const) : ("user" as const),
+    parts: [{ text: msg.content }],
+  }));
+
+  const chat = model.startChat({
+    history: [
+      { role: "user", parts: [{ text: "Hệ thống: " + systemPrompt }] },
+      { role: "model", parts: [{ text: "Tôi đã hiểu. Tôi là Y Dược AI, trợ lý ảo của Viện Y Dược Học Dân Tộc TP.HCM. Tôi sẵn sàng hỗ trợ bệnh nhân." }] },
+      ...chatHistory,
+    ],
+  });
+
+  const result = await chat.sendMessage(message);
+  return result.response.text();
+}
+
+/**
  * Xử lý tin nhắn từ người dùng, gọi Gemini API
  */
 export async function processMessage(req: ChatRequest): Promise<ChatResponse> {
@@ -116,40 +150,21 @@ export async function processMessage(req: ChatRequest): Promise<ChatResponse> {
   let reply: string;
 
   try {
-    const ai = getGenAI();
-    const model = ai.getGenerativeModel({
-      model: "gemini-2.0-flash",
-      generationConfig: {
-        temperature: 0.7,
-        topP: 0.9,
-        topK: 40,
-        maxOutputTokens: 1024,
-      },
-    });
-
-    // Build conversation for Gemini
-    const systemPrompt = buildSystemPrompt();
-
-    const chatHistory = history.slice(0, -1).map((msg) => ({
-      role: msg.role === "assistant" ? ("model" as const) : ("user" as const),
-      parts: [{ text: msg.content }],
-    }));
-
-    const chat = model.startChat({
-      history: [
-        { role: "user", parts: [{ text: "Hệ thống: " + systemPrompt }] },
-        { role: "model", parts: [{ text: "Tôi đã hiểu. Tôi là Y Dược AI, trợ lý ảo của Viện Y Dược Học Dân Tộc TP.HCM. Tôi sẵn sàng hỗ trợ bệnh nhân." }] },
-        ...chatHistory,
-      ],
-    });
-
-    const result = await chat.sendMessage(req.message);
-    reply = result.response.text();
+    reply = await callGemini(history, req.message);
   } catch (error: any) {
     console.error("[Chatbot] Gemini API error:", error.message);
 
-    // Fallback khi API lỗi
-    if (error.message?.includes("GEMINI_API_KEY")) {
+    // Retry 1 lần nếu bị rate limit (429)
+    if (error.message?.includes("429") || error.message?.includes("quota")) {
+      console.log("[Chatbot] Rate limited, retrying in 5s...");
+      await new Promise(resolve => setTimeout(resolve, 5000));
+      try {
+        reply = await callGemini(history, req.message);
+      } catch (retryError: any) {
+        console.error("[Chatbot] Retry failed:", retryError.message);
+        reply = "⏳ Hệ thống AI đang bận. Vui lòng thử lại sau vài giây hoặc liên hệ **(028) 3844 2349**.";
+      }
+    } else if (error.message?.includes("GEMINI_API_KEY")) {
       reply = "⚠️ Trợ lý AI đang được cấu hình. Vui lòng liên hệ **(028) 3844 2349** để được tư vấn trực tiếp.";
     } else {
       reply = "Xin lỗi, tôi đang gặp sự cố kỹ thuật. Vui lòng thử lại sau hoặc liên hệ **(028) 3844 2349** để được hỗ trợ.";
