@@ -237,3 +237,53 @@ export async function getPatientTypes(): Promise<PatientTypeDTO[]> {
   const data = await apiFetch<{ success: boolean; data: PatientTypeDTO[] }>("/api/booking/patient-types");
   return data.data;
 }
+
+// ─────────────────────────────────────────
+// Web CMS API (Lấy từ SQLite Backend)
+// ─────────────────────────────────────────
+
+export interface PostDTO {
+  id: number;
+  title: string;
+  slug: string;
+  category: string;
+  excerpt: string;
+  content: string;
+  thumbnail: string | null;
+  author: string;
+  status: string;
+  tags: string | null;
+  view_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PaginatedPosts {
+  data: PostDTO[];
+  pagination: {
+    total: number;
+    limit: number;
+    offset: number;
+  };
+}
+
+export async function getPosts(category?: string, search?: string, limit = 10, offset = 0): Promise<PaginatedPosts> {
+  let url = `/api/cms/posts?limit=${limit}&offset=${offset}`;
+  if (category && category !== "Tất cả") url += `&category=${encodeURIComponent(category)}`;
+  if (search) url += `&search=${encodeURIComponent(search)}`;
+  
+  const response = await apiFetch<{ success: boolean; data: PostDTO[]; pagination: any }>(url);
+  return {
+    data: response.data,
+    pagination: response.pagination
+  };
+}
+
+export async function createPost(data: Partial<PostDTO>): Promise<{ id: number; message: string }> {
+  const response = await apiFetch<{ success: boolean; data: { id: number; message: string } }>("/api/cms/posts", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  });
+  return response.data;
+}

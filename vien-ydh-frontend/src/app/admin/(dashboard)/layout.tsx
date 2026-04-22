@@ -28,9 +28,9 @@ export default function AdminLayout({
             <CalendarDays size={20} />
             <span>Lịch Khám</span>
           </Link>
-          <Link href="/admin" className="flex items-center gap-3 px-4 py-3 rounded-lg text-stone-400 hover:bg-stone-800 hover:text-white transition">
+          <Link href="/admin/posts" className={`flex items-center gap-3 px-4 py-3 rounded-lg transition ${usePathname().includes('/posts') ? 'bg-stone-800 text-white' : 'text-stone-400 hover:bg-stone-800 hover:text-white'}`}>
             <FileText size={20} />
-            <span>Bài Viết (Sắp ra mắt)</span>
+            <span>Bài Viết</span>
           </Link>
           <Link href="/admin" className="flex items-center gap-3 px-4 py-3 rounded-lg text-stone-400 hover:bg-stone-800 hover:text-white transition">
             <Users size={20} />
