@@ -5,21 +5,42 @@ import Link from "next/link";
 import { Plus, Search, Edit, Trash2, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { getPosts, type PostDTO } from "@/services/api";
+import { getPosts, deletePost, getCategories, type PostDTO } from "@/services/api";
+
+const FALLBACK_CATEGORIES = [
+  "Y học cổ truyền",
+  "Hoạt động Viện",
+  "Sức khỏe & Dinh dưỡng",
+  "Nghiên cứu khoa học",
+  "Hướng dẫn bệnh nhân",
+];
 
 export default function AdminPostsPage() {
   const [posts, setPosts] = useState<PostDTO[]>([]);
+  const [categories, setCategories] = useState<string[]>(FALLBACK_CATEGORIES);
   const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("Tất cả");
 
   useEffect(() => {
+    fetchCategories();
     fetchPosts();
   }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const cats = await getCategories();
+      if (cats.length > 0) setCategories(cats);
+    } catch {
+      // Dùng fallback
+    }
+  };
 
   const fetchPosts = async () => {
     setIsLoading(true);
     try {
-      const response = await getPosts(undefined, undefined, 50, 0);
+      // admin=true để lấy cả draft lẫn published
+      const response = await getPosts(undefined, undefined, 100, 0, true);
       setPosts(response.data);
     } catch (error) {
       console.error(error);
@@ -28,7 +49,25 @@ export default function AdminPostsPage() {
     }
   };
 
-  const filteredPosts = posts.filter(p => p.title.toLowerCase().includes(search.toLowerCase()));
+  const handleDelete = async (post: PostDTO) => {
+    const confirmed = window.confirm(`Bạn có chắc chắn muốn xóa bài viết "${post.title}"?\n\nHành động này không thể hoàn tác.`);
+    if (!confirmed) return;
+
+    try {
+      await deletePost(post.id);
+      // Xóa khỏi danh sách ngay lập tức không cần reload
+      setPosts(prev => prev.filter(p => p.id !== post.id));
+    } catch (error) {
+      console.error(error);
+      alert("Đã có lỗi xảy ra khi xóa bài viết.");
+    }
+  };
+
+  const filteredPosts = posts.filter(p => {
+    const matchSearch = p.title.toLowerCase().includes(search.toLowerCase());
+    const matchCategory = categoryFilter === "Tất cả" || p.category === categoryFilter;
+    return matchSearch && matchCategory;
+  });
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-stone-200 p-6">
@@ -54,11 +93,15 @@ export default function AdminPostsPage() {
             className="pl-10 h-10 rounded-lg bg-stone-50 border-stone-200"
           />
         </div>
-        <select className="h-10 rounded-lg bg-stone-50 border-stone-200 px-3 text-sm text-stone-600 focus:outline-none focus:ring-2 focus:ring-primary-500">
-          <option>Tất cả danh mục</option>
-          <option>Y học cổ truyền</option>
-          <option>Hoạt động Viện</option>
-          <option>Sức khỏe & Dinh dưỡng</option>
+        <select 
+          value={categoryFilter}
+          onChange={(e) => setCategoryFilter(e.target.value)}
+          className="h-10 rounded-lg bg-stone-50 border border-stone-200 px-3 text-sm text-stone-600 focus:outline-none focus:ring-2 focus:ring-primary-500"
+        >
+          <option value="Tất cả">Tất cả danh mục</option>
+          {categories.map(cat => (
+            <option key={cat} value={cat}>{cat}</option>
+          ))}
         </select>
       </div>
 
@@ -94,14 +137,24 @@ export default function AdminPostsPage() {
                     </span>
                   </td>
                   <td className="px-4 py-4 text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-stone-500 hover:text-primary-600">
-                        <Eye size={16} />
-                      </Button>
-                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-stone-500 hover:text-blue-600">
-                        <Edit size={16} />
-                      </Button>
-                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-stone-500 hover:text-red-600">
+                    <div className="flex items-center justify-end gap-1">
+                      <Link href={`/tin-tuc`} target="_blank" title="Xem trên web">
+                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-stone-500 hover:text-primary-600">
+                          <Eye size={16} />
+                        </Button>
+                      </Link>
+                      <Link href={`/admin/posts/${post.id}/edit`} title="Chỉnh sửa">
+                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-stone-500 hover:text-blue-600">
+                          <Edit size={16} />
+                        </Button>
+                      </Link>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-8 w-8 p-0 text-stone-500 hover:text-red-600"
+                        onClick={() => handleDelete(post)}
+                        title="Xóa bài viết"
+                      >
                         <Trash2 size={16} />
                       </Button>
                     </div>
