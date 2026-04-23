@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   allowedDevOrigins: ['192.168.1.26'],
   images: {
+    formats: ['image/avif', 'image/webp'],
     remotePatterns: [
       { protocol: 'http', hostname: 'localhost', port: '4000' },
       { protocol: 'http', hostname: '192.168.1.26', port: '4000' },

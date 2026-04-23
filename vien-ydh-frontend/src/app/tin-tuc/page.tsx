@@ -105,9 +105,11 @@ export default function TinTucPage() {
                           <span className="flex items-center gap-1"><Calendar className="h-4 w-4" /> {new Date(posts[0].created_at).toLocaleDateString('vi-VN')}</span>
                           <span className="flex items-center gap-1"><Clock className="h-4 w-4" /> {posts[0].view_count} lượt xem</span>
                         </div>
-                        <Button className="bg-white text-primary-700 hover:bg-white/90 font-bold w-fit rounded-xl">
-                          Đọc Bài Viết <ArrowRight className="ml-2 h-4 w-4" />
-                        </Button>
+                        <Link href={`/tin-tuc/${posts[0].slug}`}>
+                          <Button className="bg-white text-primary-700 hover:bg-white/90 font-bold w-fit rounded-xl">
+                            Đọc Bài Viết <ArrowRight className="ml-2 h-4 w-4" />
+                          </Button>
+                        </Link>
                       </div>
                     </div>
                   </div>
@@ -123,6 +125,7 @@ export default function TinTucPage() {
                     transition={{ duration: 0.4, delay: i * 0.06 }}
                     viewport={{ once: true }}
                     className="bg-white rounded-3xl overflow-hidden shadow-sm border border-stone-100 hover:shadow-xl hover:border-primary-100 transition-all group cursor-pointer">
+                    <Link href={`/tin-tuc/${article.slug}`} className="block h-full">
                     <div className={`h-48 bg-gradient-to-br ${defaultGradients[(i + 1) % defaultGradients.length]} relative flex items-end p-6`}>
                       <span className="bg-white/20 backdrop-blur text-white text-xs font-semibold px-3 py-1 rounded-full">
                         {article.category}
@@ -148,6 +151,7 @@ export default function TinTucPage() {
                         </span>
                       </div>
                     </div>
+                    </Link>
                   </motion.article>
                 ))}
               </div>

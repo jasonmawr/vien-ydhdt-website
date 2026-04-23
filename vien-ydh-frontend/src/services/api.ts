@@ -293,6 +293,11 @@ export async function getPostById(id: number): Promise<PostDTO> {
   return response.data;
 }
 
+export async function getPostBySlug(slug: string): Promise<PostDTO> {
+  const response = await apiFetch<{ success: boolean; data: PostDTO }>(`/api/cms/posts/slug/${slug}`);
+  return response.data;
+}
+
 export async function createPost(data: Partial<PostDTO>): Promise<{ id: number; message: string }> {
   const response = await apiFetch<{ success: boolean; data: { id: number; message: string } }>("/api/cms/posts", {
     method: "POST",

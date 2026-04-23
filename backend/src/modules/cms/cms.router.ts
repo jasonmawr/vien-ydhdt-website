@@ -86,6 +86,27 @@ cmsRouter.get('/posts/:id', async (req, res) => {
   }
 });
 
+// GET /api/cms/posts/slug/:slug — Lấy chi tiết 1 bài viết theo Slug và tăng view_count
+cmsRouter.get('/posts/slug/:slug', async (req, res) => {
+  try {
+    const db = await getWebDb();
+    const post = await db.get('SELECT * FROM posts WHERE slug = ?', [req.params.slug]);
+    if (!post) {
+      res.status(404).json({ success: false, error: 'Bài viết không tồn tại' });
+      return;
+    }
+    
+    // Tăng lượt xem
+    await db.run('UPDATE posts SET view_count = view_count + 1 WHERE id = ?', [post.id]);
+    post.view_count += 1;
+    
+    res.json({ success: true, data: post });
+  } catch (error) {
+    console.error('[CMS] getPostBySlug error:', error);
+    res.status(500).json({ success: false, error: 'Lỗi lấy bài viết theo slug' });
+  }
+});
+
 // POST /api/cms/posts — Tạo bài viết mới
 cmsRouter.post('/posts', async (req, res) => {
   try {
