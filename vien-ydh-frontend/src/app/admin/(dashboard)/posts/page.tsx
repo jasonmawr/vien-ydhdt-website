@@ -6,6 +6,7 @@ import { Plus, Search, Edit, Trash2, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getPosts, deletePost, getCategories, type PostDTO } from "@/services/api";
+import { getAuthToken } from "@/services/auth";
 
 const FALLBACK_CATEGORIES = [
   "Y học cổ truyền",
@@ -50,16 +51,17 @@ export default function AdminPostsPage() {
   };
 
   const handleDelete = async (post: PostDTO) => {
-    const confirmed = window.confirm(`Bạn có chắc chắn muốn xóa bài viết "${post.title}"?\n\nHành động này không thể hoàn tác.`);
-    if (!confirmed) return;
-
-    try {
-      await deletePost(post.id);
-      // Xóa khỏi danh sách ngay lập tức không cần reload
-      setPosts(prev => prev.filter(p => p.id !== post.id));
-    } catch (error) {
-      console.error(error);
-      alert("Đã có lỗi xảy ra khi xóa bài viết.");
+    if (confirm(`Bạn có chắc muốn xóa bài viết "${post.title}"? Hành động này không thể hoàn tác.`)) {
+      try {
+        const token = await getAuthToken();
+        if (!token) throw new Error("Chưa đăng nhập");
+        await deletePost(post.id, token);
+        alert("Đã xóa bài viết thành công!");
+        fetchPosts();
+      } catch (error) {
+        console.error(error);
+        alert("Có lỗi xảy ra khi xóa bài viết.");
+      }
     }
   };
 
@@ -138,7 +140,7 @@ export default function AdminPostsPage() {
                   </td>
                   <td className="px-4 py-4 text-right">
                     <div className="flex items-center justify-end gap-1">
-                      <Link href={`/tin-tuc`} target="_blank" title="Xem trên web">
+                      <Link href={`/tin-tuc/${post.slug}`} target="_blank" title="Xem trên web">
                         <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-stone-500 hover:text-primary-600">
                           <Eye size={16} />
                         </Button>

@@ -298,24 +298,27 @@ export async function getPostBySlug(slug: string): Promise<PostDTO> {
   return response.data;
 }
 
-export async function createPost(data: Partial<PostDTO>): Promise<{ id: number; message: string }> {
+export async function createPost(data: Partial<PostDTO>, token: string): Promise<{ id: number; message: string }> {
   const response = await apiFetch<{ success: boolean; data: { id: number; message: string } }>("/api/cms/posts", {
     method: "POST",
+    headers: { "Authorization": `Bearer ${token}` },
     body: JSON.stringify(data)
   });
   return response.data;
 }
 
-export async function updatePost(id: number, data: Partial<PostDTO>): Promise<void> {
+export async function updatePost(id: number, data: Partial<PostDTO>, token: string): Promise<void> {
   await apiFetch<{ success: boolean }>(`/api/cms/posts/${id}`, {
     method: "PUT",
+    headers: { "Authorization": `Bearer ${token}` },
     body: JSON.stringify(data)
   });
 }
 
-export async function deletePost(id: number): Promise<void> {
+export async function deletePost(id: number, token: string): Promise<void> {
   await apiFetch<{ success: boolean }>(`/api/cms/posts/${id}`, {
-    method: "DELETE"
+    method: "DELETE",
+    headers: { "Authorization": `Bearer ${token}` }
   });
 }
 

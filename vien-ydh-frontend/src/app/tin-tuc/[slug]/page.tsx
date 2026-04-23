@@ -6,9 +6,9 @@ import { getPostBySlug } from "@/services/api";
 import { Button } from "@/components/ui/button";
 
 interface Props {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 // Lấy dữ liệu bài viết
@@ -22,7 +22,8 @@ async function getPost(slug: string) {
 }
 
 // Generate metadata cho SEO (Phase 17)
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const params = await props.params;
   const post = await getPost(params.slug);
   
   if (!post) {
@@ -44,7 +45,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function ArticleDetailPage({ params }: Props) {
+export default async function ArticleDetailPage(props: Props) {
+  const params = await props.params;
   const post = await getPost(params.slug);
 
   if (!post) {

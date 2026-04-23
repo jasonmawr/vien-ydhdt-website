@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { RichTextEditor } from "@/components/ui/RichTextEditor";
 import { createPost, getCategories } from "@/services/api";
+import { getAuthToken } from "@/services/auth";
 
 const FALLBACK_CATEGORIES = [
   "Y học cổ truyền",
@@ -66,7 +67,9 @@ export default function CreatePostPage() {
 
     setIsSubmitting(true);
     try {
-      await createPost({ ...formData, status });
+      const token = await getAuthToken();
+      if (!token) throw new Error("Chưa đăng nhập");
+      await createPost({ ...formData, status }, token);
       alert(status === 'published' ? "Đã xuất bản bài viết thành công!" : "Đã lưu bản nháp thành công!");
       router.push("/admin/posts");
     } catch (error) {
