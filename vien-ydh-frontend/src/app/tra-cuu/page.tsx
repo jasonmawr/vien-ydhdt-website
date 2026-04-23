@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Search, FileText, Calendar, CreditCard, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 
 export default function TraCuuPage() {
   const [phone, setPhone] = useState("");
@@ -76,7 +77,7 @@ export default function TraCuuPage() {
                   </h3>
                   <div 
                     className="bg-white border border-stone-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow cursor-pointer group"
-                    onClick={() => alert("Tính năng xem chi tiết lịch hẹn đang được hoàn thiện ở các Phase tiếp theo.")}
+                    onClick={() => toast.info("Tính năng xem chi tiết lịch hẹn đang được hoàn thiện ở các Phase tiếp theo.")}
                   >
                     <div className="flex justify-between items-center">
                       <div>
@@ -106,7 +107,7 @@ export default function TraCuuPage() {
                       <Button 
                         variant="outline" 
                         className="rounded-xl border-stone-300"
-                        onClick={() => alert("Tính năng xem chi tiết hồ sơ bệnh án đang được liên kết với HIS ở các Phase tiếp theo.")}
+                        onClick={() => toast.info("Tính năng xem chi tiết hồ sơ bệnh án đang được liên kết với HIS ở các Phase tiếp theo.")}
                       >
                         Xem chi tiết
                       </Button>

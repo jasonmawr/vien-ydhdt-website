@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { RichTextEditor } from "@/components/ui/RichTextEditor";
 import { getPostById, updatePost, getCategories } from "@/services/api";
 import { getAuthToken } from "@/services/auth";
+import { toast } from "sonner";
 
 const FALLBACK_CATEGORIES = [
   "Y học cổ truyền",
@@ -79,7 +80,7 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
 
   const handleSubmit = async (status: 'draft' | 'published') => {
     if (!formData.title || !formData.content) {
-      alert("Vui lòng nhập đầy đủ Tiêu đề và Nội dung bài viết.");
+      toast.error("Vui lòng nhập đầy đủ Tiêu đề và Nội dung bài viết.");
       return;
     }
 
@@ -88,11 +89,11 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
       const token = await getAuthToken();
       if (!token) throw new Error("Chưa đăng nhập");
       await updatePost(Number(resolvedParams.id), { ...formData, status }, token);
-      alert(status === 'published' ? "Đã xuất bản bài viết thành công!" : "Đã lưu bản nháp thành công!");
+      toast.success(status === 'published' ? "Đã xuất bản bài viết thành công!" : "Đã lưu bản nháp thành công!");
       router.push("/admin/posts");
     } catch (error) {
       console.error(error);
-      alert("Đã có lỗi xảy ra. Vui lòng thử lại.");
+      toast.error("Đã có lỗi xảy ra. Vui lòng thử lại.");
     } finally {
       setIsSubmitting(false);
     }

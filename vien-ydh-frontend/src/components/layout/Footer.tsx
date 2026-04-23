@@ -49,13 +49,13 @@ export default function Footer() {
             {/* Column 1: Brand & Social */}
             <div className="lg:col-span-4">
               <Link href="/" className="mb-6 flex items-center gap-3">
-                <div className="relative flex h-14 w-14 items-center justify-center rounded-xl bg-white overflow-hidden shrink-0">
+                <div className="relative flex h-16 w-16 items-center justify-center overflow-hidden shrink-0">
                   <Image
                     src="/images/logo.png"
                     alt="Logo Viện"
                     fill
-                    sizes="56px"
-                    className="object-contain p-2"
+                    sizes="64px"
+                    className="object-contain"
                   />
                 </div>
                 <div>
