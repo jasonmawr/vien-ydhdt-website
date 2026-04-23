@@ -35,8 +35,9 @@ export async function initDatabase(): Promise<void> {
       password: process.env.DB_PASSWORD,
       connectString: process.env.DB_CONNECT_STRING,
       poolMin: 2,
-      poolMax: 10,
-      poolIncrement: 1,
+      poolMax: 20,
+      poolIncrement: 2,
+      poolTimeout: 30,
     });
     console.log("✅ Oracle Database connection pool đã khởi tạo thành công.");
   } catch (err) {

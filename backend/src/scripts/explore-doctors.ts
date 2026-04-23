@@ -28,7 +28,7 @@ async function main() {
     const dmnhom = await conn.execute(`
       SELECT * FROM all_tables WHERE table_name LIKE '%NHOM%' OR table_name LIKE '%LOAI%'
     `);
-    console.log("Bảng liên quan nhóm/loại:", dmnhom.rows.map((r: any) => r.TABLE_NAME).filter((t: string) => t.includes('DM') || t.includes('BS')));
+    console.log("Bảng liên quan nhóm/loại:", (dmnhom.rows || []).map((r: any) => r.TABLE_NAME).filter((t: string) => t.includes('DM') || t.includes('BS')));
 
   } catch (err) {
     console.error(err);

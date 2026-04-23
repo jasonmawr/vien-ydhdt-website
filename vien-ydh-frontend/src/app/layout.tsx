@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Merriweather, Plus_Jakarta_Sans } from "next/font/google";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 /**
@@ -65,6 +66,8 @@ export const metadata: Metadata = {
   },
 };
 
+import ChatWidget from "@/components/features/ChatWidget";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -79,6 +82,8 @@ export default function RootLayout({
         <main id="main-content" className="flex-1" role="main">
           {children}
         </main>
+        <ChatWidget />
+        <Toaster position="top-center" richColors />
       </body>
     </html>
   );

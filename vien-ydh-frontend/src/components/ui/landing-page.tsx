@@ -69,9 +69,10 @@ export function HospitalLandingPage() {
       try {
         const docs = await getAllDoctors();
         // Lấy 8 bác sĩ đầu tiên làm featured
-        setFeaturedDoctors(docs.slice(0, 8));
-      } catch (err) {
-        console.error("Failed to load featured doctors", err);
+        setFeaturedDoctors(docs?.slice(0, 8) || []);
+      } catch {
+        // Không block trang chủ nếu backend chưa sẵn sàng
+        setFeaturedDoctors([]);
       }
     };
     fetchDoctors();
@@ -291,6 +292,7 @@ export function HospitalLandingPage() {
                     src="/images/hero_medicine.png"
                     alt="Khuôn viên Viện Y Dược Học Dân Tộc"
                     fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     className="object-cover"
                     priority
                   />
@@ -460,6 +462,7 @@ export function HospitalLandingPage() {
                   src="/images/zen_garden.png"
                   alt="Vườn Y Đạo"
                   fill
+                  sizes="(max-width: 768px) 100vw, 33vw"
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 flex flex-col justify-end p-8 z-20">
@@ -490,6 +493,7 @@ export function HospitalLandingPage() {
                   src="/images/acupuncture_room.png"
                   alt="Khu vực điều trị"
                   fill
+                  sizes="(max-width: 768px) 100vw, 33vw"
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 flex flex-col justify-end p-6 z-20">
@@ -508,6 +512,7 @@ export function HospitalLandingPage() {
                   src="/images/herbal_medicine.png"
                   alt="Cơ sở vật chất"
                   fill
+                  sizes="(max-width: 768px) 100vw, 33vw"
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 flex flex-col justify-end p-6 z-20">
@@ -526,6 +531,7 @@ export function HospitalLandingPage() {
                   src="/images/clinic_room.png"
                   alt="Hoạt động khám bệnh"
                   fill
+                  sizes="(max-width: 768px) 100vw, 33vw"
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 flex flex-col justify-end p-6 z-20">
@@ -703,6 +709,7 @@ export function HospitalLandingPage() {
           <div className="flex gap-6 mt-4 md:mt-0">
             <Link href="/lien-he" className="hover:text-white transition-colors">Chính sách bảo mật</Link>
             <Link href="/lien-he" className="hover:text-white transition-colors">Điều khoản sử dụng</Link>
+            <Link href="/admin/login" className="hover:text-white transition-colors text-primary-400">Cổng nội bộ</Link>
           </div>
         </div>
       </footer>

@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Search, FileText, Calendar, CreditCard, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 
 export default function TraCuuPage() {
   const [phone, setPhone] = useState("");
@@ -74,7 +75,10 @@ export default function TraCuuPage() {
                   <h3 className="text-xl font-bold text-stone-900 mb-4 flex items-center gap-2">
                     <Calendar className="h-6 w-6 text-primary-600" /> Lịch hẹn sắp tới
                   </h3>
-                  <div className="bg-white border border-stone-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow cursor-pointer group">
+                  <div 
+                    className="bg-white border border-stone-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow cursor-pointer group"
+                    onClick={() => toast.info("Tính năng xem chi tiết lịch hẹn đang được hoàn thiện ở các Phase tiếp theo.")}
+                  >
                     <div className="flex justify-between items-center">
                       <div>
                         <div className="inline-block px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-bold mb-3 uppercase tracking-wider">
@@ -100,7 +104,11 @@ export default function TraCuuPage() {
                         <h4 className="font-bold text-stone-900">Khám Phục hồi chức năng</h4>
                         <p className="text-sm text-stone-500 mt-1">Ngày khám: 10/02/2026</p>
                       </div>
-                      <Button variant="outline" className="rounded-xl border-stone-300">
+                      <Button 
+                        variant="outline" 
+                        className="rounded-xl border-stone-300"
+                        onClick={() => toast.info("Tính năng xem chi tiết hồ sơ bệnh án đang được liên kết với HIS ở các Phase tiếp theo.")}
+                      >
                         Xem chi tiết
                       </Button>
                     </div>

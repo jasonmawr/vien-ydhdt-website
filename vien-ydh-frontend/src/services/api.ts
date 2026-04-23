@@ -6,7 +6,10 @@
  * để đảm bảo hoạt động cả trên PC lẫn mobile devices trong mạng LAN.
  */
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
+// Trên Server (SSR), fetch phải có full URL (localhost:4000).
+// Trên Client (Trình duyệt), fetch phải dùng đường dẫn tương đối ("") để Next.js Rewrites tự động trỏ về backend thông qua IP truy cập hiện tại.
+const isServer = typeof window === 'undefined';
+const API_BASE_URL = isServer ? (process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000") : "";
 
 // ─────────────────────────────────────────
 // Types (mirror từ backend)
@@ -223,6 +226,11 @@ export async function getHISSpecialties(): Promise<SpecialtyDTO[]> {
   return data.data;
 }
 
+export async function getHISDoctors(): Promise<any[]> {
+  const data = await apiFetch<{ success: boolean; data: any[] }>("/api/booking/doctors");
+  return data.data;
+}
+
 export async function getExamPricing(): Promise<ExamPricingDTO[]> {
   const data = await apiFetch<{ success: boolean; data: ExamPricingDTO[] }>("/api/booking/pricing");
   return data.data;
@@ -236,4 +244,104 @@ export async function getInsuranceTuyen(): Promise<InsuranceTuyenDTO[]> {
 export async function getPatientTypes(): Promise<PatientTypeDTO[]> {
   const data = await apiFetch<{ success: boolean; data: PatientTypeDTO[] }>("/api/booking/patient-types");
   return data.data;
+}
+
+// ─────────────────────────────────────────
+// Web CMS API (Lấy từ SQLite Backend)
+// ─────────────────────────────────────────
+
+export interface PostDTO {
+  id: number;
+  title: string;
+  slug: string;
+  category: string;
+  excerpt: string;
+  content: string;
+  thumbnail: string | null;
+  author: string;
+  status: string;
+  tags: string | null;
+  view_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PaginatedPosts {
+  data: PostDTO[];
+  pagination: {
+    total: number;
+    limit: number;
+    offset: number;
+  };
+}
+
+export async function getPosts(category?: string, search?: string, limit = 10, offset = 0, admin = false): Promise<PaginatedPosts> {
+  let url = `/api/cms/posts?limit=${limit}&offset=${offset}`;
+  if (admin) url += `&admin=1`;
+  if (category && category !== "Tất cả") url += `&category=${encodeURIComponent(category)}`;
+  if (search) url += `&search=${encodeURIComponent(search)}`;
+  
+  const response = await apiFetch<{ success: boolean; data: PostDTO[]; pagination: any }>(url);
+  return {
+    data: response.data,
+    pagination: response.pagination
+  };
+}
+
+export async function getPostById(id: number): Promise<PostDTO> {
+  const response = await apiFetch<{ success: boolean; data: PostDTO }>(`/api/cms/posts/${id}`);
+  return response.data;
+}
+
+export async function getPostBySlug(slug: string): Promise<PostDTO> {
+  const response = await apiFetch<{ success: boolean; data: PostDTO }>(`/api/cms/posts/slug/${slug}`);
+  return response.data;
+}
+
+export async function createPost(data: Partial<PostDTO>, token: string): Promise<{ id: number; message: string }> {
+  const response = await apiFetch<{ success: boolean; data: { id: number; message: string } }>("/api/cms/posts", {
+    method: "POST",
+    headers: { "Authorization": `Bearer ${token}` },
+    body: JSON.stringify(data)
+  });
+  return response.data;
+}
+
+export async function updatePost(id: number, data: Partial<PostDTO>, token: string): Promise<void> {
+  await apiFetch<{ success: boolean }>(`/api/cms/posts/${id}`, {
+    method: "PUT",
+    headers: { "Authorization": `Bearer ${token}` },
+    body: JSON.stringify(data)
+  });
+}
+
+export async function deletePost(id: number, token: string): Promise<void> {
+  await apiFetch<{ success: boolean }>(`/api/cms/posts/${id}`, {
+    method: "DELETE",
+    headers: { "Authorization": `Bearer ${token}` }
+  });
+}
+
+export async function getCategories(): Promise<string[]> {
+  const response = await apiFetch<{ success: boolean; data: string[] }>("/api/cms/categories");
+  return response.data;
+}
+
+export async function getWebDoctor(mabs: string, token: string): Promise<any> {
+  const response = await apiFetch<{ success: boolean; data: any }>(`/api/cms/doctors/${mabs}`, {
+    headers: { "Authorization": `Bearer ${token}` }
+  });
+  return response.data;
+}
+
+export async function updateWebDoctor(data: any, token: string): Promise<any> {
+  const response = await apiFetch<{ success: boolean; message: string }>("/api/cms/doctors", {
+    method: "POST",
+    headers: { 
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}` 
+    },
+    body: JSON.stringify(data)
+  });
+  return response;
 }

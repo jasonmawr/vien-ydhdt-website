@@ -167,13 +167,13 @@ export default function Header() {
               className="flex items-center gap-3 group shrink-0"
               aria-label="Viện Y Dược Học Dân Tộc — Về trang chủ"
             >
-              <div className="relative flex h-10 w-10 lg:h-12 lg:w-12 items-center justify-center rounded-lg bg-gray-50 transition-all group-hover:bg-gray-100 overflow-hidden shrink-0">
+              <div className="relative flex h-12 w-12 lg:h-16 lg:w-16 items-center justify-center transition-transform group-hover:scale-105 overflow-hidden shrink-0">
                 <Image
                   src="/images/logo.png"
                   alt="Logo Viện"
                   fill
-                  sizes="(max-width: 1024px) 40px, 48px"
-                  className="object-contain p-1"
+                  sizes="(max-width: 1024px) 48px, 64px"
+                  className="object-contain"
                 />
               </div>
               <div className="leading-tight">
@@ -280,6 +280,12 @@ export default function Header() {
               </button>
 
               {/* CTA */}
+              <Link
+                href="/tra-cuu"
+                className="hidden xl:inline-flex items-center px-4 py-2.5 text-sm font-semibold text-primary-700 bg-primary-50 rounded-lg hover:bg-primary-100 transition-colors"
+              >
+                Tra cứu lịch
+              </Link>
               <Link
                 href="/dat-lich"
                 className="hidden sm:inline-flex btn-accent !px-5 !py-2.5"

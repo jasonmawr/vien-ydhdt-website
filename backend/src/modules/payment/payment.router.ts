@@ -61,7 +61,9 @@ paymentRouter.post("/webhook", async (req: Request, res: Response) => {
       await createAppointmentRecord({
         patientId,
         departmentId: "KHOA_KHAM_BENH",
-        amount: payload.amount
+        amount: payload.amount,
+        fullName: fakePatientData.fullName,
+        phone: fakePatientData.phone
       });
       await confirmHisPayment(admissionId, payload.amount);
 

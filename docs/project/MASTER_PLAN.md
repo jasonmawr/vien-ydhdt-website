@@ -1,6 +1,6 @@
 # MASTER PLAN: HỆ SINH THÁI Y TẾ SỐ TOÀN DIỆN
 ## Viện Y Dược Học Dân Tộc TP.HCM — Website & Super App
-### *Tài liệu chuẩn dự án — Cập nhật: 2026-04-21*
+### *Tài liệu chuẩn dự án — Cập nhật: 2026-04-22*
 
 > **MỤC ĐÍCH CỦA FILE NÀY:**
 > Bất kỳ phiên làm việc nào (bất kỳ AI Agent hoặc Developer nào) chỉ cần đọc file này
@@ -35,14 +35,16 @@ vien-ydhdt-website/
 │   ├── src/
 │   │   ├── index.ts            # Entry point
 │   │   ├── shared/
-│   │   │   └── database.ts     # Oracle connection pool
+│   │   │   ├── database.ts     # Oracle connection pool (poolMax=20)
+│   │   │   └── sqlite.ts       # SQLite CMS DB (web_cms.sqlite)
 │   │   ├── modules/
 │   │   │   ├── departments/    # GET /api/departments
-│   │   │   ├── doctors/        # GET /api/doctors, GET /api/doctors/:id/image
+│   │   │   ├── doctors/        # GET /api/doctors, /:id, /:id/image (có cache)
 │   │   │   ├── appointments/   # POST+GET /api/appointments
-│   │   │   ├── auth/           # POST /api/auth/login (JWT)
+│   │   │   ├── auth/           # POST /api/auth/login (JWT), middleware requireAdmin
 │   │   │   ├── payment/        # POST /api/payment/generate-qr, POST /api/payment/webhook
 │   │   │   ├── booking/        # GET /api/booking/specialties,pricing,insurance-tuyen,patient-types
+│   │   │   ├── cms/            # CRUD /api/cms/posts, /api/cms/doctors, /api/cms/categories
 │   │   │   └── his/            # his-integration.service.ts (HIS read/write)
 │   │   └── scripts/            # Các script khám phá DB (chỉ dùng dev)
 │   └── .env                    # Biến môi trường (KHÔNG commit lên git)
@@ -58,9 +60,17 @@ vien-ydhdt-website/
 │   │   │   ├── duoc-lieu/      # Trang dược liệu
 │   │   │   ├── tra-cuu/        # Trang tra cứu lịch sử khám
 │   │   │   ├── bang-gia/       # Bảng giá dịch vụ động từ HIS
-│   │   │   ├── admin/          # Admin Dashboard (Protected)
+│   │   │   ├── admin/          # Admin Dashboard (Protected by JWT Middleware)
 │   │   │   │   ├── login/      # Đăng nhập Admin
-│   │   │   │   └── appointments/ # Quản lý lịch khám
+│   │   │   │   └── (dashboard)/ # Layout sidebar + header
+│   │   │   │       ├── page.tsx        # Tổng quan (SSR)
+│   │   │   │       ├── appointments/   # Danh sách lịch khám (SSR)
+│   │   │   │       ├── posts/          # CRUD bài viết (Client + SSR)
+│   │   │   │       │   ├── create/     # Soạn bài mới
+│   │   │   │       │   └── [id]/edit/  # Chỉnh sửa bài viết
+│   │   │   │       ├── patients/       # Danh sách bệnh nhân (SSR)
+│   │   │   │       └── doctors/        # Hồ sơ bác sĩ (Client)
+│   │   │   │           └── [mabs]/     # Chỉnh sửa web profile bác sĩ
 │   │   │   └── api/            # Next.js API Routes
 │   │   ├── components/
 │   │   │   ├── features/BookingForm.tsx  # Form đặt khám đa bước
@@ -240,12 +250,29 @@ VIETINBANK_CERT_PATH=<optional, mặc định đọc từ docs/>
 | 9 | Admin JWT Auth + Cookies | ✅ Hoàn thành |
 | 10 | VietinBank VietQR + Booking 5-step + STT | ✅ Hoàn thành |
 | **11** | **Advanced Booking Engine (3 luồng, BHYT, HIS APIs)** | **✅ Hoàn thành** |
-| **12** | **HIS Write (INSERT W_HEN khi thanh toán OK)** | ⏳ Tiếp theo |
-| 13 | Trợ lý AI Viện Y Dược (RAG + LLM) | 📋 Lên kế hoạch |
-| 14 | CMS Quản lý Bài viết Y khoa | 📋 Lên kế hoạch |
+| **12** | **HIS Write (INSERT W_HEN khi thanh toán OK)** | ⏳ Chờ IT cung cấp SQL/Stored Procedure chuẩn |
+| **13** | **Trợ lý AI Y Dược (Google Gemini + RAG)** | **✅ Hoàn thành (2026-04-22)** |
+| | — Floating Chat Widget (premium UI, suggested questions) | ✅ |
+| | — Knowledge Base bệnh viện (dịch vụ, giá, giờ, quy trình) | ✅ |
+| | — Google Gemini 2.0 Flash API integration | ✅ |
+| | — Session management (in-memory, 30min TTL) | ✅ |
+| | — Graceful fallback khi chưa có API key | ✅ |
+| | — Ẩn chatbot trên trang Admin | ✅ |
+| **14** | **CMS Admin Dashboard toàn diện** | **✅ Hoàn thành (2026-04-22)** |
+| | — CRUD Bài viết (Tạo/Sửa/Xóa, Tiptap Rich Editor) | ✅ |
+| | — Quản lý Bác sĩ (HIS → Web Profile, Avatar, Bio) | ✅ |
+| | — Quản lý Bệnh nhân (từ Appointments data) | ✅ |
+| | — Danh mục bài viết SSOT (Backend /api/cms/categories) | ✅ |
+| | — Oracle BLOB Image Caching (in-memory, TTL 1h) | ✅ |
 | 15 | Bảng giá Dịch vụ (Dynamic từ HIS) | ✅ Hoàn thành |
 | 16 | Trang Tra cứu & Cập nhật Landing Page | ✅ Hoàn thành |
-| 17 | SEO + Performance Optimization | 📋 Lên kế hoạch |
+| **17** | **SEO + Performance + UI Polish** | **✅ Hoàn thành** |
+| | — Tối ưu thẻ meta, sitemap.xml, robots.txt | ✅ |
+| | — Vá lỗi bảo mật CMS API (Missing Auth) | ✅ |
+| | — Sửa Tailwind Specificity v4 (hiển thị sai màu) | ✅ |
+| | — Khắc phục cảnh báo Next.js Image "sizes" | ✅ |
+| | — Chuyển Alert native sang Sonner Toast hiện đại | ✅ |
+| | — Đổi cấu trúc Layout Logo chuẩn (Viện Y Dược) | ✅ |
 | 18 | Mobile App (React Native / Flutter) | 📋 Giai đoạn 2 |
 | 19 | Đa ngôn ngữ (EN, 中文) | 📋 Giai đoạn 2 |
 | 20 | Deploy Production (IIS + SSL) | 📋 Giai đoạn cuối |
@@ -279,7 +306,7 @@ npm run dev            # → http://localhost:3000
 - `main` — Production
 - `develop` — Staging
 - `feature/phase-XX-*` — Feature branches
-- **Nhánh hiện tại:** `feature/phase-10-cms`
+- **Nhánh hiện tại:** `feature/phase-17-seo`
 
 ---
 
@@ -299,6 +326,17 @@ npm run dev            # → http://localhost:3000
 | GET | /api/booking/pricing | Bảng giá khám (HIS) | ❌ |
 | GET | /api/booking/insurance-tuyen | Tuyến BHYT (HIS) | ❌ |
 | GET | /api/booking/patient-types | Đối tượng BN (HIS) | ❌ |
+| GET | /api/cms/categories | Danh mục bài viết (SSOT) | ❌ |
+| GET | /api/cms/posts | Danh sách bài viết (?admin=1 xem draft) | ❌ |
+| GET | /api/cms/posts/:id | Chi tiết bài viết | ❌ |
+| POST | /api/cms/posts | Tạo bài viết mới | ❌ (cần thêm JWT) |
+| PUT | /api/cms/posts/:id | Cập nhật bài viết | ❌ (cần thêm JWT) |
+| DELETE | /api/cms/posts/:id | Xóa bài viết | ❌ (cần thêm JWT) |
+| GET | /api/cms/doctors/:mabs | Web profile bác sĩ (SQLite) | ❌ |
+| POST | /api/cms/doctors | Upsert web profile bác sĩ (SQLite) | ❌ |
+| POST | /api/chatbot/message | Gửi tin nhắn cho AI Chatbot | ❌ |
+| GET | /api/chatbot/history | Lịch sử chat theo session | ❌ |
+| GET | /api/chatbot/health | Trạng thái chatbot (API key check) | ❌ |
 
 ---
 
@@ -332,6 +370,10 @@ VIETINBANK_ACCOUNT=
 PORT=4000
 ALLOWED_ORIGINS=http://localhost:3000
 NODE_ENV=development
+
+# Google Gemini AI (Phase 13)
+# Lấy tại: https://aistudio.google.com/apikey
+GEMINI_API_KEY=<your-gemini-api-key>
 ```
 
 ### Quy ước Phát triển
