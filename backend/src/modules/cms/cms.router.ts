@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { getWebDb } from '../../shared/sqlite';
+import { requireAdmin } from '../auth/auth.middleware';
 
 export const cmsRouter = Router();
 
@@ -70,22 +71,6 @@ cmsRouter.get('/posts', async (req, res) => {
   }
 });
 
-// GET /api/cms/posts/:id — Lấy chi tiết 1 bài viết theo ID
-cmsRouter.get('/posts/:id', async (req, res) => {
-  try {
-    const db = await getWebDb();
-    const post = await db.get('SELECT * FROM posts WHERE id = ?', [req.params.id]);
-    if (!post) {
-      res.status(404).json({ success: false, error: 'Bài viết không tồn tại' });
-      return;
-    }
-    res.json({ success: true, data: post });
-  } catch (error) {
-    console.error('[CMS] getPostById error:', error);
-    res.status(500).json({ success: false, error: 'Lỗi lấy bài viết' });
-  }
-});
-
 // GET /api/cms/posts/slug/:slug — Lấy chi tiết 1 bài viết theo Slug và tăng view_count
 cmsRouter.get('/posts/slug/:slug', async (req, res) => {
   try {
@@ -107,8 +92,24 @@ cmsRouter.get('/posts/slug/:slug', async (req, res) => {
   }
 });
 
+// GET /api/cms/posts/:id — Lấy chi tiết 1 bài viết theo ID
+cmsRouter.get('/posts/:id', async (req, res) => {
+  try {
+    const db = await getWebDb();
+    const post = await db.get('SELECT * FROM posts WHERE id = ?', [req.params.id]);
+    if (!post) {
+      res.status(404).json({ success: false, error: 'Bài viết không tồn tại' });
+      return;
+    }
+    res.json({ success: true, data: post });
+  } catch (error) {
+    console.error('[CMS] getPostById error:', error);
+    res.status(500).json({ success: false, error: 'Lỗi lấy bài viết' });
+  }
+});
+
 // POST /api/cms/posts — Tạo bài viết mới
-cmsRouter.post('/posts', async (req, res) => {
+cmsRouter.post('/posts', requireAdmin, async (req, res) => {
   try {
     const { title, slug, category, excerpt, content, thumbnail, status = 'published' } = req.body;
     if (!title || !content) {
@@ -132,7 +133,7 @@ cmsRouter.post('/posts', async (req, res) => {
 });
 
 // PUT /api/cms/posts/:id — Cập nhật bài viết
-cmsRouter.put('/posts/:id', async (req, res) => {
+cmsRouter.put('/posts/:id', requireAdmin, async (req, res) => {
   try {
     const { title, slug, category, excerpt, content, thumbnail, status } = req.body;
     const db = await getWebDb();
@@ -156,7 +157,7 @@ cmsRouter.put('/posts/:id', async (req, res) => {
 });
 
 // DELETE /api/cms/posts/:id — Xóa bài viết
-cmsRouter.delete('/posts/:id', async (req, res) => {
+cmsRouter.delete('/posts/:id', requireAdmin, async (req, res) => {
   try {
     const db = await getWebDb();
     const existing = await db.get('SELECT id FROM posts WHERE id = ?', [req.params.id]);
@@ -186,7 +187,7 @@ cmsRouter.get('/doctors/:mabs', async (req, res) => {
 });
 
 // POST /api/cms/doctors
-cmsRouter.post('/doctors', async (req, res) => {
+cmsRouter.post('/doctors', requireAdmin, async (req, res) => {
   try {
     const db = await getWebDb();
     const { mabs, avatar_url, bio, experience_years, special_titles } = req.body;

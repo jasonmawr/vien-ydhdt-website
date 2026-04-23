@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { RichTextEditor } from "@/components/ui/RichTextEditor";
 import { getWebDoctor, updateWebDoctor, getDoctorById, getDoctorImageUrl } from "@/services/api";
+import { getAuthToken } from "@/services/auth";
 
 export default function EditDoctorPage({ params }: { params: Promise<{ mabs: string }> }) {
   const resolvedParams = use(params);
@@ -72,7 +73,9 @@ export default function EditDoctorPage({ params }: { params: Promise<{ mabs: str
         ...formData,
         experience_years: formData.experience_years ? parseInt(formData.experience_years) : null
       };
-      await updateWebDoctor(payload, '');
+      const token = await getAuthToken();
+      if (!token) throw new Error("Chưa đăng nhập");
+      await updateWebDoctor(payload, token);
       alert("Đã cập nhật hồ sơ bác sĩ thành công!");
       router.push("/admin/doctors");
     } catch (error) {
