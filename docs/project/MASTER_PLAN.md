@@ -266,7 +266,13 @@ VIETINBANK_CERT_PATH=<optional, mặc định đọc từ docs/>
 | | — Oracle BLOB Image Caching (in-memory, TTL 1h) | ✅ |
 | 15 | Bảng giá Dịch vụ (Dynamic từ HIS) | ✅ Hoàn thành |
 | 16 | Trang Tra cứu & Cập nhật Landing Page | ✅ Hoàn thành |
-| 17 | SEO + Performance Optimization | ✅ Hoàn thành |
+| **17** | **SEO + Performance + UI Polish** | **✅ Hoàn thành** |
+| | — Tối ưu thẻ meta, sitemap.xml, robots.txt | ✅ |
+| | — Vá lỗi bảo mật CMS API (Missing Auth) | ✅ |
+| | — Sửa Tailwind Specificity v4 (hiển thị sai màu) | ✅ |
+| | — Khắc phục cảnh báo Next.js Image "sizes" | ✅ |
+| | — Chuyển Alert native sang Sonner Toast hiện đại | ✅ |
+| | — Đổi cấu trúc Layout Logo chuẩn (Viện Y Dược) | ✅ |
 | 18 | Mobile App (React Native / Flutter) | 📋 Giai đoạn 2 |
 | 19 | Đa ngôn ngữ (EN, 中文) | 📋 Giai đoạn 2 |
 | 20 | Deploy Production (IIS + SSL) | 📋 Giai đoạn cuối |

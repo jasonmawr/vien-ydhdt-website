@@ -10,6 +10,7 @@ import {
   getInsuranceTuyen, getExamPricing,
   type DepartmentDTO, type DoctorDTO, type InsuranceTuyenDTO, type ExamPricingDTO
 } from "@/services/api";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
 type Step = 1 | 2 | 3 | 4 | 5 | 6;
@@ -155,7 +156,7 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
     if (step === 4) {
       const errorMsg = validateStep4();
       if (errorMsg) {
-        alert(errorMsg); // Hoặc bạn có thể dùng toast
+        toast.error(errorMsg);
         return;
       }
     }
@@ -170,7 +171,7 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
           setOrderId(qrRes.data.orderId);
           setStep(5);
         } else {
-          alert("Không thể tạo mã thanh toán.");
+          toast.error("Không thể tạo mã thanh toán.");
         }
       } else if (step === 5) {
         // Giả lập KH đã quét và IPN báo thành công -> Ghi vào DB
@@ -194,7 +195,7 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
       }
     } catch (err) {
       console.error("Đặt lịch thất bại:", err);
-      alert("Đã xảy ra lỗi. Vui lòng thử lại sau.");
+      toast.error("Đã xảy ra lỗi. Vui lòng thử lại sau.");
     } finally {
       setIsSubmitting(false);
     }

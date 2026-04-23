@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { RichTextEditor } from "@/components/ui/RichTextEditor";
 import { getWebDoctor, updateWebDoctor, getDoctorById, getDoctorImageUrl } from "@/services/api";
 import { getAuthToken } from "@/services/auth";
+import { toast } from "sonner";
 
 export default function EditDoctorPage({ params }: { params: Promise<{ mabs: string }> }) {
   const resolvedParams = use(params);
@@ -76,11 +77,11 @@ export default function EditDoctorPage({ params }: { params: Promise<{ mabs: str
       const token = await getAuthToken();
       if (!token) throw new Error("Chưa đăng nhập");
       await updateWebDoctor(payload, token);
-      alert("Đã cập nhật hồ sơ bác sĩ thành công!");
+      toast.success("Đã cập nhật hồ sơ bác sĩ thành công!");
       router.push("/admin/doctors");
     } catch (error) {
       console.error(error);
-      alert("Đã có lỗi xảy ra.");
+      toast.error("Đã có lỗi xảy ra.");
     } finally {
       setIsSubmitting(false);
     }

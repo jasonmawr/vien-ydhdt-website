@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getPosts, deletePost, getCategories, type PostDTO } from "@/services/api";
 import { getAuthToken } from "@/services/auth";
+import { toast } from "sonner";
 
 const FALLBACK_CATEGORIES = [
   "Y học cổ truyền",
@@ -56,11 +57,11 @@ export default function AdminPostsPage() {
         const token = await getAuthToken();
         if (!token) throw new Error("Chưa đăng nhập");
         await deletePost(post.id, token);
-        alert("Đã xóa bài viết thành công!");
+        toast.success("Đã xóa bài viết thành công!");
         fetchPosts();
       } catch (error) {
         console.error(error);
-        alert("Có lỗi xảy ra khi xóa bài viết.");
+        toast.error("Có lỗi xảy ra khi xóa bài viết.");
       }
     }
   };

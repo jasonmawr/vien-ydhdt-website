@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Merriweather, Plus_Jakarta_Sans } from "next/font/google";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 /**
@@ -82,6 +83,7 @@ export default function RootLayout({
           {children}
         </main>
         <ChatWidget />
+        <Toaster position="top-center" richColors />
       </body>
     </html>
   );
