@@ -251,6 +251,9 @@ VIETINBANK_CERT_PATH=<optional, mặc định đọc từ docs/>
 | 10 | VietinBank VietQR + Booking 5-step + STT | ✅ Hoàn thành |
 | **11** | **Advanced Booking Engine (3 luồng, BHYT, HIS APIs)** | **✅ Hoàn thành** |
 | **12** | **HIS Write (INSERT W_HEN, TBL_STTKHAM khi thanh toán OK)** | **✅ Hoàn thành (2026-04-28)** |
+| **12.5** | **Hệ thống Notification & Ticket Download** | **✅ Hoàn thành (2026-04-28)** |
+| | — Khung Zalo ZNS Service chờ IT cấp Token | ✅ |
+| | — Tải ảnh Phiếu Khám điện tử miễn phí (HTML5 Canvas Native) | ✅ |
 | **13** | **Trợ lý AI Y Dược (Google Gemini + RAG)** | **✅ Hoàn thành (2026-04-22)** |
 | | — Floating Chat Widget (premium UI, suggested questions) | ✅ |
 | | — Knowledge Base bệnh viện (dịch vụ, giá, giờ, quy trình) | ✅ |
@@ -400,5 +403,5 @@ GEMINI_API_KEY=<your-gemini-api-key>
 - **Số thứ tự (STT):** Tự động sinh số thứ tự từ bảng `MEDI.TBL_STTKHAM` và trả về hiển thị trên Frontend.
 
 ### 3. Ghi chú cho phiên làm việc tiếp theo
-- **Nhánh Git:** Hiện đang ở `feature/phase-12.5-notification`.
-- **Cần làm (Phase 12.5 - Đang thực hiện):** Đã code xong `zalo.service.ts` và tích hợp vào Webhook. Tuy nhiên chờ đơn vị/IT điền các biến môi trường Zalo (`ZALO_APP_ID`, `ZALO_ACCESS_TOKEN`, `ZALO_TEMPLATE_ID`) vào file `.env` để test tin nhắn thực tế. Xem hướng dẫn tại `docs/project/ZALO_ZNS_GUIDE.md`.
+- **Nhánh Git:** `feature/phase-12.5-notification` đã hoàn tất luồng tải Ticket (bằng Canvas Native) và đã lên khung Zalo ZNS. Cần merge nhánh này vào `develop`.
+- **Cần làm:** Triển khai Phase 20 (Deploy Server) hoặc Phase 18 (Mobile App) theo ý muốn của Bệnh viện. Nếu đi đến Deploy, cần chuẩn bị PM2 hoặc Docker cho Backend và Nginx/IIS cho Frontend.
