@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useMemo, useEffect, useRef } from "react";
-import * as htmlToImage from "html-to-image";
 import {
   ChevronRight, ChevronLeft, CheckCircle2,
   Calendar as CalendarIcon, Clock, User, Phone, FileText, Loader2, ShieldCheck, Download
@@ -41,22 +40,64 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
   const ticketRef = useRef<HTMLDivElement>(null);
 
   const handleDownloadTicket = async () => {
-    if (!ticketRef.current) return;
     try {
-      const blob = await htmlToImage.toBlob(ticketRef.current, {
-        pixelRatio: 2,
-        backgroundColor: "#ffffff",
-      });
-      if (!blob) throw new Error("Could not generate image blob");
+      const canvas = document.createElement("canvas");
+      canvas.width = 600;
+      canvas.height = 400;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) throw new Error("Canvas context not found");
+
+      // 1. Vẽ nền Gradient
+      const gradient = ctx.createLinearGradient(0, 0, 600, 400);
+      gradient.addColorStop(0, "#065f46"); // dark emerald
+      gradient.addColorStop(1, "#047857"); // lighter emerald
+      ctx.fillStyle = gradient;
+      if (typeof ctx.roundRect === 'function') {
+        ctx.roundRect(0, 0, 600, 400, 24);
+        ctx.fill();
+      } else {
+        ctx.fillRect(0, 0, 600, 400);
+      }
       
-      const blobUrl = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.download = `Phieu-Kham-${appointmentId || '000'}.png`;
-      link.href = blobUrl;
-      link.click();
-      window.URL.revokeObjectURL(blobUrl);
+      ctx.fillStyle = "#ffffff";
+      ctx.textAlign = "center";
       
-      toast.success("Đã tải Phiếu Khám về máy!");
+      // 2. Vẽ Tiêu đề
+      ctx.font = "bold 24px Arial, sans-serif";
+      ctx.globalAlpha = 0.8;
+      ctx.fillText("SỐ THỨ TỰ KHÁM", 300, 100);
+      
+      // 3. Vẽ Số Thứ Tự
+      ctx.font = "bold 130px Arial, sans-serif";
+      ctx.globalAlpha = 1.0;
+      const displayStt = String(Math.abs(Number(stt) || Number(appointmentId?.replace(/\\D/g, "").slice(-3)) || 1)).padStart(3, "0");
+      ctx.fillText(displayStt, 300, 230);
+      
+      // 4. Vẽ Đường kẻ ngang
+      ctx.globalAlpha = 0.2;
+      ctx.fillRect(100, 280, 400, 2);
+      
+      // 5. Vẽ Mã phiếu
+      ctx.globalAlpha = 0.7;
+      ctx.font = "20px Arial, sans-serif";
+      ctx.fillText("Mã phiếu", 300, 330);
+      
+      ctx.globalAlpha = 1.0;
+      ctx.font = "bold 28px monospace";
+      ctx.fillText(appointmentId || "WEB-000", 300, 365);
+
+      // 6. Xuất ảnh và tải về
+      canvas.toBlob((blob) => {
+        if (!blob) throw new Error("Blob creation failed");
+        const blobUrl = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.download = `Phieu-Kham-${appointmentId || '000'}.png`;
+        link.href = blobUrl;
+        link.click();
+        window.URL.revokeObjectURL(blobUrl);
+        toast.success("Đã tải Phiếu Khám về máy!");
+      }, "image/png");
+
     } catch (err) {
       console.error("Lỗi tải ảnh:", err);
       toast.error("Không thể tải ảnh. Vui lòng chụp màn hình!");
