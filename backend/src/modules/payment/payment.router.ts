@@ -53,7 +53,7 @@ paymentRouter.post("/webhook", async (req: Request, res: Response) => {
       console.log(`[Webhook] Thanh toán thành công. Bắt đầu đẩy dữ liệu vào HIS...`);
       
       const { saveToHis } = await import("../his/his-integration.service");
-      await saveToHis({
+      const hisResult = await saveToHis({
         fullName: fakePatientData.fullName,
         phone: fakePatientData.phone,
         departmentId: "01",
@@ -62,6 +62,17 @@ paymentRouter.post("/webhook", async (req: Request, res: Response) => {
       });
 
       console.log(`[Webhook] Tích hợp HIS hoàn tất cho giao dịch: ${payload.orderId}`);
+
+      // 4. Gửi Zalo Notification (ZNS)
+      const { sendZaloNotification } = await import("../notifications/zalo.service");
+      await sendZaloNotification(fakePatientData.phone, {
+        patient_name: fakePatientData.fullName,
+        appointment_date: new Date().toISOString().split('T')[0],
+        appointment_time: "Chưa xác định",
+        department_name: "KHOA KHÁM BỆNH",
+        stt: hisResult.stt,
+        appointment_id: hisResult.appointmentId
+      });
 
       // 4. Bắn Socket/SSE cho Frontend biết để cập nhật giao diện
       // TODO: Tích hợp Socket.io

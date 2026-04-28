@@ -400,5 +400,5 @@ GEMINI_API_KEY=<your-gemini-api-key>
 - **Số thứ tự (STT):** Tự động sinh số thứ tự từ bảng `MEDI.TBL_STTKHAM` và trả về hiển thị trên Frontend.
 
 ### 3. Ghi chú cho phiên làm việc tiếp theo
-- **Nhánh Git:** `feature/phase-12-his-write` đã hoàn thiện và sẽ được gộp vào `develop`.
-- **Cần làm:** Thiết lập gửi SMS/Email xác nhận cho bệnh nhân kèm STT hoặc chuyển qua Phase 18 (Mobile App).
+- **Nhánh Git:** Hiện đang ở `feature/phase-12.5-notification`.
+- **Cần làm (Phase 12.5 - Đang thực hiện):** Đã code xong `zalo.service.ts` và tích hợp vào Webhook. Tuy nhiên chờ đơn vị/IT điền các biến môi trường Zalo (`ZALO_APP_ID`, `ZALO_ACCESS_TOKEN`, `ZALO_TEMPLATE_ID`) vào file `.env` để test tin nhắn thực tế. Xem hướng dẫn tại `docs/project/ZALO_ZNS_GUIDE.md`.
