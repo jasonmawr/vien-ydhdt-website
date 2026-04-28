@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
+import html2canvas from "html2canvas";
 import {
   ChevronRight, ChevronLeft, CheckCircle2,
-  Calendar as CalendarIcon, Clock, User, Phone, FileText, Loader2, ShieldCheck
+  Calendar as CalendarIcon, Clock, User, Phone, FileText, Loader2, ShieldCheck, Download
 } from "lucide-react";
 import {
   getDepartments, getAllDoctors, createAppointment, getDoctorImageUrl, generatePaymentQR,
@@ -36,6 +37,27 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
   const [pricingList, setPricingList] = useState<ExamPricingDTO[]>([]);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [searchDoctor, setSearchDoctor] = useState("");
+  
+  const ticketRef = useRef<HTMLDivElement>(null);
+
+  const handleDownloadTicket = async () => {
+    if (!ticketRef.current) return;
+    try {
+      const canvas = await html2canvas(ticketRef.current, {
+        scale: 2,
+        backgroundColor: "#ffffff",
+      });
+      const dataUrl = canvas.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.download = `Phieu-Kham-${appointmentId || '000'}.png`;
+      link.href = dataUrl;
+      link.click();
+      toast.success("Đã tải Phiếu Khám về máy!");
+    } catch (err) {
+      console.error("Lỗi tải ảnh:", err);
+      toast.error("Không thể tải ảnh. Vui lòng chụp màn hình!");
+    }
+  };
 
   const [formData, setFormData] = useState({
     departmentId: "",
@@ -596,7 +618,10 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
       </div>
       
       {/* Số Thứ Tự Khám (Tự sinh) */}
-      <div className="mt-6 mx-auto bg-gradient-to-br from-primary-800 to-emerald-700 text-white p-6 rounded-2xl max-w-[280px] flex flex-col items-center shadow-lg">
+      <div 
+        ref={ticketRef}
+        className="mt-6 mx-auto bg-gradient-to-br from-primary-800 to-emerald-700 text-white p-6 rounded-2xl max-w-[280px] flex flex-col items-center shadow-lg"
+      >
         <p className="text-xs font-bold uppercase mb-1 opacity-80 tracking-wider">Số Thứ Tự Khám</p>
         <p className="text-5xl font-black tabular-nums">
           {String(Math.abs(Number(stt) || Number(appointmentId?.replace(/\D/g, "").slice(-3)) || 1)).padStart(3, "0")}
@@ -611,8 +636,12 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
         Đưa <strong>Mã Phiếu</strong> cho nhân viên tiếp nhận để được phục vụ nhanh nhất.
       </p>
 
-      <div className="mt-8">
-        <button onClick={() => window.location.reload()} className="btn-outline">
+      <div className="mt-8 flex flex-col gap-3 max-w-[280px] mx-auto">
+        <button onClick={handleDownloadTicket} className="btn-primary w-full flex items-center justify-center gap-2">
+          <Download className="w-4 h-4" />
+          Tải Phiếu Về Máy (Miễn phí)
+        </button>
+        <button onClick={() => window.location.reload()} className="btn-outline w-full text-sm py-2">
           Đặt lịch mới
         </button>
       </div>
