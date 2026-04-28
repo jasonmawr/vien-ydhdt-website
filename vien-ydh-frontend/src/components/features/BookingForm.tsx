@@ -624,7 +624,8 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
       {/* Số Thứ Tự Khám (Tự sinh) */}
       <div 
         ref={ticketRef}
-        className="mt-6 mx-auto bg-gradient-to-br from-primary-800 to-emerald-700 text-white p-6 rounded-2xl max-w-[280px] flex flex-col items-center shadow-lg"
+        className="mt-6 mx-auto text-white p-6 rounded-2xl max-w-[280px] flex flex-col items-center shadow-lg"
+        style={{ backgroundColor: '#065f46', backgroundImage: 'linear-gradient(to bottom right, #115e59, #047857)' }}
       >
         <p className="text-xs font-bold uppercase mb-1 opacity-80 tracking-wider">Số Thứ Tự Khám</p>
         <p className="text-5xl font-black tabular-nums">
