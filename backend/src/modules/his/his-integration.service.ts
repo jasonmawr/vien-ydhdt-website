@@ -5,90 +5,103 @@
  */
 import { getConnection } from "../../shared/database";
 
-export interface HISPatientData {
+export interface HISAppointmentData {
   fullName: string;
   phone: string;
   dob?: string;
   gender?: string;
-}
-
-export interface HISAdmissionData {
-  patientId: string;
   departmentId: string;
   doctorId?: string;
+  appointmentDate: string; // YYYY-MM-DD
+  appointmentTime?: string; // HH:MM
   amount: number;
+  symptoms?: string;
 }
 
 /**
- * [DRAFT] Tạo hồ sơ bệnh nhân trong HIS (Bảng MEDI.BENHNHAN)
- * CẦN CHỜ SẾP CUNG CẤP CẤU TRÚC SQL / STORED PROCEDURE CHUẨN CỦA BỆNH VIỆN
+ * [Phase 12] Lưu thông tin Hẹn Khám vào Bảng W_HEN & W_HENCT
+ * Đồng thời tự động sinh STT cho bệnh nhân từ TBL_STTKHAM
  */
-export async function createHisPatient(data: HISPatientData): Promise<string> {
-  // TODO: Thay thế bằng Stored Procedure thực tế của phần mềm Tiếp Nhận
-  console.log("[HIS Integration] Đang gọi HIS để tạo bệnh nhân...", data);
-  const fakePatientId = `BN_${Date.now()}`;
-  return fakePatientId;
-}
-
-/**
- * [DRAFT] Đăng ký chờ khám (Ghi vào bảng MEDI.TIEPDON)
- * Bảng TIEPDON chứa danh sách chờ khám thực tế tại phòng khám (MAKP).
- * Sau khi ghi vào đây, tên bệnh nhân sẽ tự động hiển thị trên màn hình gọi số của phòng khám.
- */
-export async function createHisAdmission(data: HISAdmissionData): Promise<string> {
-  // TODO: Thay thế bằng SQL chuẩn
-  // 1. SELECT MAX(MAVAOVIEN), MAX(MAQL) FROM MEDI.TIEPDON ... (Sinh mã)
-  // 2. INSERT INTO MEDI.TIEPDON(MABN, MAVAOVIEN, MAQL, MAKP, NGAY, MADOITUONG, ...) 
-  //    VALUES (data.patientId, ..., data.departmentId, SYSDATE, ...)
-  console.log("[HIS Integration] Đang tạo phiếu tiếp nhận/viện phí HIS...", data);
-  const fakeAdmissionId = `TN_${Date.now()}`;
-  return fakeAdmissionId;
-}
-
-/**
- * Lưu thông tin Hẹn Khám (Ghi vào bảng MEDI.LICH_KHAM_ONLINE)
- * Bảng này được phần mềm Viện quét định kỳ để sinh phiếu Tiếp Đón.
- */
-export async function createAppointmentRecord(data: HISAdmissionData & HISPatientData): Promise<boolean> {
+export async function saveToHis(data: HISAppointmentData): Promise<{ appointmentId: string; stt: number }> {
   const conn = await getConnection();
   try {
-    const maHoSo = `WEB${Date.now().toString().slice(-6)}`;
-    
-    // Auto-generate next ID sequence or use Max(ID) + 1 if sequence doesn't exist
-    // LICH_KHAM_ONLINE ID is NUMBER
-    const idRes = await conn.execute(`SELECT NVL(MAX(ID), 0) + 1 as NEXT_ID FROM MEDI.LICH_KHAM_ONLINE`);
-    const nextId = (idRes.rows as any[])[0]?.NEXT_ID || 1;
+    const formattedDate = data.appointmentDate.split('-').reverse().join('/'); // YYYY-MM-DD -> DD/MM/YYYY
 
-    await conn.execute(`
-      INSERT INTO MEDI.LICH_KHAM_ONLINE (
-        ID, MAHOSO, HOTEN, SDT, MABS, MAKP, NGAYKHAM, TRANGTHAI, NGAYTAO
-      ) VALUES (
-        :id, :maHoSo, :hoten, :sdt, :mabs, :makp, SYSDATE, 0, SYSDATE
-      )
-    `, {
-      id: nextId,
-      maHoSo,
-      hoten: data.fullName,
-      sdt: data.phone,
-      mabs: data.doctorId || '',
-      makp: data.departmentId || '01' // Default MAKP
-    });
+    // 1. Tự động cấp số thứ tự (STT) cho Ngày khám
+    let stt = 1;
+    const sttQuery = await conn.execute(
+      `SELECT STT FROM MEDI.TBL_STTKHAM WHERE NGAY = :ngay`,
+      { ngay: formattedDate }
+    );
     
-    console.log(`[HIS Integration] Đã ghi nhận lịch hẹn vào LICH_KHAM_ONLINE (Mã HS: ${maHoSo}) cho bệnh nhân ${data.fullName}`);
-    return true;
+    if (sttQuery.rows && sttQuery.rows.length > 0) {
+      stt = Number((sttQuery.rows as any[])[0].STT) + 1;
+      await conn.execute(
+        `UPDATE MEDI.TBL_STTKHAM SET STT = :stt WHERE NGAY = :ngay`,
+        { stt, ngay: formattedDate }
+      );
+    } else {
+      await conn.execute(
+        `INSERT INTO MEDI.TBL_STTKHAM (NGAY, STT) VALUES (:ngay, :stt)`,
+        { ngay: formattedDate, stt }
+      );
+    }
+
+    // 2. Tìm hoặc tạo bệnh nhân trong W_LOGIN
+    let idLogin = 1;
+    const loginQuery = await conn.execute(
+      `SELECT ID FROM MEDI.W_LOGIN WHERE DTDIDONG = :phone AND ROWNUM = 1`,
+      { phone: data.phone }
+    );
+    
+    if (loginQuery.rows && loginQuery.rows.length > 0) {
+      idLogin = Number((loginQuery.rows as any[])[0].ID);
+    } else {
+      const maxLoginIdRes = await conn.execute(`SELECT NVL(MAX(ID), 0) + 1 as NEXT_ID FROM MEDI.W_LOGIN`);
+      idLogin = Number((maxLoginIdRes.rows as any[])[0].NEXT_ID);
+      await conn.execute(
+        `INSERT INTO MEDI.W_LOGIN (ID, HOTEN, DTDIDONG, NGAYUD) VALUES (:id, :hoten, :phone, SYSDATE)`,
+        { id: idLogin, hoten: data.fullName, phone: data.phone }
+      );
+    }
+
+    // 3. Ghi vào W_HEN
+    const maxHenIdRes = await conn.execute(`SELECT NVL(MAX(ID), 0) + 1 as NEXT_ID FROM MEDI.W_HEN`);
+    const idHen = Number((maxHenIdRes.rows as any[])[0].NEXT_ID);
+    
+    await conn.execute(
+      `INSERT INTO MEDI.W_HEN (ID, IDLOGIN, LOAI, CHUONGTRINH, LYDO, MABS, DONE, NGAYUD, LYDO_VN) 
+       VALUES (:id, :idlogin, 0, 0, :symptoms, :mabs, 0, SYSDATE, :symptoms_vn)`,
+      {
+        id: idHen,
+        idlogin: idLogin,
+        symptoms: data.symptoms || '',
+        mabs: data.doctorId || '',
+        symptoms_vn: data.symptoms || ''
+      }
+    );
+
+    // 4. Ghi chi tiết vào W_HENCT
+    await conn.execute(
+      `INSERT INTO MEDI.W_HENCT (ID, NGAY, GHICHU, NGAYUD, GHICHU_VN) 
+       VALUES (:id, TO_DATE(:ngaykham, 'YYYY-MM-DD'), :ghichu, SYSDATE, :ghichu_vn)`,
+      {
+        id: idHen,
+        ngaykham: data.appointmentDate,
+        ghichu: data.appointmentTime ? `Giờ khám: ${data.appointmentTime}` : '',
+        ghichu_vn: data.appointmentTime ? `Giờ khám: ${data.appointmentTime}` : ''
+      }
+    );
+
+    await conn.commit();
+    console.log(`[HIS Integration] Đã ghi nhận thành công W_HEN (ID: ${idHen}), STT: ${stt}`);
+    
+    return { appointmentId: `WEB-${idHen}`, stt };
   } catch (err) {
-    console.error("[HIS Integration] Lỗi ghi lịch khám online:", err);
-    return false; // Phục hồi êm đẹp nếu HIS lỗi
+    console.error("[HIS Integration] Lỗi ghi lịch khám online (W_HEN):", err);
+    await conn.rollback();
+    throw err;
   } finally {
     await conn.close();
   }
-}
-
-/**
- * [DRAFT] Thanh toán viện phí Online (Ghi vào bảng MEDI.XN_VIENPHI hoặc tương đương)
- */
-export async function confirmHisPayment(admissionId: string, amount: number): Promise<boolean> {
-  // TODO: Thay thế bằng SQL chuẩn
-  console.log(`[HIS Integration] Đã xác nhận thanh toán ${amount} cho phiếu ${admissionId}`);
-  return true;
 }

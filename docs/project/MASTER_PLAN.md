@@ -250,7 +250,7 @@ VIETINBANK_CERT_PATH=<optional, mặc định đọc từ docs/>
 | 9 | Admin JWT Auth + Cookies | ✅ Hoàn thành |
 | 10 | VietinBank VietQR + Booking 5-step + STT | ✅ Hoàn thành |
 | **11** | **Advanced Booking Engine (3 luồng, BHYT, HIS APIs)** | **✅ Hoàn thành** |
-| **12** | **HIS Write (INSERT W_HEN khi thanh toán OK)** | ⏳ Chờ IT cung cấp SQL/Stored Procedure chuẩn |
+| **12** | **HIS Write (INSERT W_HEN, TBL_STTKHAM khi thanh toán OK)** | **✅ Hoàn thành (2026-04-28)** |
 | **13** | **Trợ lý AI Y Dược (Google Gemini + RAG)** | **✅ Hoàn thành (2026-04-22)** |
 | | — Floating Chat Widget (premium UI, suggested questions) | ✅ |
 | | — Knowledge Base bệnh viện (dịch vụ, giá, giờ, quy trình) | ✅ |
@@ -395,16 +395,10 @@ GEMINI_API_KEY=<your-gemini-api-key>
 - **CMS:** Admin Dashboard đã chạy ổn định (Bài viết, Bác sĩ, Bệnh nhân).
 - **AI Chatbot:** Tích hợp Gemini 2.0 Flash thành công, hỗ trợ trả lời dựa trên Knowledge Base.
 
-### 2. Kế hoạch Phase tiếp theo: Phase 12 (HIS Integration - Ghi dữ liệu)
-Đây là Phase quan trọng nhất để đưa hệ thống vào thực tế:
-- **Mục tiêu:** Khi bệnh nhân thanh toán thành công (webhook VietinBank báo về), Backend phải thực hiện INSERT dữ liệu vào bảng `MEDI.W_HEN` trong Oracle.
-- **Công việc cần làm:**
-    1. Liên hệ bộ phận IT bệnh viện để lấy cấu trúc bảng `W_HEN` (các trường bắt buộc).
-    2. Viết hàm `saveToHis()` trong `his-integration.service.ts`.
-    3. Xử lý logic gán số thứ tự (STT) tự động dựa trên slot khám.
-    4. Gửi email/SMS xác nhận cho bệnh nhân kèm STT.
+### 2. Kế hoạch Phase tiếp theo: Phase 12 (HIS Integration - Ghi dữ liệu) -> Đã hoàn thành
+- **Mục tiêu đạt được:** Khi bệnh nhân đặt lịch thành công, Backend thực hiện INSERT dữ liệu vào bảng `MEDI.W_LOGIN`, `MEDI.W_HEN`, `MEDI.W_HENCT` trong Oracle.
+- **Số thứ tự (STT):** Tự động sinh số thứ tự từ bảng `MEDI.TBL_STTKHAM` và trả về hiển thị trên Frontend.
 
 ### 3. Ghi chú cho phiên làm việc tiếp theo
-- **Nhánh Git:** Tiếp tục từ `feature/phase-17-seo` hoặc tạo nhánh mới `feature/phase-12-his-write`.
-- **API:** Lưu ý các API CMS hiện đã được bảo vệ bằng `requireAdmin`, cần `Authorization: Bearer <token>` khi gọi từ frontend.
-- **Logo:** File logo hiện tại nằm tại `public/images/logo.png`.
+- **Nhánh Git:** `feature/phase-12-his-write` đã hoàn thiện và sẽ được gộp vào `develop`.
+- **Cần làm:** Thiết lập gửi SMS/Email xác nhận cho bệnh nhân kèm STT hoặc chuyển qua Phase 18 (Mobile App).

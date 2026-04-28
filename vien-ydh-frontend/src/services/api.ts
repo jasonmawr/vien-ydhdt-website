@@ -155,7 +155,7 @@ export async function createAppointment(payload: CreateAppointmentPayload) {
   return apiFetch<{
     success: boolean;
     message: string;
-    data?: { id: string; patientName: string; status: string };
+    data?: { id: string; patientName: string; status: string; stt?: number };
   }>("/api/appointments", {
     method: "POST",
     body: JSON.stringify(payload),

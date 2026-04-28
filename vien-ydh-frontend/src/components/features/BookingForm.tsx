@@ -27,6 +27,7 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
   const [qrUrl, setQrUrl] = useState("");
   const [orderId, setOrderId] = useState("");
   const [appointmentId, setAppointmentId] = useState("");
+  const [stt, setStt] = useState(0);
 
   // Data from API
   const [departments, setDepartments] = useState<DepartmentDTO[]>([]);
@@ -190,6 +191,7 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
         if (result.success) {
           setSuccessMessage(result.message);
           setAppointmentId(result.data?.id || orderId);
+          setStt(result.data?.stt || 0);
           setStep(6);
         }
       }
@@ -597,7 +599,7 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
       <div className="mt-6 mx-auto bg-gradient-to-br from-primary-800 to-emerald-700 text-white p-6 rounded-2xl max-w-[280px] flex flex-col items-center shadow-lg">
         <p className="text-xs font-bold uppercase mb-1 opacity-80 tracking-wider">Số Thứ Tự Khám</p>
         <p className="text-5xl font-black tabular-nums">
-          {String(Math.abs(Number(appointmentId?.replace(/\D/g, "").slice(-3)) || 1)).padStart(3, "0")}
+          {String(Math.abs(Number(stt) || Number(appointmentId?.replace(/\D/g, "").slice(-3)) || 1)).padStart(3, "0")}
         </p>
         <div className="mt-3 pt-3 border-t border-white/20 w-full text-center">
           <p className="text-xs opacity-70">Mã phiếu</p>
