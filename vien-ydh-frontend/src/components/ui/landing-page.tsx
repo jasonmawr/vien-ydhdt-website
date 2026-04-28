@@ -106,9 +106,14 @@ export function HospitalLandingPage() {
               <motion.div
                 whileHover={{ rotate: 5, scale: 1.1 }}
                 transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                className="h-10 w-10 rounded-xl bg-primary-600 flex items-center justify-center shadow-lg"
+                className="relative h-12 w-12 lg:h-14 lg:w-14 overflow-hidden"
               >
-                <Leaf className="h-6 w-6 text-white" />
+                <Image
+                  src="/images/logo.png"
+                  alt="Logo Viện"
+                  fill
+                  className="object-contain"
+                />
               </motion.div>
               <div className="leading-tight">
                 <span className="font-bold text-lg text-primary-900 block">Viện Y Dược Học</span>
@@ -645,8 +650,13 @@ export function HospitalLandingPage() {
         <div className="container-site grid gap-10 px-4 md:px-6 lg:grid-cols-4 border-b border-stone-800 pb-16">
           <div className="space-y-6">
             <Link href="/" className="flex items-center space-x-3">
-              <div className="h-12 w-12 rounded-xl bg-primary-600 flex items-center justify-center">
-                <Leaf className="h-7 w-7 text-white" />
+              <div className="relative h-14 w-14 overflow-hidden">
+                <Image
+                  src="/images/logo.png"
+                  alt="Logo Viện"
+                  fill
+                  className="object-contain"
+                />
               </div>
               <div className="leading-tight">
                 <span className="font-bold text-xl text-white block">Viện Y Dược Học</span>

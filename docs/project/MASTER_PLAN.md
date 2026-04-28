@@ -382,3 +382,29 @@ GEMINI_API_KEY=<your-gemini-api-key>
 3. Cập nhật file này sau mỗi Phase
 4. Không hardcode bất kỳ key/secret nào trong source code
 5. Mọi dữ liệu nhạy cảm đọc từ `.env` (đã gitignore)
+
+---
+
+## VIII. TRẠNG THÁI BÀN GIAO & KẾ HOẠCH TIẾP THEO (Handover)
+
+### 1. Trạng thái hiện tại (Tính đến 2026-04-23)
+- **Website Frontend:** Đã hoàn thiện thiết kế Premium, Redesign 100% Mobile-first.
+- **Logo & Brand:** Đã thay thế Logo chuẩn của Viện (tròn), gỡ bỏ các khung bao cũ.
+- **UI/UX:** Đã gỡ bỏ toàn bộ `alert()` native, thay bằng hệ thống **Sonner Toast** hiện đại.
+- **Performance:** Đã fix lỗi Next.js Image warnings (thiếu sizes) và Tailwind v4 Specificity.
+- **CMS:** Admin Dashboard đã chạy ổn định (Bài viết, Bác sĩ, Bệnh nhân).
+- **AI Chatbot:** Tích hợp Gemini 2.0 Flash thành công, hỗ trợ trả lời dựa trên Knowledge Base.
+
+### 2. Kế hoạch Phase tiếp theo: Phase 12 (HIS Integration - Ghi dữ liệu)
+Đây là Phase quan trọng nhất để đưa hệ thống vào thực tế:
+- **Mục tiêu:** Khi bệnh nhân thanh toán thành công (webhook VietinBank báo về), Backend phải thực hiện INSERT dữ liệu vào bảng `MEDI.W_HEN` trong Oracle.
+- **Công việc cần làm:**
+    1. Liên hệ bộ phận IT bệnh viện để lấy cấu trúc bảng `W_HEN` (các trường bắt buộc).
+    2. Viết hàm `saveToHis()` trong `his-integration.service.ts`.
+    3. Xử lý logic gán số thứ tự (STT) tự động dựa trên slot khám.
+    4. Gửi email/SMS xác nhận cho bệnh nhân kèm STT.
+
+### 3. Ghi chú cho phiên làm việc tiếp theo
+- **Nhánh Git:** Tiếp tục từ `feature/phase-17-seo` hoặc tạo nhánh mới `feature/phase-12-his-write`.
+- **API:** Lưu ý các API CMS hiện đã được bảo vệ bằng `requireAdmin`, cần `Authorization: Bearer <token>` khi gọi từ frontend.
+- **Logo:** File logo hiện tại nằm tại `public/images/logo.png`.
