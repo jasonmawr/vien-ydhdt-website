@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect, useRef } from "react";
-import html2canvas from "html2canvas";
+import * as htmlToImage from "html-to-image";
 import {
   ChevronRight, ChevronLeft, CheckCircle2,
   Calendar as CalendarIcon, Clock, User, Phone, FileText, Loader2, ShieldCheck, Download
@@ -43,15 +43,19 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
   const handleDownloadTicket = async () => {
     if (!ticketRef.current) return;
     try {
-      const canvas = await html2canvas(ticketRef.current, {
-        scale: 2,
+      const blob = await htmlToImage.toBlob(ticketRef.current, {
+        pixelRatio: 2,
         backgroundColor: "#ffffff",
       });
-      const dataUrl = canvas.toDataURL("image/png");
+      if (!blob) throw new Error("Could not generate image blob");
+      
+      const blobUrl = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.download = `Phieu-Kham-${appointmentId || '000'}.png`;
-      link.href = dataUrl;
+      link.href = blobUrl;
       link.click();
+      window.URL.revokeObjectURL(blobUrl);
+      
       toast.success("Đã tải Phiếu Khám về máy!");
     } catch (err) {
       console.error("Lỗi tải ảnh:", err);
