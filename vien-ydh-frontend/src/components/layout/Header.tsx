@@ -5,6 +5,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Menu, X, Search, ChevronDown, Calendar, Phone, Globe } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useTranslations } from 'next-intl';
+import LanguageSwitcher from './LanguageSwitcher';
 
 interface NavItem {
   label: string;
@@ -12,7 +14,7 @@ interface NavItem {
   children?: { label: string; href: string }[];
 }
 
-const TOP_NAV_ITEMS = [
+const TOP_NAV_ITEMS: NavItem[] = [
   { label: 'Người bệnh & Cộng đồng', href: '/' },
   { label: 'Chuyên gia y tế', href: '/chuyen-gia-y-te' },
   { label: 'Đấu thầu', href: '/dau-thau' },
@@ -69,6 +71,7 @@ const MAIN_NAV_ITEMS: NavItem[] = [
 ];
 
 export default function Header() {
+  const t = useTranslations('nav');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -149,10 +152,7 @@ export default function Header() {
               <span>Hotline: 0964 392 632</span>
             </a>
             <div className="h-4 w-px bg-primary-700"></div>
-            <button className="flex items-center gap-1.5 hover:text-white transition-colors">
-              <Globe className="h-4 w-4" />
-              <span>VN</span>
-            </button>
+            <LanguageSwitcher />
           </div>
         </div>
       </div>
@@ -290,7 +290,7 @@ export default function Header() {
                 href="/dat-lich"
                 className="hidden sm:inline-flex btn-accent !px-5 !py-2.5"
               >
-                Đặt lịch khám
+                {t('booking.title')}
               </Link>
 
               {/* Hamburger */}
@@ -384,7 +384,7 @@ export default function Header() {
               className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary-600 px-4 py-3 text-base font-semibold text-white"
               onClick={() => setIsMenuOpen(false)}
             >
-              Đặt lịch khám ngay
+              {t('booking.title')}
             </Link>
             <a
               href="tel:0964392632"

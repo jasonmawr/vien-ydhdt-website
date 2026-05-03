@@ -4,22 +4,24 @@ import { useState, useMemo } from "react";
 import { Search, Filter, Beaker } from "lucide-react";
 import { HERBS_DATA } from "@/services/herbs-static";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 // Lấy danh sách các danh mục duy nhất
 const categories = ["Tất cả", ...Array.from(new Set(HERBS_DATA.map((herb) => herb.category)))];
 
 
 export default function HerbDictionary() {
+  const t = useTranslations('herbs');
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Tất cả");
 
   const filteredHerbs = useMemo(() => {
     return HERBS_DATA.filter((herb) => {
-      const matchesSearch = 
-        herb.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      const matchesSearch =
+        herb.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         herb.latinName.toLowerCase().includes(searchTerm.toLowerCase());
-      
-      const matchesCategory = 
+
+      const matchesCategory =
         selectedCategory === "Tất cả" || herb.category === selectedCategory;
 
       return matchesSearch && matchesCategory;
@@ -37,13 +39,13 @@ export default function HerbDictionary() {
           <input
             type="text"
             className="block w-full rounded-xl border-gray-200 bg-gray-50 py-3 pl-10 pr-3 text-sm placeholder-gray-500 focus:border-primary-800 focus:bg-white focus:ring-1 focus:ring-primary-800 transition-all"
-            placeholder="Tìm theo tên tiếng Việt hoặc tên Latin..."
+            placeholder={t('searchPlaceholder')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            aria-label="Tìm kiếm dược liệu"
+            aria-label={t('searchAriaLabel')}
           />
         </div>
-        
+
         <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 hide-scrollbar">
           <Filter className="h-5 w-5 text-gray-400 shrink-0 mr-2" />
           {categories.map((cat) => (
@@ -68,8 +70,8 @@ export default function HerbDictionary() {
       {filteredHerbs.length > 0 ? (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {filteredHerbs.map((herb, index) => (
-            <div 
-              key={herb.id} 
+            <div
+              key={herb.id}
               className="card group overflow-hidden bg-white border border-gray-100 flex flex-col h-full animate-fade-in-up"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
@@ -94,11 +96,11 @@ export default function HerbDictionary() {
                 <p className="text-sm text-gray-600 line-clamp-3 mb-6 flex-1">
                   {herb.description}
                 </p>
-                
+
                 <div className="border-t border-gray-100 pt-4 mt-auto">
                   <h4 className="text-xs font-bold text-gray-900 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                     <Beaker className="h-3 w-3 text-[#d97706]" />
-                    Công dụng chính
+                    {t('benefitsTitle')}
                   </h4>
                   <div className="flex flex-wrap gap-1.5">
                     {herb.benefits.slice(0, 3).map((benefit) => (
@@ -120,8 +122,8 @@ export default function HerbDictionary() {
       ) : (
         <div className="text-center py-20 bg-white rounded-2xl border border-dashed border-gray-200">
           <Beaker className="mx-auto h-12 w-12 text-gray-300 mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-1">Không tìm thấy dược liệu</h3>
-          <p className="text-gray-500">Vui lòng thử lại với từ khóa hoặc danh mục khác.</p>
+          <h3 className="text-lg font-medium text-gray-900 mb-1">{t('noResults')}</h3>
+          <p className="text-gray-500">{t('tryAgain')}</p>
         </div>
       )}
     </div>

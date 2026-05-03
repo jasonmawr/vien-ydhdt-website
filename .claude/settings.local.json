@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install * mình thấy bạn vừa tạo nhánh mới là docs/next-phases-planning á vậy giờ vào làm thì có cần qua nhánh mới không vậy ? Và mình có cần tạo MR trên github web không)",
+      "PowerShell(git pull *)",
+      "PowerShell(git checkout *)",
+      "PowerShell(New-Item *)",
+      "Bash(npx tsc *)",
+      "Bash(npm run *)",
+      "Bash(node -e \"require\\('./messages/vi.json'\\); console.log\\('vi.json OK'\\)\")",
+      "Bash(node --check messages/vi.json)",
+      "Bash(node -e \"require\\('./messages/vi.json'\\); require\\('./messages/en.json'\\); require\\('./messages/zh.json'\\); console.log\\('All JSON files valid'\\)\")",
+      "Bash(python -c \"import json; json.load\\(open\\('messages/vi.json'\\)\\)\")",
+      "Bash(npx next *)",
+      "Bash(echo \"Exit code: $?\")",
+      "Bash(node -e \"const fs = require\\('fs'\\); const vi = JSON.parse\\(fs.readFileSync\\('messages/vi.json', 'utf8'\\)\\); const en = JSON.parse\\(fs.readFileSync\\('messages/en.json', 'utf8'\\)\\); const zh = JSON.parse\\(fs.readFileSync\\('messages/zh.json', 'utf8'\\)\\); console.log\\('All valid'\\);\")",
+      "Bash(grep -n \"},$\" messages/vi.json)",
+      "Bash(node -e \"const fs = require\\('fs'\\); const vi = JSON.parse\\(fs.readFileSync\\('messages/vi.json', 'utf8'\\)\\); const en = JSON.parse\\(fs.readFileSync\\('messages/en.json', 'utf8'\\)\\); const zh = JSON.parse\\(fs.readFileSync\\('messages/zh.json', 'utf8'\\)\\); console.log\\('All JSON files valid'\\);\")",
+      "Bash(node validate-json.js)",
+      "Bash(tee /tmp/tsc-errors.txt)"
+    ]
+  }
+}

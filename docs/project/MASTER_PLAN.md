@@ -277,7 +277,11 @@ VIETINBANK_CERT_PATH=<optional, mặc định đọc từ docs/>
 | | — Chuyển Alert native sang Sonner Toast hiện đại | ✅ |
 | | — Đổi cấu trúc Layout Logo chuẩn (Viện Y Dược) | ✅ |
 | 18 | Mobile App (React Native / Flutter) | 📋 Giai đoạn 2 |
-| 19 | Đa ngôn ngữ (EN, 中文) | 📋 Giai đoạn 2 |
+| **19** | **Đa ngôn ngữ (EN, 中文) — Cookie-based i18n** | **✅ Hoàn thành (2026-05-03)** |
+| | — next-intl v4 (without i18n routing, cookie NEXT_LOCALE) | ✅ |
+| | — 3 bộ dịch thuật: vi.json, en.json, zh.json (~72KB tổng) | ✅ |
+| | — LanguageSwitcher component (cờ 🇻🇳🇺🇸🇨🇳, API /api/locale) | ✅ |
+| | — Chuyển toàn bộ hardcode text → useTranslations() (20+ files) | ✅ |
 | 20 | Deploy Production (IIS + SSL) | 📋 Giai đoạn cuối |
 
 ---
@@ -390,18 +394,22 @@ GEMINI_API_KEY=<your-gemini-api-key>
 
 ## VIII. TRẠNG THÁI BÀN GIAO & KẾ HOẠCH TIẾP THEO (Handover)
 
-### 1. Trạng thái hiện tại (Tính đến 2026-04-23)
+### 1. Trạng thái hiện tại (Tính đến 2026-05-03)
 - **Website Frontend:** Đã hoàn thiện thiết kế Premium, Redesign 100% Mobile-first.
 - **Logo & Brand:** Đã thay thế Logo chuẩn của Viện (tròn), gỡ bỏ các khung bao cũ.
 - **UI/UX:** Đã gỡ bỏ toàn bộ `alert()` native, thay bằng hệ thống **Sonner Toast** hiện đại.
 - **Performance:** Đã fix lỗi Next.js Image warnings (thiếu sizes) và Tailwind v4 Specificity.
 - **CMS:** Admin Dashboard đã chạy ổn định (Bài viết, Bác sĩ, Bệnh nhân).
 - **AI Chatbot:** Tích hợp Gemini 2.0 Flash thành công, hỗ trợ trả lời dựa trên Knowledge Base.
+- **Đa ngôn ngữ (Phase 19):** Hoàn thành hệ thống i18n 3 ngôn ngữ (VI/EN/ZH) bằng `next-intl` v4 cookie-based.
+  - Tất cả trang đã chuyển sang `useTranslations()`, không còn hardcode text.
+  - LanguageSwitcher tích hợp trên Header, chuyển ngôn ngữ qua API `/api/locale` + cookie `NEXT_LOCALE`.
 
 ### 2. Kế hoạch Phase tiếp theo: Phase 12 (HIS Integration - Ghi dữ liệu) -> Đã hoàn thành
 - **Mục tiêu đạt được:** Khi bệnh nhân đặt lịch thành công, Backend thực hiện INSERT dữ liệu vào bảng `MEDI.W_LOGIN`, `MEDI.W_HEN`, `MEDI.W_HENCT` trong Oracle.
 - **Số thứ tự (STT):** Tự động sinh số thứ tự từ bảng `MEDI.TBL_STTKHAM` và trả về hiển thị trên Frontend.
 
 ### 3. Ghi chú cho phiên làm việc tiếp theo
-- **Nhánh Git:** `feature/phase-12.5-notification` đã hoàn tất luồng tải Ticket (bằng Canvas Native) và đã lên khung Zalo ZNS. Cần merge nhánh này vào `develop`.
+- **Nhánh Git:** `feature/phase-19-i18n` đã hoàn tất. Cần commit, push và merge vào `develop`.
 - **Cần làm:** Triển khai Phase 20 (Deploy Server) hoặc Phase 18 (Mobile App) theo ý muốn của Bệnh viện. Nếu đi đến Deploy, cần chuẩn bị PM2 hoặc Docker cho Backend và Nginx/IIS cho Frontend.
+- **Lưu ý Next.js 16:** Middleware convention đang deprecated, sẽ chuyển sang "proxy" convention trong bản tiếp theo.

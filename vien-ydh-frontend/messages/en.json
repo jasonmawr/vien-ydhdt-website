@@ -1,0 +1,557 @@
+{
+  "nav": {
+    "home": "Home",
+    "booking": "Appointment",
+    "herbs": "Herbal Medicine",
+    "news": "News",
+    "about": "About",
+    "contact": "Contact",
+    "admin": "Admin"
+  },
+  "hero": {
+    "title": "Institute of Ethnic Medicine",
+    "subtitle": "Healthcare with Traditional Medicine",
+    "description": "Leading research and treatment institute for Vietnamese Traditional Medicine. We provide comprehensive healthcare services combining traditional and modern medical knowledge.",
+    "cta": "Book Appointment"
+  },
+  "booking": {
+    "title": "Book Appointment",
+    "subtitle": "Online booking system helps you manage your time and avoid waiting",
+    "modes": {
+      "specialty": "By Specialty",
+      "doctor": "By Doctor",
+      "date": "By Date"
+    },
+    "doctorPageDescription": "Select the doctor you trust directly, view available schedule and book immediately.",
+    "doctorPageSubtitle": "Choose your trusted doctor directly, view available slots, and book an appointment now.",
+    "specialtyPageDescription": "Select the specialty that matches your symptoms.",
+    "specialtyPageSubtitle": "Choose the specialty you want to see to view available doctors.",
+    "datePageDescription": "Select a date and time that fits your schedule.",
+    "datePageSubtitle": "View available time slots and choose the most convenient time.",
+    "step1": {
+      "title": "1. Select Specialty",
+      "select": "Choose the specialty that matches your symptoms",
+      "loading": "Loading specialties...",
+      "noResults": "No specialties found"
+    },
+    "step2": {
+      "title": "2. Select Doctor",
+      "search": "Search by doctor name...",
+      "any": "No specific doctor preference",
+      "searchPlaceholder": "Search by doctor name...",
+      "noSelection": "No specific doctor preference",
+      "autoAllocate": "(Automatically assigned based on available schedule)",
+      "loading": "Loading doctors...",
+      "noResults": "No doctors found",
+      "defaultSpecialty": "Traditional Medicine"
+    },
+    "step3": {
+      "title": "3. Select Date & Time",
+      "date": "Appointment date",
+      "time": "Available time slots",
+      "labelDate": "Appointment date",
+      "labelTime": "Available time slots",
+      "loading": "Loading schedule...",
+      "noSlots": "No available time slots for this date"
+    },
+    "step4": {
+      "title": "4. Patient Information",
+      "labelName": "Full Name *",
+      "labelPhone": "Phone Number *",
+      "labelDob": "Date of Birth *",
+      "labelGender": "Gender",
+      "male": "Male",
+      "female": "Female",
+      "labelIdNumber": "ID Card/CCCD Number",
+      "labelSymptoms": "Symptoms (Optional)",
+      "symptomsPlaceholder": "Briefly describe your health issue...",
+      "labelPatientType": "Patient Type *",
+      "patientType": {
+        "bhyt": "Health Insurance",
+        "dich-vu": "Self-Pay",
+        "yeu-cau": "On Request",
+        "chuyen-gia": "Specialist"
+      },
+      "patientTypeDesc": {
+        "bhyt": "Health Insurance",
+        "dich-vu": "No Insurance",
+        "yeu-cau": "Requested Appointment",
+        "chuyen-gia": "Specialist Doctor"
+      },
+      "bhytInfoTitle": "Health Insurance Information",
+      "bhytNumberLabel": "Health Insurance Card Number *",
+      "bhytNumberPlaceholder": "e.g. GD49632584585",
+      "bhytTuyenLabel": "Select Insurance Type *",
+      "bhytOptions": {
+        "option1": "Have health insurance registered for initial treatment at our institute",
+        "option2": "Follow-up appointment with prescription from our institute",
+        "option3": "Have a health insurance referral to our institute",
+        "option4": "None of the above (Out-of-network)"
+      }
+    },
+    "step5": {
+      "title": "5. Payment",
+      "qrInstruction": "Scan the VietQR code below using your banking app or e-wallet",
+      "instruction": "Scan the VietQR code below using your banking app or e-wallet",
+      "amount": "Amount",
+      "amountLabel": "Amount",
+      "orderId": "Order ID",
+      "orderIdLabel": "Order ID",
+      "devNote": "(System will auto-redirect to e-ticket page after successful VietinBank IPN. During development, click confirm button below to simulate IPN)."
+    },
+    "step6": {
+      "title": "Appointment Booked Successfully!",
+      "defaultMessage": "Thank you for choosing Institute of Ethnic Medicine. Our medical staff will call to confirm shortly.",
+      "labelTime": "Time",
+      "labelPatient": "Patient",
+      "labelDepartment": "Department",
+      "labelStt": "Queue Number",
+      "labelTicketId": "Ticket ID",
+      "instruction": "Please remember your <strong>Queue Number</strong> and arrive at the scheduled time. Provide your <strong>Ticket ID</strong> to the receptionist for fast service.",
+      "downloadTicket": "Download Ticket (Free)",
+      "newBooking": "Book Another Appointment"
+    },
+    "modal": {
+      "title": "Change Patient Type",
+      "message": "You selected Out-of-network. According to regulations, the examination fee will be calculated at the <strong className=\"text-blue-700\">Self-Pay (No Insurance)</strong> rate.",
+      "button": "I Understand"
+    },
+    "common": {
+      "progressLabel": "Step {step}/5",
+      "back": "Back",
+      "continue": "Continue",
+      "payNow": "Proceed to Payment",
+      "confirm": "Confirm Payment (Simulate IPN)",
+      "generatingQR": "Generating QR code...",
+      "confirming": "Confirming...",
+      "autoAllocateDoctor": "Auto-assign"
+    },
+    "summary": {
+      "title": "Registration Summary",
+      "department": "Department",
+      "doctor": "Doctor",
+      "time": "Time",
+      "patientType": "Patient Type",
+      "bhytNumber": "Health Insurance Number",
+      "priceSummary": "Exam Fee (Estimate)",
+      "priceNote": "Including all fees. Health insurance (if applicable) will be deducted at the hospital."
+    },
+    "validation": {
+      "nameRequired": "Please enter your full name.",
+      "phoneRequired": "Please enter your phone number.",
+      "phoneInvalid": "Invalid phone number.",
+      "dobRequired": "Please select your date of birth.",
+      "bhytRequired": "Please enter a valid health insurance card number."
+    },
+    "errors": {
+      "ticketDownloadSuccess": "Exam ticket downloaded!",
+      "ticketDownloadFail": "Cannot download image. Please take a screenshot!",
+      "general": "An error occurred. Please try again later.",
+      "paymentCreation": "Cannot generate payment code."
+    },
+    "step2": {
+      "defaultSpecialty": "Traditional Medicine"
+    }
+  },
+  "pricing": {
+    "title": "Exam Price List (Reference)",
+    "service": "Service",
+    "bhyt": "Insurance",
+    "dichVu": "Service",
+    "yeuCau": "On Request",
+    "chuyenGia": "Specialist",
+    "note": "* Prices are extracted directly from the hospital fee management system. Actual prices may vary according to regulations."
+  },
+  "features": {
+    "timeSave": "Save waiting time",
+    "bhytSupport": "Health insurance support",
+    "qrPayment": "VietinBank QR Payment"
+  },
+  "common": {
+    "continue": "Continue",
+    "back": "Back",
+    "submit": "Submit",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "required": "Required",
+    "invalidPhone": "Invalid phone number.",
+    "pleaseEnter": "Please enter"
+  },
+  "footer": {
+    "description": "Leading research and treatment institute for Vietnamese Traditional Medicine, combining traditional wisdom with modern healthcare.",
+    "about": {
+      "title": "About Us"
+    },
+    "specialties": {
+      "title": "Our Specialties",
+      "acupuncture": "Acupuncture",
+      "physio": "Physiotherapy",
+      "hemorrhoids": "Hemorrhoids Treatment",
+      "obesity": "Obesity Management",
+      "acupressure": "Acupressure",
+      "other": "Other Services"
+    },
+    "support": {
+      "title": "Support",
+      "patientInfo": "Patient Information",
+      "priceList": "Price List",
+      "faq": "FAQ",
+      "contact": "Contact"
+    },
+    "contact": {
+      "title": "Contact Info",
+      "address": "273 – 275 Nguyen Van Troi, Ward 10,<br/>Phu Nhuan District, Ho Chi Minh City",
+      "phone1": "(028) 3844 3047",
+      "hotline": "Hotline: 0964 392 632",
+      "email": "v.ydhdt@tphcm.gov.vn",
+      "hours": {
+        "title": "Clinic Hours:",
+        "weekday": "Regular hours: 06:00 – 16:30 (Mon - Fri)",
+        "evening": "Evening hours: 16:30 – 18:30 (Mon - Fri)",
+        "weekend": "Weekend: 07:00 – 11:30 (Sat, Sun)"
+      }
+    },
+    "rights": "All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Use",
+    "adminPortal": "Admin Portal"
+  },
+  "search": {
+    "title": "Search Medical Information",
+    "subtitle": "Enter your registered phone number to view appointment history, upcoming appointments, and medical invoices.",
+    "placeholder": "Enter phone number (e.g. 0912345678)",
+    "button": "Search",
+    "searching": "Searching...",
+    "upcomingAppointments": "Upcoming Appointments",
+    "confirmed": "Confirmed",
+    "viewDetails": "View Details",
+    "medicalHistory": "Medical History",
+    "examType": "{type} Examination",
+    "examDate": "Exam date: {date}",
+    "featureComingSoon": "View {item} details feature is being completed in upcoming phases."
+  },
+  "herbs": {
+    "title": "Herb Dictionary",
+    "subtitle": "Explore the treasure trove of Traditional Medicine with hundreds of precious herbs. Learn in detail about properties, uses, and herbal prescriptions.",
+    "searchPlaceholder": "Search by Vietnamese name or Latin name...",
+    "searchAriaLabel": "Search herbs",
+    "filterLabel": "Filter by category",
+    "benefitsTitle": "Main Benefits",
+    "noResults": "No herbs found",
+    "tryAgain": "Please try a different keyword or category."
+  },
+  "news": {
+    "title": "News & Medicine",
+    "subtitle": "Stay updated with medical knowledge, institute activities, and the latest research from the Institute of Ethnic Medicine.",
+    "searchPlaceholder": "Search articles...",
+    "loading": "Loading articles...",
+    "readMore": "Read Article",
+    "noResults": "No matching articles found",
+    "backToNews": "Back to news",
+    "articleNotFound": "Article not found",
+    "views": "{count} views",
+    "author": "Institute of Ethnic Medicine",
+    "categories": {
+      "all": "All",
+      "traditional": "Traditional Medicine",
+      "health": "Health & Nutrition",
+      "institute": "Institute Activities",
+      "research": "Scientific Research",
+      "patient": "Patient Guidance"
+    },
+    "read": "Read"
+  },
+  "about": {
+    "instituteName": "Institute of Ethnic Medicine HCMC",
+    "hero": {
+      "title": "Preserving the Essence<br />of Vietnamese Traditional Medicine",
+      "subtitle": "With over 50 years of building and development, the Institute of Ethnic Medicine is proud to be the leading unit in the field of Traditional Medicine in Ho Chi Minh City, harmoniously combining the essence of national medicine with modern medicine."
+    },
+    "cta": {
+      "bookAppointment": "Book Appointment",
+      "contactUs": "Contact Us"
+    },
+    "stats": {
+      "years": "Years of Establishment & Development",
+      "doctors": "Leading Doctors & Experts",
+      "patients": "Patients Treated Annually",
+      "awards": "Prestigious Medical Awards"
+    },
+    "sections": {
+      "missionVision": "Mission & Vision",
+      "missionVisionSub": "Institute development direction during national healthcare digital transformation",
+      "mission": "Our Mission",
+      "missionDesc": "Preserve, inherit, and promote the essence of Vietnamese Traditional Medicine. Provide comprehensive, safe, and effective healthcare services, contributing to improving community health.",
+      "missionItems": [
+        "Dedicated patient service",
+        "Research & preservation of precious herbs",
+        "Training the next generation of Traditional Medicine practitioners"
+      ],
+      "vision": "Vision 2030",
+      "visionDesc": "Become a leading Traditional Medicine center in Southeast Asia, excellently combining national knowledge with modern medicine, applying digital technology in management and treatment.",
+      "visionItems": [
+        "Leading in Traditional Medicine in the Southern region",
+        "Comprehensive digital healthcare implementation",
+        "International cooperation in herbal research"
+      ],
+      "history": "Formation & Development History",
+      "historySub": "A journey of over 50 years of building and contributing to Vietnamese national medicine",
+      "departments": "Departments & Units",
+      "departmentsSub": "Full department system serving diverse examination and treatment needs"
+    },
+    "ctaSection": {
+      "title": "Let Us Take Care of Your Health",
+      "subtitle": "Book an appointment today to be consulted by our leading Traditional Medicine doctors.",
+      "bookNow": "Book Appointment Now"
+    },
+    "milestones": [
+      { "year": "1975", "title": "Institute Established", "desc": "The Institute of Ethnic Medicine was established according to the Decision of HCMC People's Committee, under the Department of Health." },
+      { "year": "1985", "title": "Specialty Expansion", "desc": "Added departments of Acupuncture, Physiotherapy - Rehabilitation, and Herbal Medicine." },
+      { "year": "2000", "title": "Equipment Modernization", "desc": "Invested in X-Ray, Color Ultrasound, modern biochemical testing systems, enhancing diagnostic quality." },
+      { "year": "2010", "title": "ISO 15189 Standard", "desc": "Laboratory achieved international ISO 15189 standard, affirming the quality of clinical services." },
+      { "year": "2020", "title": "Digital Healthcare Transformation", "desc": "Deployed comprehensive HIS system, electronic medical records management and online booking." },
+      { "year": "2026", "title": "Digital Healthcare Foundation", "desc": "Launched online booking portal integrated with VietQR payment, moving towards Healthcare 4.0 model." }
+    ],
+    "departments": [
+      { "name": "Examination - Emergency", "desc": "Initial reception and processing of all patients." },
+      { "name": "Acupuncture - Rehabilitation", "desc": "Treatment by acupuncture, massage, spinal traction, and stroke rehabilitation." },
+      { "name": "Physiotherapy", "desc": "Therapeutic ultrasound, electrotherapy, infrared, shortwave..." },
+      { "name": "Traditional Medicine", "desc": "Northern-Southern herbal formulas, folk remedies, traditional decoctions." },
+      { "name": "Catgut Embedding - Procedures", "desc": "Self-dissolving catgut embedding into acupoints, longer effect than regular acupuncture." },
+      { "name": "Pharmacy - Herbal Medicine", "desc": "Supply and certify standard herbal medicines, manufacture Traditional Medicine finished products." },
+      { "name": "Clinical Laboratory", "desc": "Blood tests, biochemistry, X-Ray, Color Ultrasound, Electrocardiogram." },
+      { "name": "Nutrition", "desc": "Clinical nutrition counseling combined with Traditional Medicine." }
+    ]
+  },
+  "contact": {
+    "hero": {
+      "badge": "Contact & Support",
+      "title": "Contact Us",
+      "subtitle": "Our consultants are ready to support you 24/7. Send questions or book an appointment today."
+    },
+    "infoCards": {
+      "address": {
+        "title": "Address",
+        "lines": ["273 - 275 Nguyen Van Troi, Ward 10", "Phu Nhuan District, Ho Chi Minh City"],
+        "action": "Get Directions"
+      },
+      "phone": {
+        "title": "Phone & Hotline",
+        "lines": ["Hotline: 0964 392 632", "Emergency: 0964 392 632"],
+        "action": "Call Now"
+      },
+      "email": {
+        "title": "Email",
+        "lines": ["v.ydhdt@tphcm.gov.vn", "hotro@vienydhdt.gov.vn"],
+        "action": "Send Email"
+      },
+      "hours": {
+        "title": "Clinic Hours",
+        "lines": ["Mon - Fri: 7:00 – 17:00", "Sat: 7:00 – 12:00", "Sun: Closed"],
+        "action": "Book Appointment"
+      }
+    },
+    "form": {
+      "title": "Send Message",
+      "subtitle": "Fill in your information and we will respond within 24 business hours.",
+      "nameLabel": "Full Name *",
+      "namePlaceholder": "Enter your full name",
+      "phoneLabel": "Phone Number *",
+      "phonePlaceholder": "Enter phone number",
+      "emailLabel": "Email",
+      "emailPlaceholder": "Enter email address",
+      "subjectLabel": "Subject",
+      "subjectPlaceholder": "Select subject",
+      "subjects": {
+        "appointment": "Book appointment",
+        "services": "Ask about services",
+        "results": "Check exam results",
+        "feedback": "Service quality feedback",
+        "other": "Other"
+      },
+      "messageLabel": "Message *",
+      "messagePlaceholder": "Describe your issue or question...",
+      "submit": "Send Message",
+      "submitting": "Sending...",
+      "successTitle": "Sent Successfully!",
+      "successMessage": "Thank you for contacting us. We will respond as soon as possible.",
+      "sendAnother": "Send another message"
+    },
+    "map": {
+      "title": "Directions Map",
+      "directionsButton": "Google Maps Directions",
+      "bookNow": "Book Appointment Now",
+      "iframeTitle": "Institute of Ethnic Medicine Map"
+    }
+  },
+  "pricing": {
+    "title": "Exam Price List",
+    "subtitle": "Prices are updated directly from the hospital management system (HIS).",
+    "searchPlaceholder": "Search by service name...",
+    "table": {
+      "code": "Code",
+      "service": "Service Name",
+      "bhyt": "BHYT Price",
+      "serviceFee": "Service Price",
+      "request": "On Request",
+      "expert": "Specialist"
+    },
+    "noResults": "No services found matching \"{searchTerm}\".",
+    "note": {
+      "title": "Note:",
+      "text": "Prices are for reference only and may change according to Ministry of Health regulations. For BHYT patients, the benefit level depends on the benefit code on the card and in-network/out-of-network status."
+    },
+    "updating": "Updating price list..."
+  },
+  "home": {
+    "header": {
+      "logoAlt": "Institute Logo",
+      "instituteName": "Institute of Ethnic Medicine",
+      "instituteShort": "TP.HCM",
+      "nav": {
+        "about": "About",
+        "booking": "Book Appointment",
+        "news": "News",
+        "pricing": "Price List",
+        "contact": "Contact"
+      },
+      "hotline": "0964 392 632",
+      "bookNow": "Book Appointment",
+      "menuOpen": "Open menu",
+      "menuClose": "Close menu"
+    },
+    "mobileMenu": {
+      "about": "About",
+      "booking": "Book Appointment",
+      "news": "News",
+      "pricing": "Service Price List",
+      "search": "Check Appointment History",
+      "contact": "Contact",
+      "call": "Call: 0964 392 632",
+      "bookNow": "Book Appointment"
+    },
+    "hero": {
+      "badge": "Comprehensive healthcare",
+      "title": "Combining the essence of",
+      "titleBreak": "Traditional Medicine & Modern Medicine",
+      "description": "The leading reputable medical examination and treatment unit in the Southern region. We are committed to bringing peace of mind and optimal treatment effectiveness to every patient.",
+      "bookNow": "Book an Appointment Now",
+      "learnMore": "Learn More"
+    },
+    "services": {
+      "sectionBadge": "Top Specialties",
+      "sectionTitle": "Outstanding Services",
+      "sectionDescription": "We provide advanced treatment methods that combine the advantages of Traditional Medicine and modern technology.",
+      "items": [
+        {
+          "title": "Acupuncture - Rehabilitation",
+          "description": "Effective treatment of sciatica, spinal degeneration, and post-stroke functional recovery."
+        },
+        {
+          "title": "General Examination",
+          "description": "Comprehensive health assessment with the support of modern diagnostic equipment."
+        },
+        {
+          "title": "Traditional Medicine Herbs",
+          "description": "Use of Northern-Southern herbal formulas with clear origins, meeting high-quality standards."
+        },
+        {
+          "title": "Physiotherapy",
+          "description": "Exercise therapy, spinal traction, ultrasound therapy to help recover musculoskeletal function."
+        },
+        {
+          "title": "Clinical Laboratory",
+          "description": "Biochemistry, hematology, X-Ray, Color Ultrasound testing systems that are accurate and fast."
+        },
+        {
+          "title": "Catgut Embedding Therapy",
+          "description": "A breakthrough method applying self-dissolving catgut into acupoints, providing long-lasting treatment effects."
+        }
+      ],
+      "learnMore": "Learn more"
+    },
+    "portfolio": {
+      "sectionBadge": "Activities & Facilities",
+      "sectionTitle": "Treatment Environment",
+      "sectionDescription": "A green, tranquil treatment environment with a strong imprint of Traditional Medicine.",
+      "items": [
+        {
+          "title": "Famous Physician Memorial Garden",
+          "description": "A campus preserving the essence of traditional Vietnamese medicine",
+          "cta": "Explore more"
+        },
+        {
+          "title": "Rehabilitation Area",
+          "description": "Quiet and specialized",
+          "cta": "Explore more"
+        },
+        {
+          "title": "Natural Scenery",
+          "description": "Green space supporting healing",
+          "cta": "Explore more"
+        },
+        {
+          "title": "Treatment Rooms",
+          "description": "Modern, clean equipment",
+          "cta": "Explore more"
+        }
+      ],
+      "viewAll": "View All Images"
+    },
+    "contact": {
+      "sectionBadge": "Contact & Booking",
+      "sectionTitle": "Ready to take care of<br/>your health",
+      "description": "The team of doctors and medical staff at the Institute of Ethnic Medicine is always ready to support. Please leave your information or call directly.",
+      "addressTitle": "Address",
+      "address": "273 - 275 Nguyen Van Troi, Ward 10, Phu Nhuan District, HCMC",
+      "emailTitle": "Email",
+      "email": "v.ydhdt@tphcm.gov.vn",
+      "hotlineTitle": "Consulting Hotline",
+      "hotline": "0964 392 632",
+      "quickBooking": {
+        "title": "Quick Booking",
+        "description": "The new online booking system allows you to choose date/time, preferred doctor, and instant payment with just a few taps.",
+        "button": "Start Booking",
+        "confirm": "Instant confirmation",
+        "noWait": "No waiting"
+      }
+    },
+    "footer": {
+      "description": "Inheriting the essence of Vietnamese Traditional Medicine, combined with modern treatment methods to bring the best health to the community.",
+      "specialtiesTitle": "Specialties & Services",
+      "services": {
+        "initialExam": "Initial Examination",
+        "historySearch": "Check Appointment History",
+        "embedding": "Book Catgut Embedding",
+        "pricing": "Service Price List"
+      },
+      "infoTitle": "Additional Information",
+      "info": {
+        "training": "Training - Line Guidance",
+        "research": "Scientific Research",
+        "herbalProducts": "Traditional Medicine Products",
+        "news": "Activity News"
+      },
+      "newsletter": {
+        "title": "Health Newsletter",
+        "description": "Subscribe to receive the most useful Traditional Medicine health advice.",
+        "placeholder": "Enter email address...",
+        "button": "Subscribe"
+      },
+      "copyright": "© {year} Institute of Ethnic Medicine HCMC. All rights reserved.",
+      "links": {
+        "privacy": "Privacy Policy",
+        "terms": "Terms of Use",
+        "admin": "Internal Portal"
+      }
+    },
+    "alt": {
+      "logo": "Institute Logo",
+      "heroImage": "Institute of Ethnic Medicine Campus",
+      "garden": "Famous Physician Garden",
+      "treatmentArea": "Treatment Area",
+      "naturalScene": "Natural Scenery",
+      "clinicRoom": "Treatment Room"
+    }
+  }
+}

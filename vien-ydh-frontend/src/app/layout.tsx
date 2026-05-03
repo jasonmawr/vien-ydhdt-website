@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Merriweather, Plus_Jakarta_Sans } from "next/font/google";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages } from "next-intl/server";
 import { Toaster } from "sonner";
 import "./globals.css";
 
@@ -32,7 +34,7 @@ export const metadata: Metadata = {
     template: "%s | Viện Y Dược Học Dân Tộc",
   },
   description:
-    "Viện Y Dược Học Dân Tộc — Đơn vị nghiên cứu và điều trị hàng đầu về Y học Cổ truyền Việt Nam. Đặt lịch khám, tra cứu dược liệu và tìm hiểu chuyên gia uy tín.",
+    "Viện Y Dược Học Dân Tộc — Đơn vị nghiên cứu và điều trị hàng đầu về Y học Cổ truyền Việt Nam. Đặt lịch, tra cứu dược liệu và tìm hiểu chuyên gia uy tín.",
   keywords: [
     "Viện Y Dược Học Dân Tộc",
     "y học cổ truyền",
@@ -66,23 +68,22 @@ export const metadata: Metadata = {
   },
 };
 
-import ChatWidget from "@/components/features/ChatWidget";
-
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+  const messages = await getMessages();
+
   return (
-    <html
-      lang="vi"
-      className={`${merriweather.variable} ${plusJakartaSans.variable}`}
-    >
+    <html lang={locale} className={`${merriweather.variable} ${plusJakartaSans.variable}`}>
       <body className="flex min-h-screen flex-col bg-[#fbf9f6] antialiased">
         <main id="main-content" className="flex-1" role="main">
-          {children}
+          <NextIntlClientProvider messages={messages}>
+            {children}
+          </NextIntlClientProvider>
         </main>
-        <ChatWidget />
         <Toaster position="top-center" richColors />
       </body>
     </html>
