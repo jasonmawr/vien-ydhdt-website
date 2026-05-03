@@ -30,27 +30,22 @@ Tài liệu này đóng vai trò là "Bản thiết kế thi công" (Blueprint) 
 
 ---
 
-## 🌐 Phase 19: Đa ngôn ngữ - i18n (Tiếng Anh, Tiếng Trung)
+## 🌐 Phase 19: Đa ngôn ngữ - i18n (Tiếng Anh, Tiếng Trung) — ✅ HOÀN THÀNH (2026-05-03)
 
 **Mục tiêu:** Hỗ trợ bệnh nhân là người nước ngoài, du khách, hoặc chuyên gia y tế quốc tế có thể thao tác dễ dàng trên Web.
 
-**Lựa chọn Công nghệ:**
-- Thư viện: `next-intl` (Khuyên dùng nhất cho Next.js App Router hiện tại) hoặc `react-i18next`.
+**Công nghệ đã chọn:** `next-intl` v4.10.0 — Cookie-based (without i18n routing)
 
-**Kiến trúc Triển khai:**
-1. **Routing:** Sử dụng cơ chế Sub-path Routing của Next.js (VD: `/en/dat-kham`, `/zh/dat-kham`).
-2. **Cấu trúc Dịch thuật (Dictionaries):**
-   - Tạo thư mục `messages/` ở gốc Frontend.
-   - Cấu trúc file: `vi.json`, `en.json`, `zh.json`.
-   - Ví dụ `en.json`: `{ "booking": { "step1": "Select Department", "btn_next": "Continue" } }`
-3. **Database (Dữ liệu động):**
-   - Các dữ liệu lấy từ Oracle HIS (Tên Khoa, Tên Bác sĩ) hiện đang là Tiếng Việt.
-   - Cần thêm cột `NAME_EN`, `NAME_ZH` vào Database (Nếu được phép can thiệp), hoặc tạo một bảng Mapping/Dictionary ở phía Backend Node.js để tự động dịch Tên Khoa sang Tiếng Anh/Trung trước khi trả về API.
-
-**Các bước thực hiện:**
-- Cài đặt `npm install next-intl`.
-- Chuyển toàn bộ các chuỗi văn bản (hard-code) trong `BookingForm.tsx` thành các biến dịch `t('booking.step1')`.
-- Tạo Component `LanguageSwitcher` trên Header (Cờ VN, Cờ Anh, Cờ Trung Quốc).
+**Kiến trúc Triển khai (Thực tế):**
+1. **Phương pháp:** Cookie-based locale detection (Cookie `NEXT_LOCALE`) — KHÔNG dùng Sub-path Routing (`/en/...`). URL giữ nguyên tiếng Việt, ngôn ngữ chuyển qua cookie.
+2. **Config:** `i18n/request.ts` sử dụng `getRequestConfig()` đọc cookie `NEXT_LOCALE` mỗi request.
+3. **API:** `POST /api/locale` — Endpoint set cookie `NEXT_LOCALE`, LanguageSwitcher gọi API này rồi `router.refresh()`.
+4. **Cấu trúc Dịch thuật:**
+   - `messages/vi.json` (555 dòng, 27KB)
+   - `messages/en.json` (558 dòng, 24KB)
+   - `messages/zh.json` (558 dòng, 21KB)
+5. **Integration:** `next.config.ts` wrapped với `createNextIntlPlugin()`.
+6. **Lưu ý:** Dữ liệu từ Oracle HIS (Tên Khoa, Tên Bác sĩ) vẫn hiển thị Tiếng Việt. Nếu cần dịch động, phải thêm cột `NAME_EN`, `NAME_ZH` vào Database HIS hoặc tạo bảng Mapping.
 
 ---
 
