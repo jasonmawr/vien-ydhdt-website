@@ -6,8 +6,10 @@ import { Receipt, Search, Info } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { type ExamPricingDTO, getExamPricing } from "@/services/api";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTranslations } from "next-intl";
 
 export default function BangGiaPage() {
+  const t = useTranslations('pricing');
   const [pricingData, setPricingData] = useState<ExamPricingDTO[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -19,7 +21,7 @@ export default function BangGiaPage() {
       .finally(() => setIsLoading(false));
   }, []);
 
-  const filteredPricing = pricingData.filter(p => 
+  const filteredPricing = pricingData.filter(p =>
     p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     p.code.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -29,7 +31,7 @@ export default function BangGiaPage() {
       <div className="container-site px-4 max-w-6xl">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
-            <motion.h1 
+            <motion.h1
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               className="text-3xl font-bold text-stone-900 flex items-center gap-3"
@@ -37,18 +39,18 @@ export default function BangGiaPage() {
               <div className="p-3 bg-primary-100 rounded-2xl text-primary-600">
                 <Receipt className="h-8 w-8" />
               </div>
-              Bảng Giá Dịch Vụ Khám Bệnh
+              {t('title')}
             </motion.h1>
             <p className="text-stone-500 mt-2 ml-14">
-              Bảng giá được cập nhật trực tiếp từ hệ thống bệnh viện (HIS).
+              {t('subtitle')}
             </p>
           </div>
 
           <div className="relative w-full md:w-80">
             <Search className="absolute left-3 top-3 h-5 w-5 text-stone-400" />
-            <Input 
+            <Input
               type="text"
-              placeholder="Tìm theo tên dịch vụ..."
+              placeholder={t('searchPlaceholder')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10 h-12 rounded-xl bg-white border-stone-200"
@@ -66,12 +68,12 @@ export default function BangGiaPage() {
             <table className="w-full text-left text-sm text-stone-600">
               <thead className="bg-stone-100/50 text-stone-900 font-semibold border-b border-stone-200">
                 <tr>
-                  <th className="px-6 py-4 rounded-tl-3xl">Mã DV</th>
-                  <th className="px-6 py-4">Tên Dịch Vụ</th>
-                  <th className="px-6 py-4 text-right">Giá BHYT</th>
-                  <th className="px-6 py-4 text-right">Giá Dịch Vụ</th>
-                  <th className="px-6 py-4 text-right">Khám Yêu Cầu</th>
-                  <th className="px-6 py-4 text-right rounded-tr-3xl">Khám Chuyên Gia</th>
+                  <th className="px-6 py-4 rounded-tl-3xl">{t('table.code')}</th>
+                  <th className="px-6 py-4">{t('table.service')}</th>
+                  <th className="px-6 py-4 text-right">{t('table.bhyt')}</th>
+                  <th className="px-6 py-4 text-right">{t('table.serviceFee')}</th>
+                  <th className="px-6 py-4 text-right">{t('table.request')}</th>
+                  <th className="px-6 py-4 text-right rounded-tr-3xl">{t('table.expert')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -108,18 +110,18 @@ export default function BangGiaPage() {
                 ) : (
                   <tr>
                     <td colSpan={6} className="px-6 py-12 text-center text-stone-500">
-                      Không tìm thấy dịch vụ nào phù hợp với từ khóa "{searchTerm}".
+                      {t('noResults', { searchTerm })}
                     </td>
                   </tr>
                 )}
               </tbody>
             </table>
           </div>
-          
+
           <div className="bg-stone-50 p-6 flex gap-3 text-stone-600 text-sm border-t border-stone-100">
             <Info className="h-5 w-5 text-primary-600 flex-shrink-0" />
             <p>
-              <strong>Lưu ý:</strong> Bảng giá mang tính chất tham khảo và có thể thay đổi theo quy định hiện hành của Bộ Y Tế. Đối với bệnh nhân có BHYT, mức hưởng sẽ phụ thuộc vào mã quyền lợi trên thẻ và tình trạng trái tuyến/đúng tuyến.
+              <strong>{t('note.title')}</strong> {t('note.text')}
             </p>
           </div>
         </motion.div>

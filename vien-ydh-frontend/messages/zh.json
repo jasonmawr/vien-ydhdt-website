@@ -1,0 +1,631 @@
+{
+  "nav": {
+    "home": "首页",
+    "booking": "预约挂号",
+    "herbs": "中药药材",
+    "news": "新闻资讯",
+    "about": "关于我们",
+    "contact": "联系我们",
+    "admin": "管理"
+  },
+  "hero": {
+    "title": "越南民族医学研究院",
+    "subtitle": "以传统医学呵护健康",
+    "description": "越南民族医学领域领先的研究和治疗机构。我们结合传统医学与现代医学知识，为您提供全方位的医疗服务。",
+    "cta": "立即预约"
+  },
+  "booking": {
+    "title": "预约挂号",
+    "subtitle": "在线预约系统帮助您管理时间，避免等待",
+    "modes": {
+      "specialty": "按科室",
+      "specialtyDesc": "选择与您症状相符的科室，获得专业医生咨询。",
+      "doctor": "按医生",
+      "doctorDesc": "直接选择您信任的医生，查看可用时间并立即预约。",
+      "date": "按日期",
+      "dateDesc": "选择适合您日程的日期和时间，系统将自动推荐医生。"
+    },
+    "doctorPageDescription": "直接选择您信任的医生，查看可用时间并立即预约。",
+    "doctorPageSubtitle": "直接选择您信任的医生，查看可用时间段并立即预约。",
+    "specialtyPageDescription": "选择与您症状相符的科室。",
+    "specialtyPageSubtitle": "选择您想就诊的科室以查看可预约的医生。",
+    "datePageDescription": "选择适合您日程的日期和时间。",
+    "datePageSubtitle": "查看可用的时间段并选择最方便的时间。",
+    "step1": {
+      "title": "1. 选择科室",
+      "select": "选择与您症状相符的科室",
+      "loading": "正在加载科室列表...",
+      "noResults": "未找到科室"
+    },
+    "step2": {
+      "defaultSpecialty": "传统医学"
+    },
+    "step3": {
+      "title": "3. 选择日期与时间",
+      "date": "预约日期",
+      "time": "可选时间段",
+      "labelDate": "预约日期",
+      "labelTime": "可选时间段",
+      "loading": "正在加载排班...",
+      "noSlots": "该日期暂无可用时间段"
+    },
+    "step4": {
+      "title": "4. 患者信息",
+      "labelName": "姓名 *",
+      "labelPhone": "电话号码 *",
+      "labelDob": "出生日期 *",
+      "labelGender": "性别",
+      "male": "男",
+      "female": "女",
+      "labelIdNumber": "身份证/CCCD号码",
+      "labelSymptoms": "症状描述（非必填）",
+      "symptomsPlaceholder": "简要描述您的健康问题...",
+      "labelPatientType": "患者类型 *",
+      "patientType": {
+        "bhyt": "医保",
+        "dich-vu": "自费",
+        "yeu-cau": "特需",
+        "chuyen-gia": "专家"
+      },
+      "patientTypeDesc": {
+        "bhyt": "医疗保险",
+        "dich-vu": "无保险",
+        "yeu-cau": "特需预约",
+        "chuyen-gia": "专家门诊"
+      },
+      "bhytInfoTitle": "医疗保险信息",
+      "bhytNumberLabel": "医保卡号 *",
+      "bhytNumberPlaceholder": "例如: GD49632584585",
+      "bhytTuyenLabel": "选择保险类型 *",
+      "bhytOptions": {
+        "option1": "在我院注册有医疗保险的初诊患者",
+        "option2": "持我院医保处方复诊",
+        "option3": "有转诊单到我院",
+        "option4": "以上都不是（跨区就医）"
+      }
+    },
+    "step5": {
+      "title": "5. 支付挂号费",
+      "qrInstruction": "请使用银行应用或电子钱包扫描下方的VietQR码",
+      "instruction": "请使用银行应用或电子钱包扫描下方的VietQR码",
+      "amount": "金额",
+      "amountLabel": "金额",
+      "orderId": "订单号",
+      "orderIdLabel": "订单号",
+      "devNote": "(系统将在VietinBank IPN支付成功后自动跳转到电子票据页面。开发期间，请点击下方确认按钮模拟IPN)。"
+    },
+    "step6": {
+      "title": "预约成功！",
+      "defaultMessage": "感谢您选择越南民族医学研究院。我们的医务人员将尽快与您电话确认。",
+      "labelTime": "时间",
+      "labelPatient": "患者",
+      "labelDepartment": "科室",
+      "labelStt": "就诊序号",
+      "labelTicketId": "票据编号",
+      "instruction": "请记住您的<strong>就诊序号</strong>，并在约定时间到达医院。向接待人员出示<strong>票据编号</strong>以获得快速服务。",
+      "downloadTicket": "下载预约单（免费）",
+      "newBooking": "再次预约"
+    },
+    "modal": {
+      "title": "更改患者类型",
+      "message": "您选择了跨区就医。根据规定，挂号费用将按<strong className=\"text-blue-700\">自费（无保险）</strong>标准计算。",
+      "button": "我已了解"
+    },
+    "common": {
+      "progressLabel": "步骤 {step}/5",
+      "back": "返回",
+      "continue": "继续",
+      "payNow": "前往支付",
+      "confirm": "确认支付（模拟IPN）",
+      "generatingQR": "正在生成二维码...",
+      "confirming": "正在确认...",
+      "autoAllocateDoctor": "自动分配"
+    },
+    "summary": {
+      "title": "预约信息摘要",
+      "department": "科室",
+      "doctor": "医生",
+      "time": "时间",
+      "patientType": "患者类型",
+      "bhytNumber": "医保卡号",
+      "priceSummary": "挂号费用（预估）",
+      "priceNote": "包含所有费用。医疗保险（如适用）将在医院抵扣。"
+    },
+    "validation": {
+      "nameRequired": "请输入您的全名。",
+      "phoneRequired": "请输入电话号码。",
+      "phoneInvalid": "电话号码无效。",
+      "dobRequired": "请选择您的出生日期。",
+      "bhytRequired": "请输入有效的医保卡号。"
+    },
+    "errors": {
+      "ticketDownloadSuccess": "已下载预约单！",
+      "ticketDownloadFail": "无法下载图片。请截图！",
+      "general": "发生错误。请稍后重试。",
+      "paymentCreation": "无法生成支付码。"
+    }
+  },
+  "features": {
+    "timeSave": "节省等待时间",
+    "bhytSupport": "医保支持",
+    "qrPayment": "VietinBank QR支付"
+  },
+  "common": {
+    "continue": "继续",
+    "back": "返回",
+    "submit": "提交",
+    "loading": "加载中...",
+    "error": "发生错误",
+    "required": "必填",
+    "invalidPhone": "电话号码无效。",
+    "pleaseEnter": "请输入"
+  },
+  "footer": {
+    "description": "越南民族医学领域的领先研究和治疗机构，结合传统智慧与现代医疗保健。",
+    "about": {
+      "title": "关于我们"
+    },
+    "specialties": {
+      "title": "特色专科",
+      "acupuncture": "针灸",
+      "physio": "物理治疗",
+      "hemorrhoids": "痔疮治疗",
+      "obesity": "肥胖管理",
+      "acupressure": "穴位按压",
+      "other": "其他服务"
+    },
+    "support": {
+      "title": "支持服务",
+      "patientInfo": "患者信息",
+      "priceList": "价格表",
+      "faq": "常见问题",
+      "contact": "联系我们"
+    },
+    "contact": {
+      "title": "联系方式",
+      "address": "273 – 275 阮文追, 第10坊,<br/>富润郡, 胡志明市",
+      "phone1": "(028) 3844 3047",
+      "hotline": "热线: 0964 392 632",
+      "email": "v.ydhdt@tphcm.gov.vn",
+      "hours": {
+        "title": "门诊时间:",
+        "weekday": "普通门诊: 06:00 – 16:30 (周一至周五)",
+        "evening": "晚间门诊: 16:30 – 18:30 (周一至周五)",
+        "weekend": "周末门诊: 07:00 – 11:30 (周六、周日)"
+      }
+    },
+    "rights": "版权所有。",
+    "privacy": "隐私政策",
+    "terms": "使用条款",
+    "adminPortal": "管理门户"
+  },
+  "search": {
+    "title": "查询医疗信息",
+    "subtitle": "输入已注册的手机号码，查看就诊历史、即将到来的预约和医疗发票。",
+    "placeholder": "输入电话号码（例如：0912345678）",
+    "button": "查询",
+    "searching": "查询中...",
+    "upcomingAppointments": "即将到来的预约",
+    "confirmed": "已确认",
+    "viewDetails": "查看详情",
+    "medicalHistory": "就诊历史",
+    "examType": "{type} 门诊",
+    "examDate": "就诊日期：{date}",
+    "featureComingSoon": "查看{item}详情功能正在后续阶段完善中。"
+  },
+  "herbs": {
+    "title": "草药词典",
+    "subtitle": "探索传统医学的宝藏，这里有数百种珍贵草药。详细了解药性、用途和药方。",
+    "searchPlaceholder": "按中文名称或拉丁名称搜索...",
+    "searchAriaLabel": "搜索草药",
+    "filterLabel": "按类别筛选",
+    "benefitsTitle": "主要功效",
+    "noResults": "未找到草药",
+    "tryAgain": "请尝试其他关键词或类别。"
+  },
+  "news": {
+    "title": "新闻与医学",
+    "subtitle": "获取最新的医学知识、研究院动态和越南民族医学研究院的研究成果。",
+    "searchPlaceholder": "搜索文章...",
+    "loading": "正在加载文章...",
+    "readMore": "阅读文章",
+    "noResults": "未找到匹配的文章",
+    "backToNews": "返回新闻",
+    "articleNotFound": "文章不存在",
+    "views": "{count} 次查看",
+    "author": "越南民族医学研究院",
+    "categories": {
+      "all": "全部",
+      "traditional": "传统医学",
+      "health": "健康与营养",
+      "institute": "研究院活动",
+      "research": "科学研究",
+      "patient": "患者指南"
+    },
+    "read": "阅读"
+  },
+  "about": {
+    "instituteName": "越南民族医学研究院（胡志明市）",
+    "hero": {
+      "title": "传承精华<br />越南传统医学",
+      "subtitle": "经过50多年的建设和发展，越南民族医学研究院自豪地成为胡志明市传统医学领域的领先单位，和谐融合民族医学精髓与现代医学。"
+    },
+    "cta": {
+      "bookAppointment": "预约挂号",
+      "contactUs": "联系我们"
+    },
+    "stats": {
+      "years": "成立与发展年数",
+      "doctors": "领先的医生与专家",
+      "patients": "每年治疗的患者",
+      "awards": " prestigious medical awards"
+    },
+    "sections": {
+      "missionVision": "使命与愿景",
+      "missionVisionSub": "国家医疗数字化转型阶段的机构发展方向",
+      "mission": "我们的使命",
+      "missionDesc": "保护、继承并发扬越南传统医学的精髓。提供全面、安全、有效的医疗服务，为改善社区健康做出贡献。",
+      "missionItems": [
+        "用心服务患者",
+        "研究与保护珍贵草药",
+        "培养下一代传统医学从业者"
+      ],
+      "vision": "2030年愿景",
+      "visionDesc": "成为东南亚领先的传统医学中心，卓越结合民族智慧与现代医学，在管理和治疗中应用数字技术。",
+      "visionItems": [
+        "南部地区传统医学领先",
+        "全面实施数字医疗",
+        "草药研究国际合作"
+      ],
+      "history": "成立与发展历史",
+      "historySub": "50多年来为越南民族医学建设与贡献的历程",
+      "departments": "科室与部门",
+      "departmentsSub": "完整的科室体系满足多样化的诊疗需求"
+    },
+    "ctaSection": {
+      "title": "让我们为您守护健康",
+      "subtitle": "立即预约，接受我们领先的传统医学医生咨询。",
+      "bookNow": "立即预约"
+    },
+    "milestones": [
+      {
+        "year": "1975",
+        "title": "研究院成立",
+        "desc": "越南民族医学研究院根据胡志明市人民委员会决定成立，隶属于卫生局。"
+      },
+      {
+        "year": "1985",
+        "title": "专科扩展",
+        "desc": "新增针灸科、物理治疗-康复科和草药科。"
+      },
+      {
+        "year": "2000",
+        "title": "设备现代化",
+        "desc": "投资X光、彩色超声、现代生化检验系统，提高诊断质量。"
+      },
+      {
+        "year": "2010",
+        "title": "ISO 15189标准",
+        "desc": "实验室获得国际ISO 15189标准，确认临床服务质量。"
+      },
+      {
+        "year": "2020",
+        "title": "数字医疗转型",
+        "desc": "部署全面的HIS系统，电子病案管理和在线预约。"
+      },
+      {
+        "year": "2026",
+        "title": "数字医疗基础",
+        "desc": "推出集成了VietQR支付的在线预约门户，迈向医疗4.0模式。"
+      }
+    ],
+    "departments": [
+      {
+        "name": "门诊-急诊",
+        "desc": "接待和处理所有就诊患者。"
+      },
+      {
+        "name": "针灸-康复",
+        "desc": "通过针灸、按摩、脊柱牵引和中风后康复进行治疗。"
+      },
+      {
+        "name": "物理治疗",
+        "desc": "治疗性超声、电疗、红外线、短波……"
+      },
+      {
+        "name": "传统医学",
+        "desc": "南北药方、民间验方、传统煎药。"
+      },
+      {
+        "name": "埋线-操作",
+        "desc": "可吸收肠线埋入穴位，效果比常规针灸更持久。"
+      },
+      {
+        "name": "药房-草药",
+        "desc": "供应和认证标准化草药，生产传统医学成品药。"
+      },
+      {
+        "name": "临床检验",
+        "desc": "血液检验、生化、X光、彩色超声、心电图。"
+      },
+      {
+        "name": "营养",
+        "desc": "临床营养咨询结合传统医学。"
+      }
+    ]
+  },
+  "contact": {
+    "hero": {
+      "badge": "联系与支持",
+      "title": "联系我们",
+      "subtitle": "我们的咨询顾问随时为您提供24/7支持。今天就发送问题或预约。"
+    },
+    "infoCards": {
+      "address": {
+        "title": "地址",
+        "lines": [
+          "273 - 275 阮文追, 第10坊",
+          "富润郡, 胡志明市"
+        ],
+        "action": "获取路线"
+      },
+      "phone": {
+        "title": "电话与热线",
+        "lines": [
+          "热线: 0964 392 632",
+          "急救: 0964 392 632"
+        ],
+        "action": "立即致电"
+      },
+      "email": {
+        "title": "电子邮件",
+        "lines": [
+          "v.ydhdt@tphcm.gov.vn",
+          "hotro@vienydhdt.gov.vn"
+        ],
+        "action": "发送邮件"
+      },
+      "hours": {
+        "title": "门诊时间",
+        "lines": [
+          "周一至周五: 7:00 – 17:00",
+          "周六: 7:00 – 12:00",
+          "周日: 休息"
+        ],
+        "action": "立即预约"
+      }
+    },
+    "form": {
+      "title": "发送消息",
+      "subtitle": "填写您的信息，我们将在24个工作小时内回复。",
+      "nameLabel": "姓名 *",
+      "namePlaceholder": "输入您的姓名",
+      "phoneLabel": "电话号码 *",
+      "phonePlaceholder": "输入电话号码",
+      "emailLabel": "电子邮件",
+      "emailPlaceholder": "输入电子邮件地址",
+      "subjectLabel": "主题",
+      "subjectPlaceholder": "选择主题",
+      "subjects": {
+        "appointment": "预约挂号",
+        "services": "咨询服务",
+        "results": "查询检查结果",
+        "feedback": "服务质量反馈",
+        "other": "其他"
+      },
+      "messageLabel": "消息内容 *",
+      "messagePlaceholder": "描述您的问题或疑问...",
+      "submit": "发送消息",
+      "submitting": "发送中...",
+      "successTitle": "发送成功！",
+      "successMessage": "感谢您联系我们。我们将尽快回复。",
+      "sendAnother": "发送另一条消息"
+    },
+    "map": {
+      "title": "路线地图",
+      "directionsButton": "Google Maps路线",
+      "bookNow": "立即预约",
+      "iframeTitle": "越南民族医学研究院地图"
+    }
+  },
+  "pricing": {
+    "title": "诊费价格表",
+    "subtitle": "价格直接从医院管理系统（HIS）更新。",
+    "searchPlaceholder": "按服务名称搜索...",
+    "service": "服务项目",
+    "bhyt": "医保",
+    "dichVu": "自费",
+    "yeuCau": "特需",
+    "chuyenGia": "专家",
+    "updating": "正在更新价格表...",
+    "table": {
+      "code": "代码",
+      "service": "服务名称",
+      "bhyt": "BHYT价格",
+      "serviceFee": "服务费",
+      "request": "特需",
+      "expert": "专家"
+    },
+    "note": {
+      "title": "注意：",
+      "text": "价格仅供参考，可能会根据卫生部规定而变化。对于BHYT患者，福利水平取决于卡片上的福利代码以及网络内/网络外状态。"
+    },
+    "noResults": "未找到与 \"{searchTerm}\" 匹配的服务。"
+  },
+  "home": {
+    "header": {
+      "logoAlt": "研究院标志",
+      "instituteName": "越南民族医学研究院",
+      "instituteShort": "胡志明市",
+      "nav": {
+        "about": "关于我们",
+        "booking": "预约挂号",
+        "news": "新闻资讯",
+        "pricing": "价格表",
+        "contact": "联系我们"
+      },
+      "hotline": "0964 392 632",
+      "bookNow": "预约挂号",
+      "menuOpen": "打开菜单",
+      "menuClose": "关闭菜单"
+    },
+    "mobileMenu": {
+      "about": "关于我们",
+      "booking": "预约挂号",
+      "news": "新闻资讯",
+      "pricing": "服务价格表",
+      "search": "查询预约记录",
+      "contact": "联系我们",
+      "call": "致电：0964 392 632",
+      "bookNow": "预约挂号"
+    },
+    "hero": {
+      "badge": "全方位健康关怀",
+      "title": "融合精髓",
+      "titleBreak": "传统医学与现代医学",
+      "description": "本区域领先的医疗诊断和治疗机构。我们致力于为每一位患者带来安心与最佳疗效。",
+      "bookNow": "立即预约",
+      "learnMore": "了解更多"
+    },
+    "services": {
+      "sectionBadge": "顶尖专科",
+      "sectionTitle": "特色医疗服务",
+      "sectionDescription": "我们提供先进的治疗方法，结合传统医学优势和现代科技。",
+      "items": [
+        {
+          "title": "针灸康复",
+          "description": "有效治疗坐骨神经痛、脊柱退行性病变及中风后功能康复。"
+        },
+        {
+          "title": "综合门诊",
+          "description": "在现代化诊断设备的支持下进行全面健康评估。"
+        },
+        {
+          "title": "传统医学草药",
+          "description": "使用来源清晰、符合高质量标准的南北草药方剂。"
+        },
+        {
+          "title": "物理治疗",
+          "description": "运动疗法、脊柱牵引、超声波疗法帮助肌肉骨骼功能恢复。"
+        },
+        {
+          "title": "临床检验",
+          "description": "生化、血液、X光、彩色超声检测系统，准确快捷。"
+        },
+        {
+          "title": "埋线疗法",
+          "description": "将可吸收羊肠线植入穴位的前沿方法，带来持久的治疗效果。"
+        }
+      ],
+      "learnMore": "了解更多"
+    },
+    "portfolio": {
+      "sectionBadge": "活动与设施",
+      "sectionTitle": "诊疗环境",
+      "sectionDescription": "绿色宁静的治疗环境，彰显传统医学独特风格。",
+      "items": [
+        {
+          "title": "名医纪念园",
+          "description": "传承越南传统医学精髓的院区",
+          "cta": "探索更多"
+        },
+        {
+          "title": "康复区域",
+          "description": "安静且专业",
+          "cta": "探索更多"
+        },
+        {
+          "title": "自然景观",
+          "description": "支持疗愈的绿色空间",
+          "cta": "探索更多"
+        },
+        {
+          "title": "诊疗室",
+          "description": "现代、整洁的设备",
+          "cta": "探索更多"
+        }
+      ],
+      "viewAll": "查看所有图片"
+    },
+    "contact": {
+      "sectionBadge": "联系与预约",
+      "sectionTitle": "随时为您<br/>提供健康照护",
+      "description": "越南民族医学研究院的医生和医护人员随时准备为您提供帮助。请留下您的信息或直接致电。",
+      "addressTitle": "地址",
+      "address": "越南胡志明市第10区阮文追路273-275号",
+      "emailTitle": "邮箱",
+      "email": "v.ydhdt@tphcm.gov.vn",
+      "hotlineTitle": "咨询热线",
+      "hotline": "0964 392 632",
+      "quickBooking": {
+        "title": "快速预约",
+        "description": "全新的在线预约系统让您只需轻点几下就能选择日期时间、心仪医生并即时付款。",
+        "button": "开始预约",
+        "confirm": "即时确认",
+        "noWait": "无需等待"
+      }
+    },
+    "footer": {
+      "description": "传承越南传统医学精髓，结合现代治疗方法，为社区带来最佳健康。",
+      "specialtiesTitle": "专科与服务",
+      "services": {
+        "initialExam": "初诊",
+        "historySearch": "查询预约记录",
+        "embedding": "预约埋线治疗",
+        "pricing": "服务价格表"
+      },
+      "infoTitle": "辅助信息",
+      "info": {
+        "training": "培训-指导专线",
+        "research": "科学研究",
+        "herbalProducts": "中药产品",
+        "news": "活动资讯"
+      },
+      "newsletter": {
+        "title": "健康通讯",
+        "description": "订阅邮箱，获取最有用的传统医学健康建议。",
+        "placeholder": "输入邮箱地址...",
+        "button": "订阅"
+      },
+      "copyright": "© {year} 越南民族医学研究院（胡志明市）。保留所有权利。",
+      "links": {
+        "privacy": "隐私政策",
+        "terms": "使用条款",
+        "admin": "内部门户"
+      }
+    },
+    "alt": {
+      "logo": "研究院标志",
+      "heroImage": "越南民族医学研究院院区",
+      "garden": "名医纪念园",
+      "treatmentArea": "治疗区域",
+      "naturalScene": "自然景观",
+      "clinicRoom": "诊疗室"
+    }
+  },
+  "metadata": {
+    "titleDefault": "民族医药学院 | 传统医学健康护理",
+    "titleTemplate": "%s | 民族医药学院",
+    "description": "民族医药学院 — 越南传统医学研究和治疗的领先单位。预约、搜索草药并寻找著名的专家。",
+    "keywords": "民族医药学院, 传统医学, 预约, 东方草药, 传统医学医生, 在线预约",
+    "siteName": "民族医药学院",
+    "ogTitle": "民族医药学院 | 越南传统医学",
+    "ogDescription": "探索民族医药学院的传统医学健康护理服务 — 快速预约，标准草药，名医。"
+  },
+  "chatWidget": {
+    "welcome": "你好！👋 我是 **Y Dược AI** — 民族医药学院的虚拟助手。\n\n我可以帮助您了解：\n- 📋 服务信息和定价\n- 🕐 工作时间和地址\n- 📅 预约说明\n- 💊 专科介绍\n\n我能帮您什么？",
+    "error": "抱歉，我遇到了一些问题。请重试或致电 **(028) 3844 2349** 获取支持。",
+    "title": "Y Dược AI",
+    "subtitle": "学院虚拟助手",
+    "online": "在线",
+    "placeholder": "输入您的问题...",
+    "disclaimer": "Y Dược AI — 虚拟助手，不能替代医生",
+    "ariaOpen": "打开 Y Dược AI 聊天机器人",
+    "ariaClose": "关闭聊天机器人",
+    "suggestions": {
+      "hours": "工作时间？",
+      "booking": "如何在线预约？",
+      "insurance": "你们接受医疗保险吗？"
+    }
+  }
+}

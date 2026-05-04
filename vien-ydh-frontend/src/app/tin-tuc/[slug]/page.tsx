@@ -4,14 +4,15 @@ import { Calendar, Clock, ChevronLeft, User, Tag } from "lucide-react";
 import Link from "next/link";
 import { getPostBySlug } from "@/services/api";
 import { Button } from "@/components/ui/button";
+import { getTranslations } from "next-intl/server";
 
 interface Props {
   params: Promise<{
+    locale: string;
     slug: string;
   }>;
 }
 
-// Lấy dữ liệu bài viết
 async function getPost(slug: string) {
   try {
     const post = await getPostBySlug(slug);
@@ -21,14 +22,15 @@ async function getPost(slug: string) {
   }
 }
 
-// Generate metadata cho SEO (Phase 17)
+// Generate metadata cho SEO
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const params = await props.params;
+  const t = await getTranslations({ locale: params.locale, namespace: 'news' });
   const post = await getPost(params.slug);
-  
+
   if (!post) {
     return {
-      title: "Bài viết không tồn tại",
+      title: t('articleNotFound'),
     };
   }
 
@@ -40,12 +42,13 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
       title: post.title,
       description: post.excerpt,
       type: "article",
-      authors: [post.author || "Viện Y Dược Học Dân Tộc"],
+      authors: [post.author || t('author')],
     },
   };
 }
 
 export default async function ArticleDetailPage(props: Props) {
+  const t = await getTranslations({ locale: (await props.params).locale, namespace: 'news' });
   const params = await props.params;
   const post = await getPost(params.slug);
 
@@ -61,7 +64,7 @@ export default async function ArticleDetailPage(props: Props) {
           <Link href="/tin-tuc">
             <Button variant="ghost" className="text-stone-500 hover:text-primary-700 -ml-4">
               <ChevronLeft className="mr-2 h-4 w-4" />
-              Quay lại tin tức
+              {t('backToNews')}
             </Button>
           </Link>
         </div>
@@ -101,16 +104,16 @@ export default async function ArticleDetailPage(props: Props) {
               </div>
               <div className="flex items-center gap-2">
                 <Clock className="h-4 w-4 text-primary-500" />
-                {post.view_count} lượt xem
+                {post.view_count} {t('views', { count: post.view_count })}
               </div>
               <div className="flex items-center gap-2">
                 <User className="h-4 w-4 text-primary-500" />
-                {post.author || "Viện Y Dược"}
+                {post.author || t('author')}
               </div>
             </div>
 
             {/* Content (Prose) */}
-            <div 
+            <div
               className="prose prose-stone max-w-none prose-headings:text-stone-800 prose-a:text-primary-600 hover:prose-a:text-primary-700 prose-img:rounded-2xl"
               dangerouslySetInnerHTML={{ __html: post.content }}
             />

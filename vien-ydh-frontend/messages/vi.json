@@ -1,0 +1,639 @@
+{
+  "nav": {
+    "home": "Trang chủ",
+    "booking": "Đặt lịch khám",
+    "herbs": "Dược liệu",
+    "news": "Tin tức",
+    "about": "Giới thiệu",
+    "contact": "Liên hệ",
+    "admin": "Quản trị"
+  },
+  "hero": {
+    "title": "Viện Y Dược Học Dân Tộc",
+    "subtitle": "Chăm Sóc Sức Khỏe Bằng Y Học Cổ Truyền",
+    "description": "Đơn vị nghiên cứu và điều trị hàng đầu về Y học Cổ truyền Việt Nam. Chúng tôi mang đến dịch vụ chăm sóc sức khỏe toàn diện, kết hợp tri thức y học cổ truyền và hiện đại.",
+    "cta": "Đặt Lịch Ngay"
+  },
+  "booking": {
+    "title": "Đặt Lịch Khám",
+    "subtitle": "Hệ thống đặt lịch trực tuyến giúp bạn chủ động thời gian, tránh tình trạng chờ đợi",
+    "modes": {
+      "specialty": "Đặt khám theo Chuyên khoa",
+      "specialtyDesc": "Chọn chuyên khoa phù hợp với triệu chứng của bạn để được tư vấn bởi bác sĩ chuyên môn.",
+      "doctor": "Đặt khám theo Bác sĩ",
+      "doctorDesc": "Chọn trực tiếp bác sĩ bạn tin tưởng, xem lịch trống và đặt khám ngay.",
+      "date": "Đặt khám theo Ngày",
+      "dateDesc": "Chọn ngày và giờ khám phù hợp với lịch của bạn, hệ thống tự động gợi ý bác sĩ."
+    },
+    "doctorPageDescription": "Chọn trực tiếp bác sĩ bạn tin tưởng, xem lịch trống và đặt ngay.",
+    "doctorPageSubtitle": "Chọn trực tiếp bác sĩ bạn tin tưởng, xem lịch trống và đặt khám ngay.",
+    "specialtyPageDescription": "Chọn chuyên khoa phù hợp với triệu chứng của bạn.",
+    "specialtyPageSubtitle": "Chọn chuyên khoa bạn muốn khám để xem các bác sĩ có thể đặt lịch.",
+    "datePageDescription": "Chọn ngày và giờ khám phù hợp với lịch của bạn.",
+    "datePageSubtitle": "Xem các khung giờ trống và chọn thời gian thuận tiện nhất.",
+    "step1": {
+      "title": "1. Chọn Chuyên Khoa",
+      "select": "Chọn chuyên khoa phù hợp với triệu chứng",
+      "loading": "Đang tải danh sách chuyên khoa...",
+      "noResults": "Không có chuyên khoa nào"
+    },
+    "step2": {
+      "title": "2. Chọn Bác Sĩ",
+      "search": "Tìm theo tên bác sĩ...",
+      "any": "Không chọn bác sĩ cụ thể",
+      "searchPlaceholder": "Tìm theo tên bác sĩ...",
+      "noSelection": "Không chọn bác sĩ cụ thể",
+      "autoAllocate": "(Tự động phân bổ theo lịch trống)",
+      "loading": "Đang tải danh sách bác sĩ...",
+      "noResults": "Không có bác sĩ nào phù hợp",
+      "defaultSpecialty": "Y học cổ truyền"
+    },
+    "step3": {
+      "title": "3. Chọn Ngày & Giờ",
+      "date": "Ngày khám",
+      "time": "Khung giờ trống",
+      "labelDate": "Ngày khám",
+      "labelTime": "Khung giờ trống",
+      "loading": "Đang tải lịch khám...",
+      "noSlots": "Không có khung giờ trống trong ngày này"
+    },
+    "step4": {
+      "title": "4. Thông Tin Bệnh Nhân",
+      "labelName": "Họ và tên *",
+      "labelPhone": "Số điện thoại *",
+      "labelDob": "Ngày sinh *",
+      "labelGender": "Giới tính",
+      "male": "Nam",
+      "female": "Nữ",
+      "labelIdNumber": "Số CMND/CCCD",
+      "labelSymptoms": "Triệu chứng (Không bắt buộc)",
+      "symptomsPlaceholder": "Mô tả ngắn gọn vấn đề sức khỏe của bạn...",
+      "labelPatientType": "Đối tượng khám bệnh *",
+      "patientType": {
+        "bhyt": "BHYT",
+        "dich-vu": "Dịch vụ",
+        "yeu-cau": "Yêu cầu",
+        "chuyen-gia": "Chuyên gia"
+      },
+      "patientTypeDesc": {
+        "bhyt": "Bảo hiểm Y tế",
+        "dich-vu": "Không BHYT",
+        "yeu-cau": "Khám theo yêu cầu",
+        "chuyen-gia": "Khám Chuyên gia"
+      },
+      "bhytInfoTitle": "Thông tin Bảo hiểm Y tế",
+      "bhytNumberLabel": "Số thẻ BHYT *",
+      "bhytNumberPlaceholder": "VD: GD49632584585",
+      "bhytTuyenLabel": "Chọn đối tượng Bảo hiểm Y tế *",
+      "bhytOptions": {
+        "option1": "Có thẻ BHYT đăng ký khám chữa bệnh ban đầu tại Viện YDHDT",
+        "option2": "Có tái khám theo hẹn trên đơn thuốc BHYT của Viện YDHDT",
+        "option3": "Có giấy chuyển BHYT đúng tuyến đến Viện YDHDT",
+        "option4": "Không phải 3 trường hợp trên (Khám trái tuyến)"
+      }
+    },
+    "step5": {
+      "title": "5. Thanh Toán Lệ Phí Khám",
+      "qrInstruction": "Sử dụng App Ngân hàng hoặc Ví điện tử quét mã VietQR bên dưới",
+      "instruction": "Sử dụng App Ngân hàng hoặc Ví điện tử quét mã VietQR bên dưới",
+      "amount": "Số tiền",
+      "amountLabel": "Số tiền",
+      "orderId": "Mã đơn",
+      "orderIdLabel": "Mã đơn",
+      "devNote": "(Hệ thống sẽ tự động chuyển sang trang Vé Khám Điện Tử khi thanh toán thành công qua VietinBank IPN. Trong lúc Dev, hãy bấm nút Xác nhận bên dưới để giả lập IPN)."
+    },
+    "step6": {
+      "title": "Đặt Lịch Thành Công!",
+      "defaultMessage": "Cảm ơn bạn đã tin tưởng Viện Y Dược Học Dân Tộc. Nhân viên y tế sẽ gọi điện xác nhận trong thời gian sớm nhất.",
+      "labelTime": "Thời gian",
+      "labelPatient": "Bệnh nhân",
+      "labelDepartment": "Chuyên khoa",
+      "labelStt": "Số Thứ Tự Khám",
+      "labelTicketId": "Mã phiếu",
+      "instruction": "Vui lòng ghi nhớ <strong>Số Thứ Tự</strong> và đến viện đúng ngày giờ đã hẹn. Đưa <strong>Mã Phiếu</strong> cho nhân viên tiếp nhận để được phục vụ nhanh nhất.",
+      "downloadTicket": "Tải Phiếu Về Máy (Miễn phí)",
+      "newBooking": "Đặt lịch mới"
+    },
+    "modal": {
+      "title": "Chuyển Đối Tượng",
+      "message": "Bạn chọn Khám Trái Tuyến. Theo quy định, chi phí khám sẽ được tính theo giá <strong className=\"text-blue-700\">Dịch vụ (Không BHYT)</strong>.",
+      "button": "Tôi đã hiểu"
+    },
+    "common": {
+      "progressLabel": "Bước {step}/5",
+      "back": "Quay lại",
+      "continue": "Tiếp tục",
+      "payNow": "Tiến hành Thanh toán",
+      "confirm": "Đã thanh toán (Giả lập IPN)",
+      "generatingQR": "Đang tạo mã QR...",
+      "confirming": "Đang xác nhận...",
+      "autoAllocateDoctor": "Phân bổ tự động"
+    },
+    "summary": {
+      "title": "Hồ sơ đăng ký",
+      "department": "Chuyên khoa",
+      "doctor": "Bác sĩ",
+      "time": "Thời gian",
+      "patientType": "Đối tượng",
+      "bhytNumber": "Số thẻ BHYT",
+      "priceSummary": "Tổng tiền khám (Tạm tính)",
+      "priceNote": "Đã bao gồm phí tiện ích. BHYT (nếu có) sẽ được khấu trừ tại viện."
+    },
+    "validation": {
+      "nameRequired": "Vui lòng nhập họ tên đầy đủ.",
+      "phoneRequired": "Vui lòng nhập số điện thoại.",
+      "phoneInvalid": "Số điện thoại không hợp lệ (cần 10 số hợp lệ).",
+      "dobRequired": "Vui lòng chọn ngày sinh.",
+      "bhytRequired": "Vui lòng nhập số thẻ BHYT hợp lệ."
+    },
+    "errors": {
+      "ticketDownloadSuccess": "Đã tải Phiếu Khám về máy!",
+      "ticketDownloadFail": "Không thể tải ảnh. Vui lòng chụp màn hình!",
+      "general": "Đã xảy ra lỗi. Vui lòng thử lại sau.",
+      "paymentCreation": "Không thể tạo mã thanh toán."
+    }
+  },
+  "features": {
+    "timeSave": "Tiết kiệm thời gian chờ đợi",
+    "bhytSupport": "Hỗ trợ BHYT đúng tuyến",
+    "qrPayment": "Thanh toán QR VietinBank"
+  },
+  "common": {
+    "continue": "Tiếp tục",
+    "back": "Quay lại",
+    "submit": "Gửi",
+    "loading": "Đang tải...",
+    "error": "Đã xảy ra lỗi",
+    "required": "Bắt buộc",
+    "invalidPhone": "Số điện thoại không hợp lệ (cần 10 số hợp lệ).",
+    "pleaseEnter": "Vui lòng nhập"
+  },
+  "footer": {
+    "description": "Đơn vị nghiên cứu và điều trị hàng đầu về Y học Cổ truyền Việt Nam, kết hợp tinh hoa y học cổ truyền và y học hiện đại trong chăm sóc sức khỏe.",
+    "about": {
+      "title": "Về Viện"
+    },
+    "specialties": {
+      "title": "Chuyên khoa nổi bật",
+      "acupuncture": "Châm cứu",
+      "physio": "Vật lý trị liệu",
+      "hemorrhoids": "Khám trĩ",
+      "obesity": "Béo phì",
+      "acupressure": "Cấy chỉ",
+      "other": "Các dịch vụ khám khác"
+    },
+    "support": {
+      "title": "Hỗ trợ",
+      "patientInfo": "Thông tin bệnh nhân",
+      "priceList": "Bảng giá dịch vụ",
+      "faq": "Câu hỏi thường gặp",
+      "contact": "Liên hệ"
+    },
+    "contact": {
+      "title": "Thông tin liên hệ",
+      "address": "273 – 275 Nguyễn Văn Trỗi, Phường 10,<br/>Quận Phú Nhuận, TP. Hồ Chí Minh",
+      "phone1": "(028) 3844 3047",
+      "hotline": "Hotline: 0964 392 632",
+      "email": "v.ydhdt@tphcm.gov.vn",
+      "hours": {
+        "title": "Giờ khám bệnh:",
+        "weekday": "Khám thường: 06:00 – 16:30 (Thứ 2 - Thứ 6)",
+        "evening": "Khám ngoài giờ: 16:30 – 18:30 (Thứ 2 - Thứ 6)",
+        "weekend": "Khám cuối tuần: 07:00 – 11:30 (Thứ 7, CN)"
+      }
+    },
+    "rights": "Bảo lưu mọi quyền.",
+    "privacy": "Chính sách bảo mật",
+    "terms": "Điều khoản sử dụng",
+    "adminPortal": "Cổng nội bộ"
+  },
+  "search": {
+    "title": "Tra Cứu Thông Tin Khám Bệnh",
+    "subtitle": "Nhập số điện thoại đã đăng ký khám để xem lịch sử khám, lịch hẹn sắp tới và hóa đơn viện phí.",
+    "placeholder": "Nhập số điện thoại (VD: 0912345678)",
+    "button": "Tra Cứu",
+    "searching": "Đang tìm...",
+    "upcomingAppointments": "Lịch hẹn sắp tới",
+    "confirmed": "Đã xác nhận",
+    "viewDetails": "Xem chi tiết",
+    "medicalHistory": "Lịch sử khám bệnh",
+    "examType": "Khám {type}",
+    "examDate": "Ngày khám: {date}",
+    "featureComingSoon": "Tính năng xem chi tiết {item} đang được hoàn thiện ở các Phase tiếp theo."
+  },
+  "herbs": {
+    "title": "Từ Điển Dược Liệu",
+    "subtitle": "Khám phá kho tàng tri thức Y học Cổ truyền với hàng trăm vị thuốc quý. Tìm hiểu chi tiết về tính vị, công dụng và bài thuốc chữa bệnh.",
+    "searchPlaceholder": "Tìm theo tên tiếng Việt hoặc tên Latin...",
+    "searchAriaLabel": "Tìm kiếm dược liệu",
+    "filterLabel": "Lọc theo danh mục",
+    "benefitsTitle": "Công dụng chính",
+    "noResults": "Không tìm thấy dược liệu",
+    "tryAgain": "Vui lòng thử lại với từ khóa hoặc danh mục khác."
+  },
+  "news": {
+    "title": "Tin Tức & Y Khoa",
+    "subtitle": "Cập nhật kiến thức y học, tin tức hoạt động và các nghiên cứu mới nhất từ Viện Y Dược Học Dân Tộc.",
+    "searchPlaceholder": "Tìm kiếm bài viết...",
+    "loading": "Đang tải bài viết...",
+    "readMore": "Đọc Bài Viết",
+    "noResults": "Không tìm thấy bài viết phù hợp",
+    "backToNews": "Quay lại tin tức",
+    "articleNotFound": "Bài viết không tồn tại",
+    "views": "{count} lượt xem",
+    "author": "Viện Y Dược",
+    "categories": {
+      "all": "Tất cả",
+      "traditional": "Y học cổ truyền",
+      "health": "Sức khỏe & Dinh dưỡng",
+      "institute": "Hoạt động Viện",
+      "research": "Nghiên cứu khoa học",
+      "patient": "Hướng dẫn bệnh nhân"
+    },
+    "read": "Đọc"
+  },
+  "about": {
+    "instituteName": "Viện Y Dược Học Dân Tộc TP.HCM",
+    "hero": {
+      "title": "Kế thừa tinh hoa<br />Y học cổ truyền Việt Nam",
+      "subtitle": "Hơn 50 năm xây dựng và phát triển, Viện Y Dược Học Dân Tộc tự hào là đơn vị đầu ngành trong lĩnh vực Y học cổ truyền tại TP.HCM, kết hợp hài hòa giữa tinh hoa y học dân tộc và y học hiện đại."
+    },
+    "cta": {
+      "bookAppointment": "Đặt Lịch Khám",
+      "contactUs": "Liên Hệ Chúng Tôi"
+    },
+    "stats": {
+      "years": "Năm thành lập & phát triển",
+      "doctors": "Bác sĩ, chuyên gia hàng đầu",
+      "patients": "Bệnh nhân được điều trị mỗi năm",
+      "awards": "Giải thưởng y tế uy tín"
+    },
+    "sections": {
+      "missionVision": "Sứ Mệnh & Tầm Nhìn",
+      "missionVisionSub": "Định hướng phát triển của Viện trong giai đoạn chuyển đổi số y tế quốc gia",
+      "mission": "Sứ Mệnh",
+      "missionDesc": "Bảo tồn, kế thừa và phát huy tinh hoa Y học cổ truyền Việt Nam. Cung cấp dịch vụ y tế toàn diện, an toàn và hiệu quả, góp phần nâng cao sức khỏe cộng đồng.",
+      "missionItems": [
+        "Phục vụ bệnh nhân tận tâm",
+        "Nghiên cứu & bảo tồn dược liệu quý",
+        "Đào tạo thế hệ thầy thuốc YHCT kế tiếp"
+      ],
+      "vision": "Tầm Nhìn 2030",
+      "visionDesc": "Trở thành trung tâm Y học cổ truyền hàng đầu Đông Nam Á, kết hợp xuất sắc giữa tri thức dân tộc và nền y học hiện đại, ứng dụng công nghệ số trong quản lý và điều trị.",
+      "visionItems": [
+        "Đứng đầu về YHCT tại khu vực phía Nam",
+        "Triển khai Y tế số toàn diện",
+        "Hợp tác quốc tế về nghiên cứu dược liệu"
+      ],
+      "history": "Lịch Sử Hình Thành & Phát Triển",
+      "historySub": "Hành trình hơn 50 năm xây dựng và cống hiến cho nền Y học dân tộc Việt Nam",
+      "departments": "Các Khoa & Phòng Ban",
+      "departmentsSub": "Hệ thống khoa phòng đầy đủ phục vụ nhu cầu khám và điều trị đa dạng"
+    },
+    "ctaSection": {
+      "title": "Hãy Để Chúng Tôi Chăm Sóc Sức Khỏe Cho Bạn",
+      "subtitle": "Đặt lịch khám ngay hôm nay để được tư vấn bởi đội ngũ bác sĩ YHCT hàng đầu.",
+      "bookNow": "Đặt Lịch Khám Ngay"
+    },
+    "milestones": [
+      {
+        "year": "1975",
+        "title": "Thành lập Viện",
+        "desc": "Viện Y Dược Học Dân Tộc được thành lập theo Quyết định của UBND TP.HCM, trực thuộc Sở Y tế."
+      },
+      {
+        "year": "1985",
+        "title": "Mở rộng chuyên khoa",
+        "desc": "Bổ sung các khoa Châm cứu, Vật lý trị liệu – Phục hồi chức năng và Dược liệu."
+      },
+      {
+        "year": "2000",
+        "title": "Hiện đại hóa trang thiết bị",
+        "desc": "Đầu tư hệ thống X-Quang, Siêu âm màu, Xét nghiệm sinh hóa hiện đại, nâng cao chất lượng chẩn đoán."
+      },
+      {
+        "year": "2010",
+        "title": "Chuẩn ISO 15189",
+        "desc": "Phòng xét nghiệm đạt tiêu chuẩn quốc tế ISO 15189, khẳng định chất lượng dịch vụ cận lâm sàng."
+      },
+      {
+        "year": "2020",
+        "title": "Chuyển đổi số Y tế",
+        "desc": "Triển khai hệ thống HIS toàn diện, quản lý hồ sơ bệnh nhân điện tử và đặt lịch trực tuyến."
+      },
+      {
+        "year": "2026",
+        "title": "Nền tảng Y tế số",
+        "desc": "Ra mắt cổng đặt khám trực tuyến tích hợp thanh toán VietQR, hướng đến mô hình Y tế 4.0."
+      }
+    ],
+    "departments": [
+      {
+        "name": "Khám bệnh - Cấp cứu",
+        "desc": "Tiếp nhận và xử lý ban đầu tất cả bệnh nhân đến khám."
+      },
+      {
+        "name": "Châm cứu - Phục hồi chức năng",
+        "desc": "Điều trị bằng châm cứu, xoa bóp, kéo giãn cột sống và phục hồi sau tai biến."
+      },
+      {
+        "name": "Vật lý trị liệu",
+        "desc": "Siêu âm trị liệu, điện trị liệu, tia hồng ngoại, sóng ngắn..."
+      },
+      {
+        "name": "Y học cổ truyền",
+        "desc": "Thang thuốc Nam-Bắc, bài thuốc dân gian, sắc thuốc theo cổ phương."
+      },
+      {
+        "name": "Cấy chỉ - Thủ thuật",
+        "desc": "Cấy chỉ catgut tự tiêu vào huyệt đạo, tác dụng kéo dài hơn châm thông thường."
+      },
+      {
+        "name": "Dược - Dược liệu",
+        "desc": "Cung cấp và kiểm định dược liệu đạt chuẩn, bào chế thuốc thành phẩm YHCT."
+      },
+      {
+        "name": "Cận lâm sàng",
+        "desc": "Xét nghiệm máu, sinh hóa, X-Quang, Siêu âm màu, Điện tim."
+      },
+      {
+        "name": "Dinh dưỡng",
+        "desc": "Tư vấn dinh dưỡng lâm sàng kết hợp với Y học cổ truyền."
+      }
+    ]
+  },
+  "contact": {
+    "hero": {
+      "badge": "Liên hệ & Hỗ trợ",
+      "title": "Liên Hệ Với Chúng Tôi",
+      "subtitle": "Đội ngũ tư vấn viên sẵn sàng hỗ trợ bạn 24/7. Gửi câu hỏi hoặc đặt lịch hẹn ngay hôm nay."
+    },
+    "infoCards": {
+      "address": {
+        "title": "Địa chỉ",
+        "lines": [
+          "273 - 275 Nguyễn Văn Trỗi, Phường 10",
+          "Quận Phú Nhuận, TP. Hồ Chí Minh"
+        ],
+        "action": "Chỉ Đường"
+      },
+      "phone": {
+        "title": "Điện thoại & Hotline",
+        "lines": [
+          "Hotline: 0964 392 632",
+          "Cấp cứu: 0964 392 632"
+        ],
+        "action": "Gọi Ngay"
+      },
+      "email": {
+        "title": "Email",
+        "lines": [
+          "v.ydhdt@tphcm.gov.vn",
+          "hotro@vienydhdt.gov.vn"
+        ],
+        "action": "Gửi Email"
+      },
+      "hours": {
+        "title": "Giờ Khám Bệnh",
+        "lines": [
+          "Thứ 2 – Thứ 6: 7:00 – 17:00",
+          "Thứ 7: 7:00 – 12:00",
+          "Chủ nhật: Nghỉ"
+        ],
+        "action": "Đặt Lịch"
+      }
+    },
+    "form": {
+      "title": "Gửi Tin Nhắn",
+      "subtitle": "Điền thông tin và chúng tôi sẽ phản hồi trong vòng 24 giờ làm việc.",
+      "nameLabel": "Họ và tên *",
+      "namePlaceholder": "Nhập họ và tên",
+      "phoneLabel": "Số điện thoại *",
+      "phonePlaceholder": "Nhập số điện thoại",
+      "emailLabel": "Email",
+      "emailPlaceholder": "Nhập địa chỉ email",
+      "subjectLabel": "Chủ đề",
+      "subjectPlaceholder": "Chọn chủ đề",
+      "subjects": {
+        "appointment": "Đặt lịch khám",
+        "services": "Hỏi về dịch vụ",
+        "results": "Tra cứu kết quả khám",
+        "feedback": "Góp ý chất lượng dịch vụ",
+        "other": "Khác"
+      },
+      "messageLabel": "Nội dung *",
+      "messagePlaceholder": "Mô tả vấn đề hoặc câu hỏi của bạn...",
+      "submit": "Gửi Tin Nhắn",
+      "submitting": "Đang gửi...",
+      "successTitle": "Gửi Thành Công!",
+      "successMessage": "Cảm ơn bạn đã liên hệ. Viện sẽ phản hồi sớm nhất có thể.",
+      "sendAnother": "Gửi tin nhắn khác"
+    },
+    "map": {
+      "title": "Bản Đồ Chỉ Đường",
+      "directionsButton": "Chỉ Đường Google Maps",
+      "bookNow": "Đặt Lịch Khám Ngay",
+      "iframeTitle": "Bản đồ Viện Y Dược Học Dân Tộc"
+    }
+  },
+  "pricing": {
+    "title": "Bảng Giá Dịch Vụ Khám Bệnh",
+    "subtitle": "Bảng giá được cập nhật trực tiếp từ hệ thống bệnh viện (HIS).",
+    "searchPlaceholder": "Tìm theo tên dịch vụ...",
+    "service": "Dịch vụ",
+    "bhyt": "BHYT",
+    "dichVu": "Dịch Vụ",
+    "yeuCau": "Khám theo Yêu cầu",
+    "chuyenGia": "Khám Chuyên gia",
+    "updating": "Đang cập nhật bảng giá...",
+    "table": {
+      "code": "Mã DV",
+      "service": "Tên Dịch Vụ",
+      "bhyt": "Giá BHYT",
+      "serviceFee": "Giá Dịch Vụ",
+      "request": "Khám Yêu Cầu",
+      "expert": "Khám Chuyên Gia"
+    },
+    "noResults": "Không tìm thấy dịch vụ nào phù hợp với từ khóa \"{searchTerm}\".",
+    "note": {
+      "title": "Lưu ý:",
+      "text": "Bảng giá mang tính chất tham khảo và có thể thay đổi theo quy định hiện hành của Bộ Y Tế. Đối với bệnh nhân có BHYT, mức hưởng sẽ phụ thuộc vào mã quyền lợi trên thẻ và tình trạng trái tuyến/đúng tuyến."
+    }
+  },
+  "home": {
+    "header": {
+      "logoAlt": "Logo Viện",
+      "instituteName": "Viện Y Dược Học",
+      "instituteShort": "Dân Tộc TP.HCM",
+      "nav": {
+        "about": "Giới Thiệu",
+        "booking": "Đặt Lịch Khám",
+        "news": "Tin Tức",
+        "pricing": "Bảng Giá",
+        "contact": "Liên Hệ"
+      },
+      "hotline": "0964 392 632",
+      "bookNow": "Đặt Lịch Khám",
+      "menuOpen": "Mở menu",
+      "menuClose": "Đóng menu"
+    },
+    "mobileMenu": {
+      "about": "Giới Thiệu",
+      "booking": "Đặt Lịch Khám",
+      "news": "Tin Tức",
+      "pricing": "Bảng Giá Dịch Vụ",
+      "search": "Tra Cứu Lịch Khám",
+      "contact": "Liên Hệ",
+      "call": "Gọi: 0964 392 632",
+      "bookNow": "Đặt Lịch Khám"
+    },
+    "hero": {
+      "badge": "Chăm sóc sức khỏe toàn diện",
+      "title": "Kết hợp tinh hoa",
+      "titleBreak": "Y học cổ truyền & Hiện đại",
+      "description": "Đơn vị khám chữa bệnh uy tín hàng đầu khu vực phía Nam. Chúng tôi cam kết mang lại sự an tâm và hiệu quả điều trị tối ưu cho mọi bệnh nhân.",
+      "bookNow": "Đặt Lịch Khám Ngay",
+      "learnMore": "Tìm Hiểu Thêm"
+    },
+    "services": {
+      "sectionBadge": "Chuyên Khoa Mũi Nhọn",
+      "sectionTitle": "Các Dịch Vụ Nổi Bật",
+      "sectionDescription": "Chúng tôi cung cấp các phương pháp điều trị tiên tiến, kết hợp ưu điểm của Y học cổ truyền và công nghệ hiện đại.",
+      "items": [
+        {
+          "title": "Châm Cứu - Phục Hồi",
+          "description": "Điều trị hiệu quả các chứng đau thần kinh tọa, thoái hóa cột sống, và phục hồi chức năng sau tai biến."
+        },
+        {
+          "title": "Khám Tổng Quát",
+          "description": "Đánh giá tình trạng sức khỏe toàn diện với sự hỗ trợ của các trang thiết bị chẩn đoán hiện đại."
+        },
+        {
+          "title": "Dược Liệu YHCT",
+          "description": "Sử dụng các bài thuốc Nam, thuốc Bắc nguồn gốc rõ ràng, đạt tiêu chuẩn chất lượng cao."
+        },
+        {
+          "title": "Vật Lý Trị Liệu",
+          "description": "Các bài tập vận động, kéo giãn cột sống, siêu âm trị liệu giúp phục hồi cơ xương khớp."
+        },
+        {
+          "title": "Cận Lâm Sàng",
+          "description": "Hệ thống xét nghiệm sinh hóa, huyết học, X-Quang, Siêu âm màu chuẩn xác và nhanh chóng."
+        },
+        {
+          "title": "Cấy Chỉ Trị Liệu",
+          "description": "Phương pháp đột phá ứng dụng chỉ tự tiêu vào huyệt đạo, mang lại tác dụng điều trị kéo dài."
+        }
+      ],
+      "learnMore": "Tìm hiểu thêm"
+    },
+    "portfolio": {
+      "sectionBadge": "Hoạt Động & Cơ Sở",
+      "sectionTitle": "Không Gian Khám Chữa Bệnh",
+      "sectionDescription": "Môi trường điều trị xanh mát, thanh tịnh mang đậm bản sắc Y học Cổ truyền.",
+      "items": [
+        {
+          "title": "Vườn Y Đạo Tượng Danh Y",
+          "description": "Khuôn viên lưu giữ tinh hoa y học truyền thống Việt Nam",
+          "cta": "Khám phá thêm"
+        },
+        {
+          "title": "Khu Vực Phục Hồi",
+          "description": "Yên tĩnh và chuyên biệt",
+          "cta": "Khám phá thêm"
+        },
+        {
+          "title": "Cảnh Quan Thiên Nhiên",
+          "description": "Không gian xanh hỗ trợ chữa lành",
+          "cta": "Khám phá thêm"
+        },
+        {
+          "title": "Phòng Chẩn Trị",
+          "description": "Trang thiết bị hiện đại, sạch sẽ",
+          "cta": "Khám phá thêm"
+        }
+      ],
+      "viewAll": "Xem Tất Cả Hình Ảnh"
+    },
+    "contact": {
+      "sectionBadge": "Liên Hệ & Đặt Lịch",
+      "sectionTitle": "Sẵn sàng chăm sóc<br/>sức khỏe cho bạn",
+      "description": "Đội ngũ bác sĩ và nhân viên y tế của Viện Y Dược Học Dân Tộc luôn sẵn lòng hỗ trợ. Hãy để lại thông tin hoặc gọi điện trực tiếp.",
+      "addressTitle": "Địa chỉ",
+      "address": "273 - 275 Nguyễn Văn Trỗi, Phường 10, Quận Phú Nhuận, TP.HCM",
+      "emailTitle": "Email",
+      "email": "v.ydhdt@tphcm.gov.vn",
+      "hotlineTitle": "Hotline tư vấn",
+      "hotline": "0964 392 632",
+      "quickBooking": {
+        "title": "Đặt Lịch Nhanh Chóng",
+        "description": "Hệ thống đặt lịch trực tuyến mới cho phép bạn chọn ngày giờ, bác sĩ yêu thích và thanh toán ngay lập tức chỉ với vài thao tác.",
+        "button": "Bắt Đầu Đặt Lịch",
+        "confirm": "Xác nhận tức thì",
+        "noWait": "Không chờ đợi"
+      }
+    },
+    "footer": {
+      "description": "Kế thừa tinh hoa Y học cổ truyền Việt Nam, kết hợp cùng các phương pháp điều trị hiện đại nhằm mang lại sức khỏe tốt nhất cho cộng đồng.",
+      "specialtiesTitle": "Chuyên Khoa & Dịch Vụ",
+      "services": {
+        "initialExam": "Khám Bệnh Ban Đầu",
+        "historySearch": "Tra Cứu Lịch Sử Khám",
+        "embedding": "Đặt Lịch Cấy Chỉ",
+        "pricing": "Bảng Giá Dịch Vụ"
+      },
+      "infoTitle": "Thông Tin Phụ Trợ",
+      "info": {
+        "training": "Đào Tạo - Chỉ Đạo Tuyến",
+        "research": "Nghiên Cứu Khoa Học",
+        "herbalProducts": "Sản Phẩm Thuốc YHCT",
+        "news": "Tin Tức Hoạt Động"
+      },
+      "newsletter": {
+        "title": "Bản Tin Sức Khỏe",
+        "description": "Đăng ký email để nhận các lời khuyên chăm sóc sức khỏe bằng Đông Y hữu ích nhất.",
+        "placeholder": "Nhập địa chỉ email...",
+        "button": "Đăng Ký"
+      },
+      "copyright": "© {year} Viện Y Dược Học Dân Tộc TP.HCM. Bảo lưu mọi quyền.",
+      "links": {
+        "privacy": "Chính sách bảo mật",
+        "terms": "Điều khoản sử dụng",
+        "admin": "Cổng nội bộ"
+      }
+    },
+    "alt": {
+      "logo": "Logo Viện",
+      "heroImage": "Khuôn viên Viện Y Dược Học Dân Tộc",
+      "garden": "Vườn Y Đạo",
+      "treatmentArea": "Khu vực điều trị",
+      "naturalScene": "Cảnh Quan Thiên Nhiên",
+      "clinicRoom": "Phòng Chẩn Trị"
+    }
+  },
+  "metadata": {
+    "titleDefault": "Viện Y Dược Học Dân Tộc | Chăm Sóc Sức Khỏe Bằng Y Học Cổ Truyền",
+    "titleTemplate": "%s | Viện Y Dược Học Dân Tộc",
+    "description": "Viện Y Dược Học Dân Tộc — Đơn vị nghiên cứu và điều trị hàng đầu về Y học Cổ truyền Việt Nam. Đặt lịch, tra cứu dược liệu và tìm hiểu chuyên gia uy tín.",
+    "keywords": "Viện Y Dược Học Dân Tộc, y học cổ truyền, đặt lịch khám bệnh, dược liệu đông y, bác sĩ y học cổ truyền, khám bệnh online",
+    "siteName": "Viện Y Dược Học Dân Tộc",
+    "ogTitle": "Viện Y Dược Học Dân Tộc | Y Học Cổ Truyền Việt Nam",
+    "ogDescription": "Khám phá dịch vụ chăm sóc sức khỏe bằng Y học Cổ truyền của Viện Y Dược Học Dân Tộc — Đặt lịch nhanh, Dược liệu chuẩn, Bác sĩ giỏi."
+  },
+  "chatWidget": {
+    "welcome": "Xin chào! 👋 Tôi là **Y Dược AI** — trợ lý ảo của Viện Y Dược Học Dân Tộc TP.HCM.\n\nTôi có thể giúp bạn:\n- 📋 Thông tin dịch vụ & giá khám\n- 🕐 Giờ làm việc & địa chỉ\n- 📅 Hướng dẫn đặt lịch khám\n- 💊 Giới thiệu chuyên khoa\n\nBạn cần hỗ trợ gì ạ?",
+    "error": "Xin lỗi, tôi đang gặp sự cố. Vui lòng thử lại hoặc gọi **(028) 3844 2349** để được hỗ trợ.",
+    "title": "Y Dược AI",
+    "subtitle": "Trợ lý ảo Viện Y Dược Học Dân Tộc",
+    "online": "Trực tuyến",
+    "placeholder": "Nhập câu hỏi của bạn...",
+    "disclaimer": "Y Dược AI — Trợ lý ảo, không thay thế bác sĩ",
+    "ariaOpen": "Mở chatbot Y Dược AI",
+    "ariaClose": "Đóng chatbot",
+    "suggestions": {
+      "hours": "Giờ làm việc của Viện?",
+      "booking": "Cách đặt lịch khám online?",
+      "insurance": "Viện có nhận BHYT không?"
+    }
+  }
+}

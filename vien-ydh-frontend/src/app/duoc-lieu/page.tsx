@@ -1,12 +1,18 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import HerbDictionary from "@/components/features/HerbDictionary";
 
-export const metadata: Metadata = {
-  title: "Từ Điển Dược Liệu",
-  description: "Tra cứu thông tin chi tiết, công dụng và cách dùng của các vị thuốc Đông y tại Viện Y Dược Học Dân Tộc.",
-};
+export async function generateMetadata({ params: { locale } }: { params: { locale: string } }): Promise<Metadata> {
+  const t = await getTranslations('herbs');
+  return {
+    title: t('title'),
+    description: t('subtitle'),
+  };
+}
 
-export default function DuocLieuPage() {
+export default async function DuocLieuPage() {
+  const t = await getTranslations('herbs');
+
   return (
     <div className="bg-[#fbf9f6] min-h-screen pb-20">
       {/* Header Banner */}
@@ -16,10 +22,9 @@ export default function DuocLieuPage() {
           <div className="absolute -right-20 bottom-0 h-96 w-96 rounded-full bg-[#d97706] blur-3xl"></div>
         </div>
         <div className="container-site relative z-10 text-center max-w-3xl">
-          <h1 className="font-heading text-4xl md:text-5xl font-bold mb-6">Từ Điển Dược Liệu</h1>
+          <h1 className="font-heading text-4xl md:text-5xl font-bold mb-6">{t('title')}</h1>
           <p className="text-lg text-emerald-50 leading-relaxed">
-            Khám phá kho tàng tri thức Y học Cổ truyền với hàng trăm vị thuốc quý. 
-            Tìm hiểu chi tiết về tính vị, công dụng và bài thuốc chữa bệnh.
+            {t('subtitle')}
           </p>
         </div>
       </section>
