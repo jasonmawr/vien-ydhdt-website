@@ -31,7 +31,7 @@ export default function HomeScreen({ navigation }: any) {
   const renderItem = ({ item }: { item: any }) => (
     <TouchableOpacity 
       style={styles.card}
-      onPress={() => console.log('Navigate to Booking with dept:', item.id)}
+      onPress={() => navigation.navigate('Doctor', { departmentId: item.id })}
     >
       <Text style={styles.cardTitle}>{item.name}</Text>
       <Text style={styles.cardDesc} numberOfLines={2}>{item.description}</Text>
