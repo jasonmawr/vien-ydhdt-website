@@ -19,8 +19,11 @@
     "subtitle": "Hệ thống đặt lịch trực tuyến giúp bạn chủ động thời gian, tránh tình trạng chờ đợi",
     "modes": {
       "specialty": "Đặt khám theo Chuyên khoa",
+      "specialtyDesc": "Chọn chuyên khoa phù hợp với triệu chứng của bạn để được tư vấn bởi bác sĩ chuyên môn.",
       "doctor": "Đặt khám theo Bác sĩ",
-      "date": "Đặt khám theo Ngày"
+      "doctorDesc": "Chọn trực tiếp bác sĩ bạn tin tưởng, xem lịch trống và đặt khám ngay.",
+      "date": "Đặt khám theo Ngày",
+      "dateDesc": "Chọn ngày và giờ khám phù hợp với lịch của bạn, hệ thống tự động gợi ý bác sĩ."
     },
     "doctorPageDescription": "Chọn trực tiếp bác sĩ bạn tin tưởng, xem lịch trống và đặt ngay.",
     "doctorPageSubtitle": "Chọn trực tiếp bác sĩ bạn tin tưởng, xem lịch trống và đặt khám ngay.",
@@ -149,16 +152,6 @@
       "general": "Đã xảy ra lỗi. Vui lòng thử lại sau.",
       "paymentCreation": "Không thể tạo mã thanh toán."
     }
-  },
-  "pricing": {
-    "title": "Bảng Giá Khám Bệnh (Tham Khảo)",
-    "service": "Dịch vụ",
-    "bhyt": "BHYT",
-    "dichVu": "Dịch Vụ",
-    "yeuCau": "Khám theo Yêu cầu",
-    "chuyenGia": "Khám Chuyên gia",
-    "note": "* Giá trên được trích xuất trực tiếp từ hệ thống quản lý viện phí. Giá thực tế có thể thay đổi theo quy định.",
-    "updating": "Đang cập nhật bảng giá..."
   },
   "features": {
     "timeSave": "Tiết kiệm thời gian chờ đợi",
@@ -386,6 +379,12 @@
     "title": "Bảng Giá Dịch Vụ Khám Bệnh",
     "subtitle": "Bảng giá được cập nhật trực tiếp từ hệ thống bệnh viện (HIS).",
     "searchPlaceholder": "Tìm theo tên dịch vụ...",
+    "service": "Dịch vụ",
+    "bhyt": "BHYT",
+    "dichVu": "Dịch Vụ",
+    "yeuCau": "Khám theo Yêu cầu",
+    "chuyenGia": "Khám Chuyên gia",
+    "updating": "Đang cập nhật bảng giá...",
     "table": {
       "code": "Mã DV",
       "service": "Tên Dịch Vụ",

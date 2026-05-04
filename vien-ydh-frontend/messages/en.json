@@ -19,8 +19,11 @@
     "subtitle": "Online booking system helps you manage your time and avoid waiting",
     "modes": {
       "specialty": "By Specialty",
+      "specialtyDesc": "Choose the specialty that matches your symptoms for expert consultation.",
       "doctor": "By Doctor",
-      "date": "By Date"
+      "doctorDesc": "Select your trusted doctor directly, view available schedule and book now.",
+      "date": "By Date",
+      "dateDesc": "Choose a date and time that fits your schedule, system will suggest doctors."
     },
     "doctorPageDescription": "Select the doctor you trust directly, view available schedule and book immediately.",
     "doctorPageSubtitle": "Choose your trusted doctor directly, view available slots, and book an appointment now.",
@@ -152,15 +155,6 @@
     "step2": {
       "defaultSpecialty": "Traditional Medicine"
     }
-  },
-  "pricing": {
-    "title": "Exam Price List (Reference)",
-    "service": "Service",
-    "bhyt": "Insurance",
-    "dichVu": "Service",
-    "yeuCau": "On Request",
-    "chuyenGia": "Specialist",
-    "note": "* Prices are extracted directly from the hospital fee management system. Actual prices may vary according to regulations."
   },
   "features": {
     "timeSave": "Save waiting time",
@@ -388,6 +382,12 @@
     "title": "Exam Price List",
     "subtitle": "Prices are updated directly from the hospital management system (HIS).",
     "searchPlaceholder": "Search by service name...",
+    "service": "Service",
+    "bhyt": "Insurance",
+    "dichVu": "Service",
+    "yeuCau": "On Request",
+    "chuyenGia": "Specialist",
+    "updating": "Updating price list...",
     "table": {
       "code": "Code",
       "service": "Service Name",
@@ -400,8 +400,7 @@
     "note": {
       "title": "Note:",
       "text": "Prices are for reference only and may change according to Ministry of Health regulations. For BHYT patients, the benefit level depends on the benefit code on the card and in-network/out-of-network status."
-    },
-    "updating": "Updating price list..."
+    }
   },
   "home": {
     "header": {

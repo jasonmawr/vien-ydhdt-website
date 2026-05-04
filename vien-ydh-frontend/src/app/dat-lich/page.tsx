@@ -31,9 +31,9 @@ const bookingModes = [
 ];
 
 const features = [
-  { icon: Clock, textKey: "features.timeSave" },
-  { icon: ShieldCheck, textKey: "features.bhytSupport" },
-  { icon: CreditCard, textKey: "features.qrPayment" },
+  { icon: Clock, textKey: "timeSave" },
+  { icon: ShieldCheck, textKey: "bhytSupport" },
+  { icon: CreditCard, textKey: "qrPayment" },
 ];
 
 export async function generateMetadata() {
@@ -47,6 +47,7 @@ export async function generateMetadata() {
 
 export default async function DatLichPage() {
   const t = await getTranslations('booking');
+  const tFeatures = await getTranslations('features');
   const tPricing = await getTranslations('pricing');
   const pricingData = await getExamPricing().catch(() => []);
 
@@ -67,7 +68,7 @@ export default async function DatLichPage() {
             {features.map((f, i) => (
               <div key={i} className="flex items-center gap-2 text-sm text-emerald-100">
                 <f.icon className="h-5 w-5 text-amber-300" />
-                <span>{t(f.textKey)}</span>
+                <span>{tFeatures(f.textKey)}</span>
               </div>
             ))}
           </div>
@@ -122,8 +123,8 @@ export default async function DatLichPage() {
                   <tr className="border-b border-gray-200">
                     <th className="text-left py-3 px-4 font-semibold text-gray-600">{tPricing('service')}</th>
                     <th className="text-right py-3 px-4 font-semibold text-emerald-700">{tPricing('bhyt')}</th>
-                    <th className="text-right py-3 px-4 font-semibold text-blue-700">{tPricing('dichVu')}<br/><span className="text-xs font-normal opacity-80">({t('booking.step4.dichVu')})</span></th>
-                    <th className="text-right py-3 px-4 font-semibold text-amber-700">{tPricing('yeuCau')}<br/><span className="text-xs font-normal opacity-80">({t('booking.step4.yeuCau')})</span></th>
+                    <th className="text-right py-3 px-4 font-semibold text-blue-700">{tPricing('dichVu')}<br/><span className="text-xs font-normal opacity-80">({t('step4.patientType.dich-vu')})</span></th>
+                    <th className="text-right py-3 px-4 font-semibold text-amber-700">{tPricing('yeuCau')}<br/><span className="text-xs font-normal opacity-80">({t('step4.patientType.yeu-cau')})</span></th>
                     <th className="text-right py-3 px-4 font-semibold text-purple-700">{tPricing('chuyenGia')}</th>
                   </tr>
                 </thead>
@@ -157,7 +158,7 @@ export default async function DatLichPage() {
               </table>
             </div>
             <p className="text-xs text-gray-400 mt-4 text-center italic">
-              * {tPricing('note')}
+              * {tPricing('note.text')}
             </p>
           </div>
         </div>

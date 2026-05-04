@@ -19,8 +19,11 @@
     "subtitle": "在线预约系统帮助您管理时间，避免等待",
     "modes": {
       "specialty": "按科室",
+      "specialtyDesc": "选择与您症状相符的科室，获得专业医生咨询。",
       "doctor": "按医生",
-      "date": "按日期"
+      "doctorDesc": "直接选择您信任的医生，查看可用时间并立即预约。",
+      "date": "按日期",
+      "dateDesc": "选择适合您日程的日期和时间，系统将自动推荐医生。"
     },
     "doctorPageDescription": "直接选择您信任的医生，查看可用时间并立即预约。",
     "doctorPageSubtitle": "直接选择您信任的医生，查看可用时间段并立即预约。",
@@ -152,16 +155,6 @@
     "step2": {
       "defaultSpecialty": "传统医学"
     }
-  },
-  "pricing": {
-    "title": "挂号价格表（参考）",
-    "service": "服务项目",
-    "bhyt": "医保",
-    "dichVu": "自费",
-    "yeuCau": "特需",
-    "chuyenGia": "专家",
-    "note": "* 价格直接从医院收费管理系统提取。实际价格可能根据规定有所变动。",
-    "updating": "正在更新价格表..."
   },
   "features": {
     "timeSave": "节省等待时间",
@@ -389,6 +382,12 @@
     "title": "诊费价格表",
     "subtitle": "价格直接从医院管理系统（HIS）更新。",
     "searchPlaceholder": "按服务名称搜索...",
+    "service": "服务项目",
+    "bhyt": "医保",
+    "dichVu": "自费",
+    "yeuCau": "特需",
+    "chuyenGia": "专家",
+    "updating": "正在更新价格表...",
     "table": {
       "code": "代码",
       "service": "服务名称",
