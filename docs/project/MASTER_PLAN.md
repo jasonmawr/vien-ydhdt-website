@@ -282,11 +282,11 @@ VIETINBANK_CERT_PATH=<optional, mặc định đọc từ docs/>
 | | — 3 bộ dịch thuật: vi.json, en.json, zh.json (~72KB tổng) | ✅ |
 | | — LanguageSwitcher component (cờ 🇻🇳🇺🇸🇨🇳, API /api/locale) | ✅ |
 | | — Chuyển toàn bộ hardcode text → useTranslations() (20+ files) | ✅ |
-| **19.5** | **Security, Stability & Real-time Optimization** | **⏳ Đang xử lý** |
-| | — Chống Spam (Rate-limit) | ⏳ |
+| **19.5** | **Security, Stability & Real-time Optimization** | **✅ Hoàn thành** |
+| | — Chống Spam (Rate-limit) | ✅ |
 | | — Xử lý Race Condition (Oracle `SELECT FOR UPDATE`) | ✅ |
-| | — Ghi Log lỗi (Winston/Pino) | ⏳ |
-| | — Tối ưu thanh toán VietQR với Webhook SSE | ⏳ |
+| | — Ghi Log lỗi (Winston/Pino) | ✅ |
+| | — Tối ưu thanh toán VietQR với Webhook SSE | ✅ |
 | 20 | Deploy Production (IIS + SSL) | 📋 Giai đoạn cuối |
 
 ---
