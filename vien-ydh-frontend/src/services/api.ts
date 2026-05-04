@@ -250,17 +250,43 @@ export async function getPatientTypes(): Promise<PatientTypeDTO[]> {
 // Web CMS API (Lấy từ SQLite Backend)
 // ─────────────────────────────────────────
 
+export interface CategoryDTO {
+  id: number;
+  name: string;
+  slug: string;
+  parent_id: number | null;
+  description: string | null;
+  display_order: number;
+  created_at: string;
+}
+
+export interface AttachmentDTO {
+  id?: number;
+  file_name: string;
+  file_url: string;
+  file_type?: string;
+  file_size?: number;
+}
+
 export interface PostDTO {
   id: number;
   title: string;
   slug: string;
-  category: string;
+  category_id: number | null;
+  category_name?: string;
+  category_slug_name?: string;
   excerpt: string;
   content: string;
   thumbnail: string | null;
   author: string;
   status: string;
   tags: string | null;
+  meta_title?: string;
+  meta_description?: string;
+  keywords?: string;
+  is_featured?: boolean;
+  published_at?: string;
+  attachments?: AttachmentDTO[];
   view_count: number;
   created_at: string;
   updated_at: string;
@@ -275,11 +301,12 @@ export interface PaginatedPosts {
   };
 }
 
-export async function getPosts(category?: string, search?: string, limit = 10, offset = 0, admin = false): Promise<PaginatedPosts> {
+export async function getPosts(category_slug?: string, search?: string, limit = 10, offset = 0, admin = false, featured = false): Promise<PaginatedPosts> {
   let url = `/api/cms/posts?limit=${limit}&offset=${offset}`;
   if (admin) url += `&admin=1`;
-  if (category && category !== "Tất cả") url += `&category=${encodeURIComponent(category)}`;
+  if (category_slug && category_slug !== "Tất cả") url += `&category_slug=${encodeURIComponent(category_slug)}`;
   if (search) url += `&search=${encodeURIComponent(search)}`;
+  if (featured) url += `&featured=true`;
   
   const response = await apiFetch<{ success: boolean; data: PostDTO[]; pagination: any }>(url);
   return {
@@ -322,9 +349,52 @@ export async function deletePost(id: number, token: string): Promise<void> {
   });
 }
 
-export async function getCategories(): Promise<string[]> {
-  const response = await apiFetch<{ success: boolean; data: string[] }>("/api/cms/categories");
+export async function getCategories(): Promise<CategoryDTO[]> {
+  const response = await apiFetch<{ success: boolean; data: CategoryDTO[] }>("/api/cms/categories");
   return response.data;
+}
+
+export async function createCategory(data: Partial<CategoryDTO>, token: string): Promise<any> {
+  const response = await apiFetch<{ success: boolean; data: any }>("/api/cms/categories", {
+    method: "POST",
+    headers: { "Authorization": `Bearer ${token}` },
+    body: JSON.stringify(data)
+  });
+  return response.data;
+}
+
+export async function updateCategory(id: number, data: Partial<CategoryDTO>, token: string): Promise<void> {
+  await apiFetch<{ success: boolean }>(`/api/cms/categories/${id}`, {
+    method: "PUT",
+    headers: { "Authorization": `Bearer ${token}` },
+    body: JSON.stringify(data)
+  });
+}
+
+export async function deleteCategory(id: number, token: string): Promise<void> {
+  await apiFetch<{ success: boolean }>(`/api/cms/categories/${id}`, {
+    method: "DELETE",
+    headers: { "Authorization": `Bearer ${token}` }
+  });
+}
+
+export async function uploadFile(file: File, token: string): Promise<{url: string, filename: string, mimetype: string, size: number}> {
+  const formData = new FormData();
+  formData.append('file', file);
+  
+  const url = `${API_BASE_URL}/api/upload`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      "Authorization": `Bearer ${token}`
+    },
+    body: formData
+  });
+  if (!res.ok) {
+    throw new Error('Upload failed');
+  }
+  const result = await res.json();
+  return result.data;
 }
 
 export async function getWebDoctor(mabs: string, token: string): Promise<any> {
@@ -344,4 +414,14 @@ export async function updateWebDoctor(data: any, token: string): Promise<any> {
     body: JSON.stringify(data)
   });
   return response;
+}
+
+export async function getLogs(token: string, file?: string): Promise<any> {
+  let url = "/api/cms/logs";
+  if (file) url += `?file=${encodeURIComponent(file)}`;
+  
+  const response = await apiFetch<{ success: boolean; data: any }>(url, {
+    headers: { "Authorization": `Bearer ${token}` }
+  });
+  return response.data;
 }

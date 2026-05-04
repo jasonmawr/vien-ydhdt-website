@@ -224,91 +224,160 @@ export function HospitalLandingPage() {
       )}
 
       <main className="flex-1">
-        {/* Hero Section */}
-        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 overflow-hidden">
-          <div className="container-site px-4 md:px-6 border border-stone-200/60 rounded-3xl bg-gradient-to-br from-white to-stone-50/50 shadow-sm">
-            <div className="grid gap-8 lg:grid-cols-[1fr_450px] lg:gap-12 xl:grid-cols-[1fr_650px] items-center">
-              <motion.div
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={fadeIn}
-                className="flex flex-col justify-center space-y-6 py-10"
-              >
-                <div className="space-y-4">
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.5 }}
-                    className="inline-flex items-center rounded-full bg-primary-50 border border-primary-100 px-4 py-1.5 text-sm font-medium text-primary-700"
-                  >
-                    <Sparkles className="mr-2 h-4 w-4 text-primary-500" />
-                    {t('hero.badge')}
-                  </motion.div>
-                  <motion.h1
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.7, delay: 0.2 }}
-                    className="text-4xl font-extrabold tracking-tight sm:text-5xl xl:text-6xl text-stone-900 leading-[1.1]"
-                  >
-                    {t('hero.title')}
-                    <br className="hidden sm:block" />
-                    <span className="bg-gradient-to-r from-primary-600 to-teal-500 bg-clip-text text-transparent">
-                      {t('hero.titleBreak')}
-                    </span>
-                  </motion.h1>
-                  <motion.p
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.7, delay: 0.4 }}
-                    className="max-w-[600px] text-stone-600 md:text-xl leading-relaxed"
-                  >
-                    {t('hero.description')}
-                  </motion.p>
-                </div>
+        {/* Hero Section — BVDaiHoc style: full-width mosaic banner */}
+        <section className="w-full overflow-hidden">
+          <div className="relative w-full min-h-[520px] md:min-h-[620px] lg:min-h-[680px] flex">
+
+            {/* LEFT — Large photo with gradient overlay & text */}
+            <motion.div
+              initial={{ opacity: 0, x: -40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              className="relative flex-1 min-w-0"
+            >
+              <Image
+                src="/images/hero_medicine.png"
+                alt="Khuôn viên Viện Y Dược Học Dân Tộc"
+                fill
+                sizes="65vw"
+                className="object-cover"
+                priority
+              />
+              {/* Blue gradient overlay matching the hospital theme */}
+              <div className="absolute inset-0 bg-gradient-to-r from-primary-900/80 via-primary-800/60 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-primary-900/70 via-transparent to-transparent" />
+
+              {/* Text Content */}
+              <div className="absolute bottom-0 left-0 p-8 md:p-12 lg:p-16 max-w-xl z-10">
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                  className="inline-flex items-center rounded-full bg-white/20 backdrop-blur-sm border border-white/30 px-4 py-1.5 text-sm font-medium text-white mb-5"
+                >
+                  <Sparkles className="mr-2 h-4 w-4 text-teal-300" />
+                  {t('hero.badge')}
+                </motion.div>
+
+                <motion.h1
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.7, delay: 0.4 }}
+                  className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-white leading-tight mb-4 drop-shadow-lg"
+                >
+                  {t('hero.title')}
+                  <br />
+                  <span className="text-teal-300">{t('hero.titleBreak')}</span>
+                </motion.h1>
+
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.7, delay: 0.6 }}
+                  className="text-white/85 text-base md:text-lg leading-relaxed mb-8"
+                >
+                  {t('hero.description')}
+                </motion.p>
+
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.7, delay: 0.6 }}
-                  className="flex flex-col gap-4 sm:flex-row"
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.7, delay: 0.8 }}
+                  className="flex flex-col sm:flex-row gap-3"
                 >
                   <Link href="/dat-lich">
-                    <Button size="lg" className="rounded-xl group bg-primary-600 hover:bg-primary-700 text-white shadow-lg shadow-primary-500/30 text-base h-14 px-8">
+                    <Button size="lg" className="rounded-xl bg-white text-primary-700 hover:bg-primary-50 font-bold shadow-xl text-base h-13 px-8 border-2 border-white">
                       {t('hero.bookNow')}
-                      <motion.span
-                        initial={{ x: 0 }}
-                        whileHover={{ x: 5 }}
-                        transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                      >
-                        <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-                      </motion.span>
+                      <ArrowRight className="ml-2 h-5 w-5" />
                     </Button>
                   </Link>
-                  <Button variant="outline" size="lg" className="rounded-xl border-stone-300 text-stone-700 hover:bg-stone-50 hover:text-primary-700 text-base h-14 px-8">
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="rounded-xl border-2 border-white/60 text-white hover:bg-white/15 backdrop-blur-sm text-base h-13 px-8"
+                  >
                     {t('hero.learnMore')}
                   </Button>
                 </motion.div>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, x: 100 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8 }}
-                className="flex items-center justify-center relative"
-              >
-                <div className="absolute inset-0 bg-primary-100 rounded-[2.5rem] transform rotate-3 scale-105 opacity-50"></div>
-                <div className="relative h-[400px] w-full md:h-[500px] lg:h-[550px] xl:h-[600px] overflow-hidden rounded-[2rem] shadow-2xl border-4 border-white">
-                  <Image
-                    src="/images/hero_medicine.png"
-                    alt="Khuôn viên Viện Y Dược Học Dân Tộc"
-                    fill
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    className="object-cover"
-                    priority
-                  />
-                </div>
-              </motion.div>
-            </div>
+              </div>
+            </motion.div>
+
+            {/* RIGHT — Photo mosaic grid (2×2 → 4 cells) */}
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="hidden md:grid grid-cols-2 grid-rows-2 w-[38%] lg:w-[35%] flex-shrink-0"
+            >
+              {/* Cell 1 — top-left */}
+              <div className="relative overflow-hidden group">
+                <Image
+                  src="/images/acupuncture_room.png"
+                  alt="Phòng châm cứu"
+                  fill
+                  sizes="19vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-primary-900/20 group-hover:bg-primary-900/10 transition-colors duration-300" />
+              </div>
+              {/* Cell 2 — top-right */}
+              <div className="relative overflow-hidden group">
+                <Image
+                  src="/images/herbal_medicine.png"
+                  alt="Dược liệu y học cổ truyền"
+                  fill
+                  sizes="19vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-teal-900/20 group-hover:bg-teal-900/10 transition-colors duration-300" />
+              </div>
+              {/* Cell 3 — bottom-left */}
+              <div className="relative overflow-hidden group">
+                <Image
+                  src="/images/zen_garden.png"
+                  alt="Không gian điều trị"
+                  fill
+                  sizes="19vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-primary-900/20 group-hover:bg-primary-900/10 transition-colors duration-300" />
+              </div>
+              {/* Cell 4 — bottom-right */}
+              <div className="relative overflow-hidden group">
+                <Image
+                  src="/images/clinic_room.png"
+                  alt="Phòng khám hiện đại"
+                  fill
+                  sizes="19vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-teal-900/20 group-hover:bg-teal-900/10 transition-colors duration-300" />
+              </div>
+            </motion.div>
+
           </div>
+
+          {/* Stats bar below hero */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 1 }}
+            className="bg-primary-700 text-white"
+          >
+            <div className="container-site grid grid-cols-2 md:grid-cols-4 divide-x divide-white/20">
+              {[
+                { value: "60+", label: "Năm kinh nghiệm" },
+                { value: "116+", label: "Bác sĩ chuyên khoa" },
+                { value: "500K+", label: "Bệnh nhân mỗi năm" },
+                { value: "100%", label: "Tận tâm & An toàn" },
+              ].map((stat, i) => (
+                <div key={i} className="flex flex-col items-center justify-center py-4 px-6 text-center">
+                  <span className="text-2xl md:text-3xl font-extrabold text-white">{stat.value}</span>
+                  <span className="text-xs md:text-sm text-primary-200 mt-1 font-medium">{stat.label}</span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
         </section>
 
         {/* Services Section */}

@@ -2,24 +2,16 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Plus, Search, Edit, Trash2, Eye } from "lucide-react";
+import { Plus, Search, Edit, Trash2, Eye, Star, Paperclip } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { getPosts, deletePost, getCategories, type PostDTO } from "@/services/api";
+import { getPosts, deletePost, getCategories, type PostDTO, type CategoryDTO } from "@/services/api";
 import { getAuthToken } from "@/services/auth";
 import { toast } from "sonner";
 
-const FALLBACK_CATEGORIES = [
-  "Y học cổ truyền",
-  "Hoạt động Viện",
-  "Sức khỏe & Dinh dưỡng",
-  "Nghiên cứu khoa học",
-  "Hướng dẫn bệnh nhân",
-];
-
 export default function AdminPostsPage() {
   const [posts, setPosts] = useState<PostDTO[]>([]);
-  const [categories, setCategories] = useState<string[]>(FALLBACK_CATEGORIES);
+  const [categories, setCategories] = useState<CategoryDTO[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("Tất cả");
@@ -32,9 +24,9 @@ export default function AdminPostsPage() {
   const fetchCategories = async () => {
     try {
       const cats = await getCategories();
-      if (cats.length > 0) setCategories(cats);
+      setCategories(cats || []);
     } catch {
-      // Dùng fallback
+      toast.error("Không thể tải danh mục");
     }
   };
 
@@ -68,7 +60,7 @@ export default function AdminPostsPage() {
 
   const filteredPosts = posts.filter(p => {
     const matchSearch = p.title.toLowerCase().includes(search.toLowerCase());
-    const matchCategory = categoryFilter === "Tất cả" || p.category === categoryFilter;
+    const matchCategory = categoryFilter === "Tất cả" || p.category_slug_name === categoryFilter;
     return matchSearch && matchCategory;
   });
 
@@ -103,7 +95,7 @@ export default function AdminPostsPage() {
         >
           <option value="Tất cả">Tất cả danh mục</option>
           {categories.map(cat => (
-            <option key={cat} value={cat}>{cat}</option>
+            <option key={cat.id} value={cat.slug}>{cat.name}</option>
           ))}
         </select>
       </div>
@@ -114,30 +106,49 @@ export default function AdminPostsPage() {
             <tr>
               <th className="px-4 py-3">Tiêu đề bài viết</th>
               <th className="px-4 py-3">Danh mục</th>
-              <th className="px-4 py-3">Ngày đăng</th>
-              <th className="px-4 py-3">Trạng thái</th>
+              <th className="px-4 py-3 text-center">Đính kèm</th>
+              <th className="px-4 py-3 text-center">Nổi bật</th>
+              <th className="px-4 py-3 text-center">Trạng thái</th>
+              <th className="px-4 py-3 text-right">Ngày xuất bản</th>
               <th className="px-4 py-3 text-right">Thao tác</th>
             </tr>
           </thead>
           <tbody>
             {isLoading ? (
               <tr>
-                <td colSpan={5} className="text-center py-10">Đang tải dữ liệu...</td>
+                <td colSpan={7} className="text-center py-10">Đang tải dữ liệu...</td>
               </tr>
             ) : filteredPosts.length > 0 ? (
               filteredPosts.map(post => (
                 <tr key={post.id} className="border-b border-stone-100 hover:bg-stone-50/50">
-                  <td className="px-4 py-4 font-medium text-stone-900 max-w-xs truncate">{post.title}</td>
+                  <td className="px-4 py-4 font-medium text-stone-900 max-w-xs truncate" title={post.title}>
+                    {post.title}
+                  </td>
                   <td className="px-4 py-4">
                     <span className="bg-stone-100 text-stone-600 px-2.5 py-1 rounded-md text-xs font-medium">
-                      {post.category}
+                      {post.category_name || "Chưa phân loại"}
                     </span>
                   </td>
-                  <td className="px-4 py-4">{new Date(post.created_at).toLocaleDateString('vi-VN')}</td>
-                  <td className="px-4 py-4">
+                  <td className="px-4 py-4 text-center">
+                    {(post.attachments?.length || 0) > 0 && (
+                      <span className="inline-flex items-center gap-1 text-stone-500" title={`${post.attachments?.length} tệp đính kèm`}>
+                        <Paperclip size={14} /> {post.attachments?.length}
+                      </span>
+                    )}
+                  </td>
+                  <td className="px-4 py-4 text-center">
+                    {post.is_featured ? <Star size={16} className="text-yellow-500 fill-yellow-500 mx-auto" /> : "-"}
+                  </td>
+                  <td className="px-4 py-4 text-center">
                     <span className={`px-2.5 py-1 rounded-md text-xs font-medium ${post.status === 'published' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
-                      {post.status === 'published' ? 'Đã xuất bản' : 'Bản nháp'}
+                      {post.status === 'published' ? 'Xuất bản' : 'Nháp'}
                     </span>
+                  </td>
+                  <td className="px-4 py-4 text-right">
+                    {post.published_at 
+                      ? new Date(post.published_at).toLocaleString('vi-VN', { hour: '2-digit', minute:'2-digit', day: '2-digit', month: '2-digit', year: 'numeric' }) 
+                      : new Date(post.created_at).toLocaleString('vi-VN', { hour: '2-digit', minute:'2-digit', day: '2-digit', month: '2-digit', year: 'numeric' })
+                    }
                   </td>
                   <td className="px-4 py-4 text-right">
                     <div className="flex items-center justify-end gap-1">
@@ -166,7 +177,7 @@ export default function AdminPostsPage() {
               ))
             ) : (
               <tr>
-                <td colSpan={5} className="text-center py-10 text-stone-500">Không tìm thấy bài viết nào.</td>
+                <td colSpan={7} className="text-center py-10 text-stone-500">Không tìm thấy bài viết nào.</td>
               </tr>
             )}
           </tbody>

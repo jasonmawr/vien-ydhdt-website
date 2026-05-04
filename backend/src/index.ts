@@ -18,6 +18,7 @@ import { authRouter } from "./modules/auth/auth.router";
 import { paymentRouter } from "./modules/payment/payment.router";
 import { bookingRouter } from "./modules/booking/booking.router";
 import { cmsRouter } from "./modules/cms/cms.router";
+import { uploadRouter } from "./modules/upload/upload.router";
 import chatbotRouter from "./modules/chatbot/chatbot.router";
 import { ensureWebUsersTable } from "./modules/auth/auth.service";
 import { getWebDb } from "./shared/sqlite";
@@ -78,7 +79,12 @@ app.use("/api/auth", authRouter);
 app.use("/api/payment", paymentRouter);
 app.use("/api/booking", bookingRouter);
 app.use("/api/cms", cmsRouter);
+app.use("/api/upload", uploadRouter);
 app.use("/api/chatbot", strictLimiter, chatbotRouter);
+
+// Phục vụ các file đính kèm/ảnh tải lên (chỉ cho phép get)
+import path from "path";
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 // ──────────────────────────────────────────
 // 404 Handler
