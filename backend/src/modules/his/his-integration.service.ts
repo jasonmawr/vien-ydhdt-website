@@ -28,9 +28,10 @@ export async function saveToHis(data: HISAppointmentData): Promise<{ appointment
     const formattedDate = data.appointmentDate.split('-').reverse().join('/'); // YYYY-MM-DD -> DD/MM/YYYY
 
     // 1. Tự động cấp số thứ tự (STT) cho Ngày khám
+    // Bắt đầu khóa giao dịch trên dòng STT của ngày này (chống Race Condition)
     let stt = 1;
     const sttQuery = await conn.execute(
-      `SELECT STT FROM MEDI.TBL_STTKHAM WHERE NGAY = :ngay`,
+      `SELECT STT FROM MEDI.TBL_STTKHAM WHERE NGAY = :ngay FOR UPDATE`,
       { ngay: formattedDate }
     );
     

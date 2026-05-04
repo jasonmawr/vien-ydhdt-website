@@ -30,7 +30,7 @@ Tài liệu này đóng vai trò là "Bản thiết kế thi công" (Blueprint) 
 
 ---
 
-## 🌐 Phase 19: Đa ngôn ngữ - i18n (Tiếng Anh, Tiếng Trung) — ✅ HOÀN THÀNH (2026-05-03)
+## 🌐 Phase 19: Đa ngôn ngữ - i18n (Tiếng Anh, Tiếng Trung) — ✅ HOÀN THÀNH (2026-05-04)
 
 **Mục tiêu:** Hỗ trợ bệnh nhân là người nước ngoài, du khách, hoặc chuyên gia y tế quốc tế có thể thao tác dễ dàng trên Web.
 
@@ -46,6 +46,16 @@ Tài liệu này đóng vai trò là "Bản thiết kế thi công" (Blueprint) 
    - `messages/zh.json` (558 dòng, 21KB)
 5. **Integration:** `next.config.ts` wrapped với `createNextIntlPlugin()`.
 6. **Lưu ý:** Dữ liệu từ Oracle HIS (Tên Khoa, Tên Bác sĩ) vẫn hiển thị Tiếng Việt. Nếu cần dịch động, phải thêm cột `NAME_EN`, `NAME_ZH` vào Database HIS hoặc tạo bảng Mapping.
+
+## 🛡️ Phase 19.5: Security, Stability & Real-time Optimization — ✅ HOÀN THÀNH
+
+**Mục tiêu:** Vá các lỗ hổng bảo mật chí mạng, tối ưu hiệu năng và đảm bảo trải nghiệm real-time mượt mà trước khi Go-Live.
+
+**Các bước thực hiện:**
+1. **Xử lý Race Condition (Oracle):** Cập nhật API sinh STT trong `his-integration.service.ts` sử dụng `SELECT ... FOR UPDATE` để khóa dòng dữ liệu, tránh việc 2 bệnh nhân thanh toán cùng lúc nhận trùng STT. *(Đã xong)*
+2. **Tối ưu Thanh toán VietQR (SSE):** Áp dụng Server-Sent Events (SSE) để Frontend có thể tự động lắng nghe khi Backend nhận được IPN từ VietinBank và tự động chuyển trang. *(Đã xong)*
+3. **Chống Spam (Rate-limit):** Cài đặt `express-rate-limit` để bảo vệ API `/api/appointments` và `/api/chatbot/message`, chống lại các đòn tấn công DDoS. *(Đã xong)*
+4. **Hệ thống Ghi Log:** Tích hợp `winston` cùng với `winston-daily-rotate-file` để ghi log lỗi ra hệ thống file nội bộ, hỗ trợ truy vết lỗi trên Production. *(Đã xong)*
 
 ---
 

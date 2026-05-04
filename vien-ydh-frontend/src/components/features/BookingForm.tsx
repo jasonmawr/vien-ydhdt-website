@@ -219,6 +219,59 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
     }
   };
 
+  const handleCompleteBooking = async () => {
+    setIsSubmitting(true);
+    try {
+      const result = await createAppointment({
+        patientName: formData.patientName,
+        patientPhone: formData.patientPhone,
+        patientDob: formData.patientDob,
+        patientGender: formData.patientGender,
+        departmentId: formData.departmentId,
+        doctorId: formData.doctorId !== "any" ? formData.doctorId : undefined,
+        appointmentDate: formData.appointmentDate,
+        appointmentTime: formData.appointmentTime,
+        symptoms: formData.symptoms,
+      });
+
+      if (result.success) {
+        setSuccessMessage(result.message);
+        setAppointmentId(result.data?.id || orderId);
+        setStt(result.data?.stt || 0);
+        setStep(6);
+      }
+    } catch (err) {
+      console.error("Đặt lịch thất bại:", err);
+      toast.error(t('errors.general'));
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  useEffect(() => {
+    let eventSource: EventSource | null = null;
+    if (step === 5 && orderId) {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+      eventSource = new EventSource(`${apiUrl}/api/payment/events/${orderId}`);
+      
+      eventSource.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          if (data.status === "SUCCESS") {
+            if (eventSource) eventSource.close();
+            toast.success(t('common.confirm'));
+            handleCompleteBooking();
+          }
+        } catch (e) {
+          console.error("SSE parse error", e);
+        }
+      };
+    }
+    return () => {
+      if (eventSource) eventSource.close();
+    };
+  }, [step, orderId]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (step < 4 && !isStepValid()) return;
@@ -229,6 +282,12 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
         toast.error(errorMsg);
         return;
       }
+    }
+
+    if (step === 5) {
+      // Dành cho trường hợp User tự bấm nút (Mock/Fallback)
+      await handleCompleteBooking();
+      return;
     }
 
     setIsSubmitting(true);
@@ -242,26 +301,6 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
           setStep(5);
         } else {
           toast.error(t('errors.paymentCreation'));
-        }
-      } else if (step === 5) {
-        // Giả lập KH đã quét và IPN báo thành công -> Ghi vào DB
-        const result = await createAppointment({
-          patientName: formData.patientName,
-          patientPhone: formData.patientPhone,
-          patientDob: formData.patientDob,
-          patientGender: formData.patientGender,
-          departmentId: formData.departmentId,
-          doctorId: formData.doctorId !== "any" ? formData.doctorId : undefined,
-          appointmentDate: formData.appointmentDate,
-          appointmentTime: formData.appointmentTime,
-          symptoms: formData.symptoms,
-        });
-
-        if (result.success) {
-          setSuccessMessage(result.message);
-          setAppointmentId(result.data?.id || orderId);
-          setStt(result.data?.stt || 0);
-          setStep(6);
         }
       }
     } catch (err) {
