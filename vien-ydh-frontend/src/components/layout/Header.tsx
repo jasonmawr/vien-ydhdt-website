@@ -290,8 +290,13 @@ export default function Header() {
                 href="/dat-lich"
                 className="hidden sm:inline-flex btn-accent !px-5 !py-2.5"
               >
-                {t('booking.title')}
+                {t('booking')}
               </Link>
+
+              {/* Language Switcher (Mobile) */}
+              <div className="lg:hidden">
+                <LanguageSwitcher />
+              </div>
 
               {/* Hamburger */}
               <button
@@ -384,7 +389,7 @@ export default function Header() {
               className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary-600 px-4 py-3 text-base font-semibold text-white"
               onClick={() => setIsMenuOpen(false)}
             >
-              {t('booking.title')}
+              {t('booking')}
             </Link>
             <a
               href="tel:0964392632"
