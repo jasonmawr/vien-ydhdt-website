@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { usePathname } from "next/navigation";
 import { MessageCircle, X, Send, Bot, User, Sparkles, ChevronDown } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -17,20 +18,22 @@ interface ChatState {
   isLoading: boolean;
 }
 
-const INITIAL_SUGGESTIONS = [
-  "Giờ làm việc của Viện?",
-  "Cách đặt lịch khám online?",
-  "Viện có nhận BHYT không?",
-];
-
-const WELCOME_MESSAGE: ChatMessage = {
-  role: "assistant",
-  content: "Xin chào! 👋 Tôi là **Y Dược AI** — trợ lý ảo của Viện Y Dược Học Dân Tộc TP.HCM.\n\nTôi có thể giúp bạn:\n- 📋 Thông tin dịch vụ & giá khám\n- 🕐 Giờ làm việc & địa chỉ\n- 📅 Hướng dẫn đặt lịch khám\n- 💊 Giới thiệu chuyên khoa\n\nBạn cần hỗ trợ gì ạ?",
-  timestamp: Date.now(),
-};
-
 export default function ChatWidget() {
   const pathname = usePathname();
+  const t = useTranslations('chatWidget');
+
+  const INITIAL_SUGGESTIONS = [
+    t('suggestions.hours'),
+    t('suggestions.booking'),
+    t('suggestions.insurance'),
+  ];
+
+  const WELCOME_MESSAGE: ChatMessage = {
+    role: "assistant",
+    content: t('welcome'),
+    timestamp: Date.now(),
+  };
+
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
   const [state, setState] = useState<ChatState>({
@@ -117,7 +120,7 @@ export default function ChatWidget() {
     } catch (error) {
       const errorMessage: ChatMessage = {
         role: "assistant",
-        content: "Xin lỗi, tôi đang gặp sự cố. Vui lòng thử lại hoặc gọi **(028) 3844 2349** để được hỗ trợ.",
+        content: t('error'),
         timestamp: Date.now(),
       };
 
@@ -167,7 +170,7 @@ export default function ChatWidget() {
             ? "bg-stone-700 hover:bg-stone-800 scale-90"
             : "bg-gradient-to-br from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 scale-100 hover:scale-110"
         }`}
-        aria-label={isOpen ? "Đóng chatbot" : "Mở chatbot Y Dược AI"}
+        aria-label={isOpen ? t('ariaClose') : t('ariaOpen')}
       >
         {isOpen ? (
           <X size={22} className="text-white" />
@@ -193,12 +196,12 @@ export default function ChatWidget() {
               <Sparkles size={20} className="text-white" />
             </div>
             <div className="flex-1">
-              <h3 className="font-bold text-white text-sm">Y Dược AI</h3>
-              <p className="text-emerald-100 text-xs">Trợ lý ảo Viện Y Dược Học Dân Tộc</p>
+              <h3 className="font-bold text-white text-sm">{t('title')}</h3>
+              <p className="text-emerald-100 text-xs">{t('subtitle')}</p>
             </div>
             <div className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-green-300 animate-pulse" />
-              <span className="text-emerald-100 text-xs">Online</span>
+              <span className="text-emerald-100 text-xs">{t('online')}</span>
             </div>
           </div>
 
@@ -285,7 +288,7 @@ export default function ChatWidget() {
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Nhập câu hỏi của bạn..."
+                placeholder={t('placeholder')}
                 disabled={state.isLoading}
                 className="flex-1 px-4 py-2.5 rounded-xl bg-stone-100 border border-stone-200 text-sm text-stone-800 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent disabled:opacity-50"
                 maxLength={1000}
@@ -299,7 +302,7 @@ export default function ChatWidget() {
               </button>
             </div>
             <p className="text-[10px] text-stone-400 mt-1.5 text-center">
-              Y Dược AI — Trợ lý ảo, không thay thế bác sĩ
+              {t('disclaimer')}
             </p>
           </form>
         </div>

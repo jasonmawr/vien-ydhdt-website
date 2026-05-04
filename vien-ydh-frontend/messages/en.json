@@ -38,14 +38,6 @@
       "noResults": "No specialties found"
     },
     "step2": {
-      "title": "2. Select Doctor",
-      "search": "Search by doctor name...",
-      "any": "No specific doctor preference",
-      "searchPlaceholder": "Search by doctor name...",
-      "noSelection": "No specific doctor preference",
-      "autoAllocate": "(Automatically assigned based on available schedule)",
-      "loading": "Loading doctors...",
-      "noResults": "No doctors found",
       "defaultSpecialty": "Traditional Medicine"
     },
     "step3": {
@@ -151,9 +143,6 @@
       "ticketDownloadFail": "Cannot download image. Please take a screenshot!",
       "general": "An error occurred. Please try again later.",
       "paymentCreation": "Cannot generate payment code."
-    },
-    "step2": {
-      "defaultSpecialty": "Traditional Medicine"
     }
   },
   "features": {
@@ -299,22 +288,70 @@
       "bookNow": "Book Appointment Now"
     },
     "milestones": [
-      { "year": "1975", "title": "Institute Established", "desc": "The Institute of Ethnic Medicine was established according to the Decision of HCMC People's Committee, under the Department of Health." },
-      { "year": "1985", "title": "Specialty Expansion", "desc": "Added departments of Acupuncture, Physiotherapy - Rehabilitation, and Herbal Medicine." },
-      { "year": "2000", "title": "Equipment Modernization", "desc": "Invested in X-Ray, Color Ultrasound, modern biochemical testing systems, enhancing diagnostic quality." },
-      { "year": "2010", "title": "ISO 15189 Standard", "desc": "Laboratory achieved international ISO 15189 standard, affirming the quality of clinical services." },
-      { "year": "2020", "title": "Digital Healthcare Transformation", "desc": "Deployed comprehensive HIS system, electronic medical records management and online booking." },
-      { "year": "2026", "title": "Digital Healthcare Foundation", "desc": "Launched online booking portal integrated with VietQR payment, moving towards Healthcare 4.0 model." }
+      {
+        "year": "1975",
+        "title": "Institute Established",
+        "desc": "The Institute of Ethnic Medicine was established according to the Decision of HCMC People's Committee, under the Department of Health."
+      },
+      {
+        "year": "1985",
+        "title": "Specialty Expansion",
+        "desc": "Added departments of Acupuncture, Physiotherapy - Rehabilitation, and Herbal Medicine."
+      },
+      {
+        "year": "2000",
+        "title": "Equipment Modernization",
+        "desc": "Invested in X-Ray, Color Ultrasound, modern biochemical testing systems, enhancing diagnostic quality."
+      },
+      {
+        "year": "2010",
+        "title": "ISO 15189 Standard",
+        "desc": "Laboratory achieved international ISO 15189 standard, affirming the quality of clinical services."
+      },
+      {
+        "year": "2020",
+        "title": "Digital Healthcare Transformation",
+        "desc": "Deployed comprehensive HIS system, electronic medical records management and online booking."
+      },
+      {
+        "year": "2026",
+        "title": "Digital Healthcare Foundation",
+        "desc": "Launched online booking portal integrated with VietQR payment, moving towards Healthcare 4.0 model."
+      }
     ],
     "departments": [
-      { "name": "Examination - Emergency", "desc": "Initial reception and processing of all patients." },
-      { "name": "Acupuncture - Rehabilitation", "desc": "Treatment by acupuncture, massage, spinal traction, and stroke rehabilitation." },
-      { "name": "Physiotherapy", "desc": "Therapeutic ultrasound, electrotherapy, infrared, shortwave..." },
-      { "name": "Traditional Medicine", "desc": "Northern-Southern herbal formulas, folk remedies, traditional decoctions." },
-      { "name": "Catgut Embedding - Procedures", "desc": "Self-dissolving catgut embedding into acupoints, longer effect than regular acupuncture." },
-      { "name": "Pharmacy - Herbal Medicine", "desc": "Supply and certify standard herbal medicines, manufacture Traditional Medicine finished products." },
-      { "name": "Clinical Laboratory", "desc": "Blood tests, biochemistry, X-Ray, Color Ultrasound, Electrocardiogram." },
-      { "name": "Nutrition", "desc": "Clinical nutrition counseling combined with Traditional Medicine." }
+      {
+        "name": "Examination - Emergency",
+        "desc": "Initial reception and processing of all patients."
+      },
+      {
+        "name": "Acupuncture - Rehabilitation",
+        "desc": "Treatment by acupuncture, massage, spinal traction, and stroke rehabilitation."
+      },
+      {
+        "name": "Physiotherapy",
+        "desc": "Therapeutic ultrasound, electrotherapy, infrared, shortwave..."
+      },
+      {
+        "name": "Traditional Medicine",
+        "desc": "Northern-Southern herbal formulas, folk remedies, traditional decoctions."
+      },
+      {
+        "name": "Catgut Embedding - Procedures",
+        "desc": "Self-dissolving catgut embedding into acupoints, longer effect than regular acupuncture."
+      },
+      {
+        "name": "Pharmacy - Herbal Medicine",
+        "desc": "Supply and certify standard herbal medicines, manufacture Traditional Medicine finished products."
+      },
+      {
+        "name": "Clinical Laboratory",
+        "desc": "Blood tests, biochemistry, X-Ray, Color Ultrasound, Electrocardiogram."
+      },
+      {
+        "name": "Nutrition",
+        "desc": "Clinical nutrition counseling combined with Traditional Medicine."
+      }
     ]
   },
   "contact": {
@@ -326,22 +363,35 @@
     "infoCards": {
       "address": {
         "title": "Address",
-        "lines": ["273 - 275 Nguyen Van Troi, Ward 10", "Phu Nhuan District, Ho Chi Minh City"],
+        "lines": [
+          "273 - 275 Nguyen Van Troi, Ward 10",
+          "Phu Nhuan District, Ho Chi Minh City"
+        ],
         "action": "Get Directions"
       },
       "phone": {
         "title": "Phone & Hotline",
-        "lines": ["Hotline: 0964 392 632", "Emergency: 0964 392 632"],
+        "lines": [
+          "Hotline: 0964 392 632",
+          "Emergency: 0964 392 632"
+        ],
         "action": "Call Now"
       },
       "email": {
         "title": "Email",
-        "lines": ["v.ydhdt@tphcm.gov.vn", "hotro@vienydhdt.gov.vn"],
+        "lines": [
+          "v.ydhdt@tphcm.gov.vn",
+          "hotro@vienydhdt.gov.vn"
+        ],
         "action": "Send Email"
       },
       "hours": {
         "title": "Clinic Hours",
-        "lines": ["Mon - Fri: 7:00 – 17:00", "Sat: 7:00 – 12:00", "Sun: Closed"],
+        "lines": [
+          "Mon - Fri: 7:00 – 17:00",
+          "Sat: 7:00 – 12:00",
+          "Sun: Closed"
+        ],
         "action": "Book Appointment"
       }
     },
@@ -551,6 +601,31 @@
       "treatmentArea": "Treatment Area",
       "naturalScene": "Natural Scenery",
       "clinicRoom": "Treatment Room"
+    }
+  },
+  "metadata": {
+    "titleDefault": "Traditional Medicine Institute | Healthcare with Traditional Medicine",
+    "titleTemplate": "%s | Traditional Medicine Institute",
+    "description": "Traditional Medicine Institute — The leading unit for research and treatment in Vietnamese Traditional Medicine. Book appointments, search herbs, and find prestigious experts.",
+    "keywords": "Traditional Medicine Institute, traditional medicine, book appointment, oriental herbs, traditional medicine doctor, online booking",
+    "siteName": "Traditional Medicine Institute",
+    "ogTitle": "Traditional Medicine Institute | Vietnamese Traditional Medicine",
+    "ogDescription": "Explore healthcare services using Traditional Medicine at the Traditional Medicine Institute — Fast booking, Standard herbs, Good doctors."
+  },
+  "chatWidget": {
+    "welcome": "Hello! 👋 I am **Y Dược AI** — the virtual assistant of the Traditional Medicine Institute.\n\nI can help you with:\n- 📋 Service info & pricing\n- 🕐 Working hours & address\n- 📅 Booking instructions\n- 💊 Specialty introduction\n\nHow can I help you?",
+    "error": "Sorry, I am experiencing an issue. Please try again or call **(028) 3844 2349** for support.",
+    "title": "Y Dược AI",
+    "subtitle": "Virtual Assistant of the Institute",
+    "online": "Online",
+    "placeholder": "Enter your question...",
+    "disclaimer": "Y Dược AI — Virtual assistant, does not replace a doctor",
+    "ariaOpen": "Open Y Dược AI chatbot",
+    "ariaClose": "Close chatbot",
+    "suggestions": {
+      "hours": "Working hours?",
+      "booking": "How to book online?",
+      "insurance": "Do you accept health insurance?"
     }
   }
 }

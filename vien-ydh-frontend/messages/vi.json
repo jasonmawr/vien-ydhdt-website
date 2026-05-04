@@ -296,22 +296,70 @@
       "bookNow": "Đặt Lịch Khám Ngay"
     },
     "milestones": [
-      { "year": "1975", "title": "Thành lập Viện", "desc": "Viện Y Dược Học Dân Tộc được thành lập theo Quyết định của UBND TP.HCM, trực thuộc Sở Y tế." },
-      { "year": "1985", "title": "Mở rộng chuyên khoa", "desc": "Bổ sung các khoa Châm cứu, Vật lý trị liệu – Phục hồi chức năng và Dược liệu." },
-      { "year": "2000", "title": "Hiện đại hóa trang thiết bị", "desc": "Đầu tư hệ thống X-Quang, Siêu âm màu, Xét nghiệm sinh hóa hiện đại, nâng cao chất lượng chẩn đoán." },
-      { "year": "2010", "title": "Chuẩn ISO 15189", "desc": "Phòng xét nghiệm đạt tiêu chuẩn quốc tế ISO 15189, khẳng định chất lượng dịch vụ cận lâm sàng." },
-      { "year": "2020", "title": "Chuyển đổi số Y tế", "desc": "Triển khai hệ thống HIS toàn diện, quản lý hồ sơ bệnh nhân điện tử và đặt lịch trực tuyến." },
-      { "year": "2026", "title": "Nền tảng Y tế số", "desc": "Ra mắt cổng đặt khám trực tuyến tích hợp thanh toán VietQR, hướng đến mô hình Y tế 4.0." }
+      {
+        "year": "1975",
+        "title": "Thành lập Viện",
+        "desc": "Viện Y Dược Học Dân Tộc được thành lập theo Quyết định của UBND TP.HCM, trực thuộc Sở Y tế."
+      },
+      {
+        "year": "1985",
+        "title": "Mở rộng chuyên khoa",
+        "desc": "Bổ sung các khoa Châm cứu, Vật lý trị liệu – Phục hồi chức năng và Dược liệu."
+      },
+      {
+        "year": "2000",
+        "title": "Hiện đại hóa trang thiết bị",
+        "desc": "Đầu tư hệ thống X-Quang, Siêu âm màu, Xét nghiệm sinh hóa hiện đại, nâng cao chất lượng chẩn đoán."
+      },
+      {
+        "year": "2010",
+        "title": "Chuẩn ISO 15189",
+        "desc": "Phòng xét nghiệm đạt tiêu chuẩn quốc tế ISO 15189, khẳng định chất lượng dịch vụ cận lâm sàng."
+      },
+      {
+        "year": "2020",
+        "title": "Chuyển đổi số Y tế",
+        "desc": "Triển khai hệ thống HIS toàn diện, quản lý hồ sơ bệnh nhân điện tử và đặt lịch trực tuyến."
+      },
+      {
+        "year": "2026",
+        "title": "Nền tảng Y tế số",
+        "desc": "Ra mắt cổng đặt khám trực tuyến tích hợp thanh toán VietQR, hướng đến mô hình Y tế 4.0."
+      }
     ],
     "departments": [
-      { "name": "Khám bệnh - Cấp cứu", "desc": "Tiếp nhận và xử lý ban đầu tất cả bệnh nhân đến khám." },
-      { "name": "Châm cứu - Phục hồi chức năng", "desc": "Điều trị bằng châm cứu, xoa bóp, kéo giãn cột sống và phục hồi sau tai biến." },
-      { "name": "Vật lý trị liệu", "desc": "Siêu âm trị liệu, điện trị liệu, tia hồng ngoại, sóng ngắn..." },
-      { "name": "Y học cổ truyền", "desc": "Thang thuốc Nam-Bắc, bài thuốc dân gian, sắc thuốc theo cổ phương." },
-      { "name": "Cấy chỉ - Thủ thuật", "desc": "Cấy chỉ catgut tự tiêu vào huyệt đạo, tác dụng kéo dài hơn châm thông thường." },
-      { "name": "Dược - Dược liệu", "desc": "Cung cấp và kiểm định dược liệu đạt chuẩn, bào chế thuốc thành phẩm YHCT." },
-      { "name": "Cận lâm sàng", "desc": "Xét nghiệm máu, sinh hóa, X-Quang, Siêu âm màu, Điện tim." },
-      { "name": "Dinh dưỡng", "desc": "Tư vấn dinh dưỡng lâm sàng kết hợp với Y học cổ truyền." }
+      {
+        "name": "Khám bệnh - Cấp cứu",
+        "desc": "Tiếp nhận và xử lý ban đầu tất cả bệnh nhân đến khám."
+      },
+      {
+        "name": "Châm cứu - Phục hồi chức năng",
+        "desc": "Điều trị bằng châm cứu, xoa bóp, kéo giãn cột sống và phục hồi sau tai biến."
+      },
+      {
+        "name": "Vật lý trị liệu",
+        "desc": "Siêu âm trị liệu, điện trị liệu, tia hồng ngoại, sóng ngắn..."
+      },
+      {
+        "name": "Y học cổ truyền",
+        "desc": "Thang thuốc Nam-Bắc, bài thuốc dân gian, sắc thuốc theo cổ phương."
+      },
+      {
+        "name": "Cấy chỉ - Thủ thuật",
+        "desc": "Cấy chỉ catgut tự tiêu vào huyệt đạo, tác dụng kéo dài hơn châm thông thường."
+      },
+      {
+        "name": "Dược - Dược liệu",
+        "desc": "Cung cấp và kiểm định dược liệu đạt chuẩn, bào chế thuốc thành phẩm YHCT."
+      },
+      {
+        "name": "Cận lâm sàng",
+        "desc": "Xét nghiệm máu, sinh hóa, X-Quang, Siêu âm màu, Điện tim."
+      },
+      {
+        "name": "Dinh dưỡng",
+        "desc": "Tư vấn dinh dưỡng lâm sàng kết hợp với Y học cổ truyền."
+      }
     ]
   },
   "contact": {
@@ -323,22 +371,35 @@
     "infoCards": {
       "address": {
         "title": "Địa chỉ",
-        "lines": ["273 - 275 Nguyễn Văn Trỗi, Phường 10", "Quận Phú Nhuận, TP. Hồ Chí Minh"],
+        "lines": [
+          "273 - 275 Nguyễn Văn Trỗi, Phường 10",
+          "Quận Phú Nhuận, TP. Hồ Chí Minh"
+        ],
         "action": "Chỉ Đường"
       },
       "phone": {
         "title": "Điện thoại & Hotline",
-        "lines": ["Hotline: 0964 392 632", "Cấp cứu: 0964 392 632"],
+        "lines": [
+          "Hotline: 0964 392 632",
+          "Cấp cứu: 0964 392 632"
+        ],
         "action": "Gọi Ngay"
       },
       "email": {
         "title": "Email",
-        "lines": ["v.ydhdt@tphcm.gov.vn", "hotro@vienydhdt.gov.vn"],
+        "lines": [
+          "v.ydhdt@tphcm.gov.vn",
+          "hotro@vienydhdt.gov.vn"
+        ],
         "action": "Gửi Email"
       },
       "hours": {
         "title": "Giờ Khám Bệnh",
-        "lines": ["Thứ 2 – Thứ 6: 7:00 – 17:00", "Thứ 7: 7:00 – 12:00", "Chủ nhật: Nghỉ"],
+        "lines": [
+          "Thứ 2 – Thứ 6: 7:00 – 17:00",
+          "Thứ 7: 7:00 – 12:00",
+          "Chủ nhật: Nghỉ"
+        ],
         "action": "Đặt Lịch"
       }
     },
@@ -548,6 +609,31 @@
       "treatmentArea": "Khu vực điều trị",
       "naturalScene": "Cảnh Quan Thiên Nhiên",
       "clinicRoom": "Phòng Chẩn Trị"
+    }
+  },
+  "metadata": {
+    "titleDefault": "Viện Y Dược Học Dân Tộc | Chăm Sóc Sức Khỏe Bằng Y Học Cổ Truyền",
+    "titleTemplate": "%s | Viện Y Dược Học Dân Tộc",
+    "description": "Viện Y Dược Học Dân Tộc — Đơn vị nghiên cứu và điều trị hàng đầu về Y học Cổ truyền Việt Nam. Đặt lịch, tra cứu dược liệu và tìm hiểu chuyên gia uy tín.",
+    "keywords": "Viện Y Dược Học Dân Tộc, y học cổ truyền, đặt lịch khám bệnh, dược liệu đông y, bác sĩ y học cổ truyền, khám bệnh online",
+    "siteName": "Viện Y Dược Học Dân Tộc",
+    "ogTitle": "Viện Y Dược Học Dân Tộc | Y Học Cổ Truyền Việt Nam",
+    "ogDescription": "Khám phá dịch vụ chăm sóc sức khỏe bằng Y học Cổ truyền của Viện Y Dược Học Dân Tộc — Đặt lịch nhanh, Dược liệu chuẩn, Bác sĩ giỏi."
+  },
+  "chatWidget": {
+    "welcome": "Xin chào! 👋 Tôi là **Y Dược AI** — trợ lý ảo của Viện Y Dược Học Dân Tộc TP.HCM.\n\nTôi có thể giúp bạn:\n- 📋 Thông tin dịch vụ & giá khám\n- 🕐 Giờ làm việc & địa chỉ\n- 📅 Hướng dẫn đặt lịch khám\n- 💊 Giới thiệu chuyên khoa\n\nBạn cần hỗ trợ gì ạ?",
+    "error": "Xin lỗi, tôi đang gặp sự cố. Vui lòng thử lại hoặc gọi **(028) 3844 2349** để được hỗ trợ.",
+    "title": "Y Dược AI",
+    "subtitle": "Trợ lý ảo Viện Y Dược Học Dân Tộc",
+    "online": "Trực tuyến",
+    "placeholder": "Nhập câu hỏi của bạn...",
+    "disclaimer": "Y Dược AI — Trợ lý ảo, không thay thế bác sĩ",
+    "ariaOpen": "Mở chatbot Y Dược AI",
+    "ariaClose": "Đóng chatbot",
+    "suggestions": {
+      "hours": "Giờ làm việc của Viện?",
+      "booking": "Cách đặt lịch khám online?",
+      "insurance": "Viện có nhận BHYT không?"
     }
   }
 }

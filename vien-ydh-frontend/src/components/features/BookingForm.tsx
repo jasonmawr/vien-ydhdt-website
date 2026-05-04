@@ -67,7 +67,7 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
       // 2. Vẽ Tiêu đề
       ctx.font = "bold 24px Arial, sans-serif";
       ctx.globalAlpha = 0.8;
-      ctx.fillText("SỐ THỨ TỰ KHÁM", 300, 100);
+      ctx.fillText(t('step6.labelStt'), 300, 100);
       
       // 3. Vẽ Số Thứ Tự
       ctx.font = "bold 130px Arial, sans-serif";
@@ -82,7 +82,7 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
       // 5. Vẽ Mã phiếu
       ctx.globalAlpha = 0.7;
       ctx.font = "20px Arial, sans-serif";
-      ctx.fillText("Mã phiếu", 300, 330);
+      ctx.fillText(t('step6.labelTicketId'), 300, 330);
       
       ctx.globalAlpha = 1.0;
       ctx.font = "bold 28px monospace";
@@ -93,7 +93,7 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
         if (!blob) throw new Error("Blob creation failed");
         const blobUrl = window.URL.createObjectURL(blob);
         const link = document.createElement("a");
-        link.download = `Phieu-Kham-${appointmentId || '000'}.png`;
+        link.download = `Ticket-${appointmentId || '000'}.png`;
         link.href = blobUrl;
         link.click();
         window.URL.revokeObjectURL(blobUrl);
