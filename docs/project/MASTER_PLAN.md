@@ -1,6 +1,6 @@
 # MASTER PLAN: HỆ SINH THÁI Y TẾ SỐ TOÀN DIỆN
 ## Viện Y Dược Học Dân Tộc TP.HCM — Website & Super App
-### *Tài liệu chuẩn dự án — Cập nhật: 2026-04-22*
+### *Tài liệu chuẩn dự án — Cập nhật: 2026-05-04*
 
 > **MỤC ĐÍCH CỦA FILE NÀY:**
 > Bất kỳ phiên làm việc nào (bất kỳ AI Agent hoặc Developer nào) chỉ cần đọc file này
@@ -292,6 +292,11 @@ VIETINBANK_CERT_PATH=<optional, mặc định đọc từ docs/>
 | | — Upload & Quản lý file đính kèm (Multer, 50MB/file) | ✅ |
 | | — Tối ưu SEO bài viết (Meta tags, Keywords) | ✅ |
 | | — Chức năng ghim bài (Featured) & Lên lịch xuất bản | ✅ |
+| **19.9** | **UI/UX Premium Polish — BVDaiHoc-style** | **✅ Hoàn thành (2026-05-04)** |
+| | — Redesign Hero Section: full-width mosaic banner (ảnh trái + lưới ảnh phải) | ✅ |
+| | — Stats Bar dưới hero (60+ năm, 116+ BS, 500K+ BN, 100% tận tâm) | ✅ |
+| | — Admin Dashboard: banner enterprise, số liệu thống kê động (real-time từ HIS + CMS) | ✅ |
+| | — Fix: số bác sĩ Dashboard đồng bộ chính xác với API (bỏ hardcode 253) | ✅ |
 | 20 | Deploy Production (IIS + SSL) | 📋 Giai đoạn cuối |
 
 ---
@@ -323,7 +328,7 @@ npm run dev            # → http://localhost:3000
 - `main` — Production
 - `develop` — Staging
 - `feature/phase-XX-*` — Feature branches
-- **Nhánh hiện tại:** `feature/phase-17-seo`
+- **Nhánh hiện tại:** `feature/enterprise-cms` (cần merge vào `main` khi deploy)
 
 ---
 
