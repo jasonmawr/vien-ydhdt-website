@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import { getWebDb } from '../../shared/sqlite';
 import { requireAdmin } from '../auth/auth.middleware';
+import fs from 'fs';
+import path from 'path';
 
 export const cmsRouter = Router();
 
@@ -213,5 +215,28 @@ cmsRouter.post('/doctors', requireAdmin, async (req, res) => {
   } catch (err) {
     console.error("[Web Doctors] POST / error:", err);
     res.status(500).json({ success: false, error: "Lỗi máy chủ" });
+  }
+});
+
+// GET /api/cms/logs
+cmsRouter.get('/logs', requireAdmin, async (req, res) => {
+  try {
+    const logDir = path.join(process.cwd(), 'logs');
+    if (!fs.existsSync(logDir)) {
+      res.json({ success: true, data: [] });
+      return;
+    }
+    const files = fs.readdirSync(logDir).filter(f => f.endsWith('.log')).sort().reverse();
+    const requestedFile = req.query.file ? String(req.query.file) : (files.length > 0 ? files[0] : null);
+    
+    let content = '';
+    if (requestedFile && files.includes(requestedFile)) {
+      content = fs.readFileSync(path.join(logDir, requestedFile), 'utf-8');
+    }
+    
+    res.json({ success: true, data: { files, content, currentFile: requestedFile } });
+  } catch (error) {
+    console.error('[CMS] getLogs error:', error);
+    res.status(500).json({ success: false, error: 'Lỗi lấy logs' });
   }
 });
