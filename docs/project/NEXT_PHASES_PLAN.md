@@ -30,7 +30,7 @@ Tài liệu này đóng vai trò là "Bản thiết kế thi công" (Blueprint) 
 
 ---
 
-## 🌐 Phase 19: Đa ngôn ngữ - i18n (Tiếng Anh, Tiếng Trung) — ✅ HOÀN THÀNH (2026-05-03)
+## 🌐 Phase 19: Đa ngôn ngữ - i18n (Tiếng Anh, Tiếng Trung) — ✅ HOÀN THÀNH (2026-05-04)
 
 **Mục tiêu:** Hỗ trợ bệnh nhân là người nước ngoài, du khách, hoặc chuyên gia y tế quốc tế có thể thao tác dễ dàng trên Web.
 

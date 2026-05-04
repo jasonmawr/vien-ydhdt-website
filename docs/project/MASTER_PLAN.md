@@ -394,7 +394,7 @@ GEMINI_API_KEY=<your-gemini-api-key>
 
 ## VIII. TRẠNG THÁI BÀN GIAO & KẾ HOẠCH TIẾP THEO (Handover)
 
-### 1. Trạng thái hiện tại (Tính đến 2026-05-03)
+### 1. Trạng thái hiện tại (Tính đến 2026-05-04)
 - **Website Frontend:** Đã hoàn thiện thiết kế Premium, Redesign 100% Mobile-first.
 - **Logo & Brand:** Đã thay thế Logo chuẩn của Viện (tròn), gỡ bỏ các khung bao cũ.
 - **UI/UX:** Đã gỡ bỏ toàn bộ `alert()` native, thay bằng hệ thống **Sonner Toast** hiện đại.
@@ -402,14 +402,19 @@ GEMINI_API_KEY=<your-gemini-api-key>
 - **CMS:** Admin Dashboard đã chạy ổn định (Bài viết, Bác sĩ, Bệnh nhân).
 - **AI Chatbot:** Tích hợp Gemini 2.0 Flash thành công, hỗ trợ trả lời dựa trên Knowledge Base.
 - **Đa ngôn ngữ (Phase 19):** Hoàn thành hệ thống i18n 3 ngôn ngữ (VI/EN/ZH) bằng `next-intl` v4 cookie-based.
-  - Tất cả trang đã chuyển sang `useTranslations()`, không còn hardcode text.
+  - Tất cả trang và Component đã chuyển sang `useTranslations()`.
+  - Toàn bộ Layout Metadata, AI ChatWidget và Canvas tạo thẻ Ticket đều đã được Việt/Anh/Trung hóa động (Triệt để 100%).
   - LanguageSwitcher tích hợp trên Header, chuyển ngôn ngữ qua API `/api/locale` + cookie `NEXT_LOCALE`.
 
 ### 2. Kế hoạch Phase tiếp theo: Phase 12 (HIS Integration - Ghi dữ liệu) -> Đã hoàn thành
 - **Mục tiêu đạt được:** Khi bệnh nhân đặt lịch thành công, Backend thực hiện INSERT dữ liệu vào bảng `MEDI.W_LOGIN`, `MEDI.W_HEN`, `MEDI.W_HENCT` trong Oracle.
 - **Số thứ tự (STT):** Tự động sinh số thứ tự từ bảng `MEDI.TBL_STTKHAM` và trả về hiển thị trên Frontend.
 
-### 3. Ghi chú cho phiên làm việc tiếp theo
-- **Nhánh Git:** `feature/phase-19-i18n` đã hoàn tất. Cần commit, push và merge vào `develop`.
-- **Cần làm:** Triển khai Phase 20 (Deploy Server) hoặc Phase 18 (Mobile App) theo ý muốn của Bệnh viện. Nếu đi đến Deploy, cần chuẩn bị PM2 hoặc Docker cho Backend và Nginx/IIS cho Frontend.
+### 2. Ghi chú cho phiên làm việc tiếp theo
+- **Nhánh Git:** `feature/phase-19-i18n` đã hoàn tất, code đã được push lên origin và link tracking.
+- **Cần làm:** 
+  1. Triển khai Phase 20 (Deploy Server & CI/CD).
+  2. Bổ sung cơ chế Polling / SSE (Server-Sent Events) cho trang Thanh toán (Phase 10) để Frontend tự động biết khi Backend nhận được IPN của VietinBank.
+  3. Bổ sung Rate Limit và Logging để sẵn sàng Production.
+  4. Triển khai Phase 18 (Mobile App Wrapper / Native).
 - **Lưu ý Next.js 16:** Middleware convention đang deprecated, sẽ chuyển sang "proxy" convention trong bản tiếp theo.
