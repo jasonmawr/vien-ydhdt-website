@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Platform, Image, ActivityIndicator } from 'react-native';
 import axios from 'axios';
 
-const API_URL = Platform.OS === 'android' ? 'http://10.0.2.2:4000/api' : 'http://localhost:4000/api';
+const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://192.168.1.26:4000/api';
 
 export default function PaymentScreen({ route, navigation }: any) {
   const { formData, amount } = route.params;

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, ActivityIndicator, TouchableOpacity, SafeAreaView, Platform } from 'react-native';
 import axios from 'axios';
 
-const API_URL = Platform.OS === 'android' ? 'http://10.0.2.2:4000/api' : 'http://localhost:4000/api';
+const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://192.168.1.26:4000/api';
 
 export default function DoctorScreen({ route, navigation }: any) {
   const { departmentId } = route.params;
@@ -15,7 +15,7 @@ export default function DoctorScreen({ route, navigation }: any) {
 
   const fetchDoctors = async () => {
     try {
-      const res = await axios.get(`${API_URL}/doctors?departmentId=${departmentId}`);
+      const res = await axios.get(`${API_URL}/doctors?department=${departmentId}`);
       if (res.data.success) {
         setDoctors(res.data.data);
       }
@@ -51,8 +51,8 @@ export default function DoctorScreen({ route, navigation }: any) {
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
               <TouchableOpacity style={styles.card} onPress={() => handleSelectDoctor(item.id.toString())}>
-                <Text style={styles.cardTitle}>{item.name}</Text>
-                <Text style={styles.cardDesc}>{item.specialty || 'Chuyên khoa'}</Text>
+                <Text style={styles.cardTitle}>{item.fullName}</Text>
+                <Text style={styles.cardDesc}>{item.degree || 'Bác sĩ'}</Text>
               </TouchableOpacity>
             )}
           />

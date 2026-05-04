@@ -2,10 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, ActivityIndicator, TouchableOpacity, SafeAreaView, Platform } from 'react-native';
 import axios from 'axios';
 
-// Dành cho Android Emulator truy cập localhost của máy host
-// Với iOS Simulator thì dùng http://localhost:4000/api
-// Nếu dùng máy thật, thay bằng IP LAN (vd: http://192.168.1.x:4000/api)
-const API_URL = Platform.OS === 'android' ? 'http://10.0.2.2:4000/api' : 'http://localhost:4000/api';
+const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://192.168.1.26:4000/api';
 
 export default function HomeScreen({ navigation }: any) {
   const [departments, setDepartments] = useState<any[]>([]);

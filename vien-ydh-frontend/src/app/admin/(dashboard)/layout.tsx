@@ -32,6 +32,10 @@ export default function AdminLayout({
             <FileText size={20} />
             <span>Bài Viết</span>
           </Link>
+          <Link href="/admin/categories" className={`flex items-center gap-3 px-4 py-3 rounded-lg transition ${usePathname().includes('/categories') ? 'bg-stone-800 text-white' : 'text-stone-400 hover:bg-stone-800 hover:text-white'}`}>
+            <FileText size={20} />
+            <span>Danh mục</span>
+          </Link>
           <Link href="/admin/patients" className={`flex items-center gap-3 px-4 py-3 rounded-lg transition ${usePathname().includes('/patients') ? 'bg-stone-800 text-white' : 'text-stone-400 hover:bg-stone-800 hover:text-white'}`}>
             <Users size={20} />
             <span>Bệnh Nhân</span>
