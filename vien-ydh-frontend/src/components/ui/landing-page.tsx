@@ -29,6 +29,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { DoctorDTO, getAllDoctors } from "@/services/api"
 import { useTranslations } from "next-intl"
+import LanguageSwitcher from "@/components/layout/LanguageSwitcher"
 
 // Animation variants
 const fadeIn = {
@@ -669,10 +670,8 @@ export function HospitalLandingPage() {
             <p className="text-stone-400 leading-relaxed">
               {t('footer.description')}
             </p>
-            <div className="flex space-x-4">
-              <Link href="#" className="h-10 w-10 rounded-full bg-stone-800 flex items-center justify-center hover:bg-primary-600 hover:text-white transition-colors">
-                <Globe className="h-5 w-5" />
-              </Link>
+            <div className="flex space-x-4 items-center">
+              <LanguageSwitcher />
               <Link href="#" className="h-10 w-10 rounded-full bg-stone-800 flex items-center justify-center hover:bg-primary-600 hover:text-white transition-colors">
                 <Video className="h-5 w-5" />
               </Link>
