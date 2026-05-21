@@ -112,6 +112,17 @@ class MockConnection {
       return { rowsAffected: 1 };
     }
 
+    if (upperSql.includes("UPDATE WEB_USERS")) {
+      const username = binds.username || "";
+      const hash = binds.hash || "";
+      const user = simulatedDb.users.find(u => u.USERNAME === username);
+      if (user) {
+        user.PASSWORD_HASH = hash;
+        return { rowsAffected: 1 };
+      }
+      return { rowsAffected: 0 };
+    }
+
     if (upperSql.includes("CREATE TABLE WEB_USERS")) {
       return { success: true };
     }
@@ -188,7 +199,11 @@ class MockConnection {
         return { rows: [{ HINH: hinhStream }] };
       }
 
-      let rows = [...mockDoctors];
+      let rows = mockDoctors.map(d => ({
+        ...d,
+        TENNHOM: d.TEN_NHOM,
+        TENKP: d.TEN_KHOA
+      }));
       if (upperSql.includes("WHERE BS.CHUYENKHOA =")) {
         const chuyenkhoa = Number(binds.chuyenkhoa);
         rows = rows.filter(r => r.CHUYENKHOA === chuyenkhoa);
