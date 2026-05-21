@@ -12,7 +12,9 @@ import {
 } from "@/services/api";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
+import AvailabilityCalendar from "./AvailabilityCalendar";
+import { translateSpecialtyName } from "@/lib/translations";
 
 type Step = 1 | 2 | 3 | 4 | 5 | 6;
 
@@ -22,6 +24,7 @@ interface BookingFormProps {
 
 export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
   const t = useTranslations('booking');
+  const locale = useLocale();
   const [step, setStep] = useState<Step>(initialStep);
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -113,6 +116,7 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
     appointmentTime: "",
     patientName: "",
     patientPhone: "",
+    patientEmail: "",
     patientDob: "",
     patientGender: "male",
     patientIdNumber: "",
@@ -225,6 +229,7 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
       const result = await createAppointment({
         patientName: formData.patientName,
         patientPhone: formData.patientPhone,
+        patientEmail: formData.patientEmail || undefined,
         patientDob: formData.patientDob,
         patientGender: formData.patientGender,
         departmentId: formData.departmentId,
@@ -232,6 +237,8 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
         appointmentDate: formData.appointmentDate,
         appointmentTime: formData.appointmentTime,
         symptoms: formData.symptoms,
+        doctorName: selectedDoctor?.fullName,
+        departmentName: selectedDept?.name,
       });
 
       if (result.success) {
@@ -251,8 +258,7 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
   useEffect(() => {
     let eventSource: EventSource | null = null;
     if (step === 5 && orderId) {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
-      eventSource = new EventSource(`${apiUrl}/api/payment/events/${orderId}`);
+      eventSource = new EventSource(`/api/payment/events/${orderId}`);
       
       eventSource.onmessage = (event) => {
         try {
@@ -335,7 +341,7 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
                   : "border-gray-200 bg-white hover:border-primary-800/30 hover:bg-gray-50"
               )}
             >
-              <h4 className="font-semibold text-[#1a1a1a]">{dept.name}</h4>
+              <h4 className="font-semibold text-[#1a1a1a]">{translateSpecialtyName(dept.name, locale)}</h4>
               <p className="text-sm text-gray-500 mt-1 line-clamp-2">{dept.description}</p>
             </div>
           ))}
@@ -395,7 +401,7 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
               />
               <div>
                 <h4 className="font-semibold text-[#1a1a1a]">{doc.degree} {doc.fullName}</h4>
-                <p className="text-sm text-primary-800">{doc.specialty ?? t('step2.defaultSpecialty')}</p>
+                <p className="text-sm text-primary-800">{translateSpecialtyName(doc.specialty || "", locale) ?? t('step2.defaultSpecialty')}</p>
               </div>
             </div>
           ))}
@@ -440,23 +446,12 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
 
       {formData.appointmentDate && (
         <div className="animate-fade-in-up">
-          <label className="mb-2 block text-sm font-semibold text-gray-700">{t('step3.labelTime')}</label>
-          <div className="grid gap-3 grid-cols-3 sm:grid-cols-4">
-            {["06:30", "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30"].map((time) => (
-              <div
-                key={time}
-                onClick={() => updateForm("appointmentTime", time)}
-                className={cn(
-                  "cursor-pointer rounded-lg border py-2 text-center text-sm font-medium transition-all",
-                  formData.appointmentTime === time
-                    ? "border-[#d97706] bg-[#fef3c7] text-[#d97706]"
-                    : "border-gray-200 bg-white text-gray-700 hover:border-[#d97706]/50"
-                )}
-              >
-                {time}
-              </div>
-            ))}
-          </div>
+          <AvailabilityCalendar
+            doctorId={formData.doctorId}
+            date={formData.appointmentDate}
+            selectedTime={formData.appointmentTime}
+            onSelectTime={(time) => updateForm("appointmentTime", time)}
+          />
         </div>
       )}
     </div>
@@ -499,6 +494,26 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
               placeholder={t('step4.labelPhone').replace(' *', '')}
               value={formData.patientPhone}
               onChange={(e) => updateForm("patientPhone", e.target.value)}
+            />
+          </div>
+        </div>
+
+        {/* Email field — tùy chọn để nhận xác nhận */}
+        <div>
+          <label htmlFor="patientEmail" className="mb-1.5 block text-sm font-medium text-gray-700">
+            Email <span className="text-gray-400 font-normal text-xs">(tùy chọn — nhận xác nhận qua email)</span>
+          </label>
+          <div className="relative">
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+              <svg className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+            </div>
+            <input
+              id="patientEmail"
+              type="email"
+              className="block w-full rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-10 pr-3 text-sm focus:border-primary-800 focus:bg-white focus:ring-1 focus:ring-primary-800 outline-none"
+              placeholder="email@gmail.com"
+              value={formData.patientEmail}
+              onChange={(e) => updateForm("patientEmail", e.target.value)}
             />
           </div>
         </div>
@@ -698,7 +713,7 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
           <Clock className="h-5 w-5 text-gray-400" />
           <div>
             <p className="text-xs text-gray-500 uppercase font-semibold">{t('step6.labelDepartment')}</p>
-            <p className="font-medium">{selectedDept?.name || "---"}</p>
+            <p className="font-medium">{translateSpecialtyName(selectedDept?.name || "", locale) || "---"}</p>
           </div>
         </div>
       </div>
@@ -871,7 +886,7 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
             <div className="space-y-4 text-sm">
               <div className="flex justify-between border-b border-gray-200 pb-3">
                 <span className="text-gray-500">{t('summary.department')}</span>
-                <span className="font-medium text-right max-w-[150px]">{selectedDept?.name || "---"}</span>
+                <span className="font-medium text-right max-w-[150px]">{translateSpecialtyName(selectedDept?.name || "", locale) || "---"}</span>
               </div>
               <div className="flex justify-between border-b border-gray-200 pb-3">
                 <span className="text-gray-500">{t('summary.doctor')}</span>

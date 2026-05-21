@@ -12,6 +12,7 @@ const router = Router();
 router.get("/", async (_req: Request, res: Response) => {
   try {
     const departments = await getAllDepartments();
+    res.set("Cache-Control", "public, max-age=300, stale-while-revalidate=60");
     res.json({ success: true, data: departments, total: departments.length });
   } catch (err) {
     console.error("[departments] GET /:", err);

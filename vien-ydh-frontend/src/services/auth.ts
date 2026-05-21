@@ -22,10 +22,15 @@ export async function loginAction(username: string, passwordRaw: string) {
     const token = data.data.token;
     
     // Lưu token vào HTTP-Only Cookie
+    // QUAN TRỌNG: Chỉ bật secure khi thực sự chạy qua HTTPS (có SSL).
+    // Nếu deploy nội bộ qua HTTP (IIS/Nginx reverse proxy không có SSL),
+    // secure: true sẽ khiến trình duyệt từ chối lưu cookie → không đăng nhập được.
+    const isHttps = process.env.NEXT_PUBLIC_SITE_URL?.startsWith("https://") ?? false;
     const cookieStore = await cookies();
     cookieStore.set("auth_token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: isHttps,
+      sameSite: "lax",
       maxAge: 60 * 60 * 24, // 24 hours
       path: "/",
     });

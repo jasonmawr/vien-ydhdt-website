@@ -17,7 +17,11 @@
       "Bash(grep -n \"},$\" messages/vi.json)",
       "Bash(node -e \"const fs = require\\('fs'\\); const vi = JSON.parse\\(fs.readFileSync\\('messages/vi.json', 'utf8'\\)\\); const en = JSON.parse\\(fs.readFileSync\\('messages/en.json', 'utf8'\\)\\); const zh = JSON.parse\\(fs.readFileSync\\('messages/zh.json', 'utf8'\\)\\); console.log\\('All JSON files valid'\\);\")",
       "Bash(node validate-json.js)",
-      "Bash(tee /tmp/tsc-errors.txt)"
+      "Bash(tee /tmp/tsc-errors.txt)",
+      "Bash(node -e ' *)",
+      "Bash(xargs grep -l \"break\\\\|BREAK\\\\|todo\\\\|TODO\")",
+      "Bash(npm list *)",
+      "Bash(npm install *)"
     ]
   }
 }

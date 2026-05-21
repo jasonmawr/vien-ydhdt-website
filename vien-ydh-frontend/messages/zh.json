@@ -6,7 +6,9 @@
     "news": "新闻资讯",
     "about": "关于我们",
     "contact": "联系我们",
-    "admin": "管理"
+    "admin": "管理",
+    "instituteName": "越南民族医学研究院",
+    "instituteShort": "胡志明市"
   },
   "hero": {
     "title": "越南民族医学研究院",
@@ -161,9 +163,15 @@
     "pleaseEnter": "请输入"
   },
   "footer": {
+    "instituteName": "越南民族医学研究院",
+    "instituteShort": "胡志明市",
     "description": "越南民族医学领域的领先研究和治疗机构，结合传统智慧与现代医疗保健。",
     "about": {
-      "title": "关于我们"
+      "title": "关于我们",
+      "intro": "机构介绍",
+      "functions": "职能与任务",
+      "structure": "组织架构",
+      "news": "新闻动态"
     },
     "specialties": {
       "title": "特色专科",
@@ -197,7 +205,13 @@
     "rights": "版权所有。",
     "privacy": "隐私政策",
     "terms": "使用条款",
-    "adminPortal": "管理门户"
+    "adminPortal": "管理门户",
+    "hours": {
+      "title": "工作时间",
+      "weekday": "周一至周五: 06:00–16:30",
+      "evening": "(下午: 13:00–16:30)",
+      "weekend": "周六日: 07:00–11:30"
+    }
   },
   "search": {
     "title": "查询医疗信息",
@@ -242,7 +256,9 @@
       "research": "科学研究",
       "patient": "患者指南"
     },
-    "read": "阅读"
+    "read": "阅读",
+    "attachments": "附件",
+    "uncategorized": "未分类"
   },
   "about": {
     "instituteName": "越南民族医学研究院（胡志明市）",
@@ -574,6 +590,7 @@
         "embedding": "预约埋线治疗",
         "pricing": "服务价格表"
       },
+      "contactTitle": "联系与地址",
       "infoTitle": "辅助信息",
       "info": {
         "training": "培训-指导专线",

@@ -3,6 +3,8 @@ import { Merriweather, Plus_Jakarta_Sans } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import { Toaster } from "sonner";
+import ChatWidget from "@/components/features/ChatWidget";
+import SocialFAB from "@/components/features/SocialFAB";
 import "./globals.css";
 
 /**
@@ -40,6 +42,11 @@ export async function generateMetadata() {
     authors: [{ name: t('siteName') }],
     creator: t('siteName'),
     metadataBase: new URL("https://vienydhdt.gov.vn"),
+    icons: {
+      icon: "/images/logo.png",
+      shortcut: "/images/logo.png",
+      apple: "/images/logo.png",
+    },
     openGraph: {
       type: "website",
       locale: "vi_VN",
@@ -47,6 +54,22 @@ export async function generateMetadata() {
       siteName: t('siteName'),
       title: t('ogTitle'),
       description: t('ogDescription'),
+      images: [{ url: "https://vienydhdt.gov.vn/images/og-default.jpg", width: 1200, height: 630 }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: t('ogTitle'),
+      description: t('ogDescription'),
+      images: ["https://vienydhdt.gov.vn/images/og-default.jpg"],
+    },
+    alternates: {
+      canonical: "https://vienydhdt.gov.vn",
+      languages: {
+        "x-default": "https://vienydhdt.gov.vn",
+        "vi-VN": "https://vienydhdt.gov.vn",
+        "en": "https://vienydhdt.gov.vn",
+        "zh-TW": "https://vienydhdt.gov.vn",
+      },
     },
     robots: {
       index: true,
@@ -70,12 +93,51 @@ export default async function RootLayout({
   const locale = await getLocale();
   const messages = await getMessages();
 
+  const orgJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "MedicalOrganization",
+    name: "Viện Y Dược Học Dân Tộc TP.HCM",
+    alternateName: "VYDH Dân Tộc",
+    url: "https://vienydhdt.gov.vn",
+    logo: "https://vienydhdt.gov.vn/images/logo.png",
+    telephone: "+84-964-392-632",
+    email: "bvyhdt@yahoo.com",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "273-275 Nam Kỳ Khởi Nghĩa, Phường 7",
+      addressLocality: "Quận 3",
+      addressRegion: "TP.HCM",
+      postalCode: "70000",
+      addressCountry: "VN",
+    },
+    medicalSpecialty: "Traditional Medicine",
+    sameAs: ["https://vienydhdt.gov.vn"],
+  };
+
   return (
     <html lang={locale} className={`${merriweather.variable} ${plusJakartaSans.variable}`}>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
+        />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#1e3a5f" />
+        <link rel="icon" href="/images/logo.png" type="image/png" />
+        <link rel="shortcut icon" href="/images/logo.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/images/logo.png" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js').catch(() => {}); }); }`,
+          }}
+        />
+      </head>
       <body className="flex min-h-screen flex-col bg-[#fbf9f6] antialiased">
         <main id="main-content" className="flex-1" role="main">
           <NextIntlClientProvider messages={messages}>
             {children}
+            <ChatWidget />
+            <SocialFAB />
           </NextIntlClientProvider>
         </main>
         <Toaster position="top-center" richColors />

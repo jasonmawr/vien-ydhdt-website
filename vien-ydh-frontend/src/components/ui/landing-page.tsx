@@ -12,7 +12,6 @@ import {
   Mail,
   MapPin,
   Phone,
-  Globe,
   Video,
   ArrowUpRight,
   Sparkles,
@@ -25,11 +24,9 @@ import {
   CheckCircle2
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { DoctorDTO, getAllDoctors } from "@/services/api"
 import { useTranslations } from "next-intl"
 import LanguageSwitcher from "@/components/layout/LanguageSwitcher"
+import { SITE_CONFIG } from "@/lib/siteConfig"
 
 // Animation variants
 const fadeIn = {
@@ -64,22 +61,6 @@ export function HospitalLandingPage() {
   const t = useTranslations('home');
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [scrollY, setScrollY] = useState(0)
-
-  const [featuredDoctors, setFeaturedDoctors] = useState<DoctorDTO[]>([]);
-
-  useEffect(() => {
-    const fetchDoctors = async () => {
-      try {
-        const docs = await getAllDoctors();
-        // Lấy 8 bác sĩ đầu tiên làm featured
-        setFeaturedDoctors(docs?.slice(0, 8) || []);
-      } catch {
-        // Không block trang chủ nếu backend chưa sẵn sàng
-        setFeaturedDoctors([]);
-      }
-    };
-    fetchDoctors();
-  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -118,9 +99,9 @@ export function HospitalLandingPage() {
                   className="object-contain"
                 />
               </motion.div>
-              <div className="leading-tight">
-                <span className="font-bold text-lg text-primary-900 block">{t('header.instituteName')}</span>
-                <span className="text-xs font-semibold text-stone-500 uppercase tracking-widest">{t('header.instituteShort')}</span>
+              <div className="leading-tight select-none">
+                <span className="text-[10px] font-bold text-primary-800 lg:text-[13px] block uppercase tracking-wide whitespace-nowrap">{t('header.instituteName')}</span>
+                <span className="text-[9px] font-semibold text-primary-700 lg:text-[11px] block uppercase tracking-wider whitespace-nowrap">{t('header.instituteShort')}</span>
               </div>
             </Link>
           </div>
@@ -142,7 +123,7 @@ export function HospitalLandingPage() {
             </Link>
           </nav>
           <div className="hidden md:flex items-center gap-3">
-            <a href="tel:0964392632">
+            <a href={SITE_CONFIG.hotlineTel}>
               <Button variant="outline" size="sm" className="rounded-xl border-primary-200 text-primary-700 hover:bg-primary-50">
                 {t('header.hotline')}
               </Button>
@@ -152,6 +133,9 @@ export function HospitalLandingPage() {
                 {t('header.bookNow')}
               </Button>
             </Link>
+            <div className="border-l border-stone-200 pl-3">
+              <LanguageSwitcher align="bottom" variant="light" dropdownAlign="right" compact={true} />
+            </div>
           </div>
           <button className="flex md:hidden text-stone-700 hover:text-primary-600 transition-colors" onClick={toggleMenu}>
             <Menu className="h-6 w-6" />
@@ -208,7 +192,10 @@ export function HospitalLandingPage() {
               </motion.div>
             ))}
             <motion.div variants={itemFadeIn} className="flex flex-col gap-3 pt-6 px-2">
-              <a href="tel:0964392632" className="w-full">
+              <div className="flex items-center justify-center py-2">
+                <LanguageSwitcher align="bottom" variant="light" dropdownAlign="left" compact={true} />
+              </div>
+              <a href={SITE_CONFIG.hotlineTel} className="w-full">
                 <Button variant="outline" className="w-full rounded-xl border-primary-200 text-primary-700 h-12 text-base font-semibold">
                   {t('mobileMenu.call')}
                 </Button>
@@ -291,13 +278,15 @@ export function HospitalLandingPage() {
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </Button>
                   </Link>
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="rounded-xl border-2 border-white/60 text-white hover:bg-white/15 backdrop-blur-sm text-base h-13 px-8"
-                  >
-                    {t('hero.learnMore')}
-                  </Button>
+                  <Link href="/gioi-thieu">
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      className="rounded-xl border-2 border-white/60 text-white hover:bg-white/15 backdrop-blur-sm text-base h-13 px-8"
+                    >
+                      {t('hero.learnMore')}
+                    </Button>
+                  </Link>
                 </motion.div>
               </div>
             </motion.div>
@@ -355,6 +344,21 @@ export function HospitalLandingPage() {
               </div>
             </motion.div>
 
+            {/* Hiệu ứng Động Sóng nước Parallax 3D (Y học Cổ truyền Thủy hải) */}
+            <div className="absolute bottom-0 left-0 right-0 w-full overflow-hidden leading-none z-20 pointer-events-none">
+              <svg className="relative block w-full h-[40px] md:h-[60px] lg:h-[80px]" viewBox="0 24 150 28" preserveAspectRatio="none" shapeRendering="auto">
+                <defs>
+                  <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18v44h-352z" />
+                </defs>
+                <g className="parallax">
+                  <use href="#gentle-wave" x="48" y="0" fill="rgba(240, 249, 255, 0.45)" />
+                  <use href="#gentle-wave" x="48" y="3" fill="rgba(186, 230, 253, 0.35)" />
+                  <use href="#gentle-wave" x="48" y="5" fill="rgba(56, 189, 248, 0.25)" />
+                  <use href="#gentle-wave" x="48" y="7" fill="var(--color-primary-700)" />
+                </g>
+              </svg>
+            </div>
+
           </div>
 
           {/* Stats bar below hero */}
@@ -366,9 +370,9 @@ export function HospitalLandingPage() {
           >
             <div className="container-site grid grid-cols-2 md:grid-cols-4 divide-x divide-white/20">
               {[
-                { value: "60+", label: "Năm kinh nghiệm" },
-                { value: "116+", label: "Bác sĩ chuyên khoa" },
-                { value: "500K+", label: "Bệnh nhân mỗi năm" },
+                { value: "50+", label: "Năm thành lập & phát triển" },
+                { value: "253+", label: "Bác sĩ, chuyên gia hàng đầu" },
+                { value: "100K+", label: "Bệnh nhân được điều trị/năm" },
                 { value: "100%", label: "Tận tâm & An toàn" },
               ].map((stat, i) => (
                 <div key={i} className="flex flex-col items-center justify-center py-4 px-6 text-center">
@@ -471,7 +475,7 @@ export function HospitalLandingPage() {
                     <p className="text-stone-600 leading-relaxed">{t(`services.${service.descKey}`)}</p>
                   </div>
                   <div className="relative z-10 mt-8 flex items-center justify-between">
-                    <Link href="#" className="text-sm font-bold text-primary-600 uppercase tracking-wide hover:text-primary-800 transition-colors">
+                    <Link href="/dat-lich" className="text-sm font-bold text-primary-600 uppercase tracking-wide hover:text-primary-800 transition-colors">
                       {t('services.learnMore')}
                     </Link>
                     <motion.div whileHover={{ x: 5 }} transition={{ type: "spring", stiffness: 400, damping: 10 }}>
@@ -535,7 +539,7 @@ export function HospitalLandingPage() {
                 transition={{ duration: 0.3 }}
                 className="group relative overflow-hidden rounded-[2rem] md:col-span-2 md:row-span-2 h-[400px] md:h-auto shadow-md"
               >
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10 z-10 pointer-events-none"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-primary-950/85 via-primary-900/30 to-transparent z-10 pointer-events-none"></div>
                 <Image
                   src="/images/zen_garden.png"
                   alt={t('portfolio.items.0.title')}
@@ -604,7 +608,7 @@ export function HospitalLandingPage() {
                 transition={{ duration: 0.3 }}
                 className="group relative overflow-hidden rounded-[2rem] md:col-span-2 h-[250px] shadow-md"
               >
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10 z-10 pointer-events-none"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-primary-950/85 via-primary-900/30 to-transparent z-10 pointer-events-none"></div>
                 <Image
                   src="/images/clinic_room.png"
                   alt={t('portfolio.items.3.title')}
@@ -620,16 +624,18 @@ export function HospitalLandingPage() {
             </motion.div>
             <div className="flex justify-center pb-10 mt-4">
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button size="lg" className="rounded-xl group bg-primary-600 text-white hover:bg-primary-700 h-14 px-8 text-base shadow-lg">
-                  {t('portfolio.viewAll')}
-                  <motion.span
-                    initial={{ x: 0 }}
-                    whileHover={{ x: 5 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                  >
-                    <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-                  </motion.span>
-                </Button>
+                <Link href="/gioi-thieu">
+                  <Button size="lg" className="rounded-xl group bg-primary-600 text-white hover:bg-primary-700 h-14 px-8 text-base shadow-lg">
+                    {t('portfolio.viewAll')}
+                    <motion.span
+                      initial={{ x: 0 }}
+                      whileHover={{ x: 5 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                    >
+                      <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                    </motion.span>
+                  </Button>
+                </Link>
               </motion.div>
             </div>
           </motion.div>
@@ -719,11 +725,11 @@ export function HospitalLandingPage() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full bg-stone-900 text-stone-300 pt-16">
-        <div className="container-site grid gap-10 px-4 md:px-6 lg:grid-cols-4 border-b border-stone-800 pb-16">
+      <footer className="w-full bg-gradient-to-b from-primary-900 via-primary-950 to-primary-950 text-primary-100 pt-16 border-t border-primary-800">
+        <div className="container-site grid gap-10 px-4 md:px-6 lg:grid-cols-4 border-b border-primary-800 pb-16">
           <div className="space-y-6">
             <Link href="/" className="flex items-center space-x-3">
-              <div className="relative h-14 w-14 overflow-hidden">
+              <div className="relative h-14 w-14 overflow-hidden shrink-0">
                 <Image
                   src="/images/logo.png"
                   alt={t('header.logoAlt')}
@@ -731,65 +737,75 @@ export function HospitalLandingPage() {
                   className="object-contain"
                 />
               </div>
-              <div className="leading-tight">
-                <span className="font-bold text-xl text-white block">{t('header.instituteName')}</span>
-                <span className="text-sm font-semibold text-primary-400 uppercase tracking-widest">{t('header.instituteShort')}</span>
+              <div className="leading-tight select-none">
+                <span className="text-[13px] font-bold text-white uppercase tracking-widest block whitespace-nowrap">{t('header.instituteName')}</span>
+                <span className="text-[11px] font-semibold text-primary-300 uppercase tracking-widest block whitespace-nowrap">{t('header.instituteShort')}</span>
               </div>
             </Link>
-            <p className="text-stone-400 leading-relaxed">
+            <p className="text-primary-200 text-[15px] leading-relaxed">
               {t('footer.description')}
             </p>
             <div className="flex space-x-4 items-center">
-              <LanguageSwitcher />
-              <Link href="#" className="h-10 w-10 rounded-full bg-stone-800 flex items-center justify-center hover:bg-primary-600 hover:text-white transition-colors">
+              <LanguageSwitcher align="top" variant="dark" dropdownAlign="left" />
+              <a href="https://www.youtube.com/@vienyduochocdantoctpHCM" target="_blank" rel="noopener noreferrer" className="h-10 w-10 rounded-full bg-primary-800/60 flex items-center justify-center hover:bg-red-600 hover:text-white transition-colors" aria-label="YouTube">
                 <Video className="h-5 w-5" />
-              </Link>
+              </a>
             </div>
           </div>
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-1 lg:ml-12">
             <div>
-              <h3 className="text-lg font-bold text-white mb-6">{t('footer.specialtiesTitle')}</h3>
-              <nav className="flex flex-col space-y-4">
-                <Link href="/dat-lich" className="text-stone-400 hover:text-primary-400 transition-colors">{t('footer.services.initialExam')}</Link>
-                <Link href="/tra-cuu" className="text-stone-400 hover:text-primary-400 transition-colors">{t('footer.services.historySearch')}</Link>
-                <Link href="/dat-lich" className="text-stone-400 hover:text-primary-400 transition-colors">{t('footer.services.embedding')}</Link>
-                <Link href="/bang-gia" className="text-stone-400 hover:text-primary-400 transition-colors">{t('footer.services.pricing')}</Link>
+              <h3 className="text-[15px] font-bold text-white uppercase tracking-wider mb-6">{t('footer.specialtiesTitle')}</h3>
+              <nav className="flex flex-col space-y-3.5">
+                <Link href="/dat-lich" className="text-[15px] text-primary-200 hover:text-white hover:translate-x-0.5 transition-all duration-200">{t('footer.services.initialExam')}</Link>
+                <Link href="/tra-cuu" className="text-[15px] text-primary-200 hover:text-white hover:translate-x-0.5 transition-all duration-200">{t('footer.services.historySearch')}</Link>
+                <Link href="/dat-lich" className="text-[15px] text-primary-200 hover:text-white hover:translate-x-0.5 transition-all duration-200">{t('footer.services.embedding')}</Link>
+                <Link href="/bang-gia" className="text-[15px] text-primary-200 hover:text-white hover:translate-x-0.5 transition-all duration-200">{t('footer.services.pricing')}</Link>
               </nav>
             </div>
           </div>
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-1 lg:ml-8">
             <div>
-              <h3 className="text-lg font-bold text-white mb-6">{t('footer.infoTitle')}</h3>
-              <nav className="flex flex-col space-y-4">
-                <Link href="/gioi-thieu" className="text-stone-400 hover:text-primary-400 transition-colors">{t('footer.info.training')}</Link>
-                <Link href="/tin-tuc" className="text-stone-400 hover:text-primary-400 transition-colors">{t('footer.info.research')}</Link>
-                <Link href="/duoc-lieu" className="text-stone-400 hover:text-primary-400 transition-colors">{t('footer.info.herbalProducts')}</Link>
-                <Link href="/tin-tuc" className="text-stone-400 hover:text-primary-400 transition-colors">{t('footer.info.news')}</Link>
+              <h3 className="text-[15px] font-bold text-white uppercase tracking-wider mb-6">{t('footer.infoTitle')}</h3>
+              <nav className="flex flex-col space-y-3.5">
+                <Link href="/gioi-thieu" className="text-[15px] text-primary-200 hover:text-white hover:translate-x-0.5 transition-all duration-200">{t('footer.info.training')}</Link>
+                <Link href="/tin-tuc" className="text-[15px] text-primary-200 hover:text-white hover:translate-x-0.5 transition-all duration-200">{t('footer.info.research')}</Link>
+                <Link href="/duoc-lieu" className="text-[15px] text-primary-200 hover:text-white hover:translate-x-0.5 transition-all duration-200">{t('footer.info.herbalProducts')}</Link>
+                <Link href="/tin-tuc" className="text-[15px] text-primary-200 hover:text-white hover:translate-x-0.5 transition-all duration-200">{t('footer.info.news')}</Link>
               </nav>
             </div>
           </div>
 
           <div className="space-y-6">
-            <h3 className="text-lg font-bold text-white">{t('footer.newsletter.title')}</h3>
-            <p className="text-stone-400">
-              {t('footer.newsletter.description')}
-            </p>
-            <form className="flex flex-col gap-3 mt-2">
-              <Input type="email" placeholder={t('footer.newsletter.placeholder')} className="bg-stone-800 border-stone-700 text-white placeholder:text-stone-500 h-12 rounded-xl focus-visible:ring-primary-500" />
-              <Button type="button" className="rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-bold h-12">
-                {t('footer.newsletter.button')}
+            <h3 className="text-[15px] font-bold text-white uppercase tracking-wider">{t('footer.contactTitle')}</h3>
+            <div className="flex flex-col gap-4 text-primary-200 text-[15px]">
+              <div className="flex items-start gap-3">
+                <MapPin className="h-5 w-5 text-primary-300 shrink-0 mt-0.5" />
+                <span>273–275 Nguyễn Văn Trỗi, P.10, Q. Phú Nhuận, TP.HCM</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <Phone className="h-5 w-5 text-primary-300 shrink-0" />
+                <a href="tel:0964392632" className="hover:text-white transition-colors">Hotline: 0964 392 632</a>
+              </div>
+              <div className="flex items-center gap-3">
+                <Mail className="h-5 w-5 text-primary-300 shrink-0" />
+                <a href="mailto:v.ydhdt@tphcm.gov.vn" className="hover:text-white transition-colors">v.ydhdt@tphcm.gov.vn</a>
+              </div>
+            </div>
+            <Link href="/dat-lich" className="block pt-2">
+              <Button className="w-full rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-bold h-12 shadow-md">
+                {t('header.bookNow')}
               </Button>
-            </form>
+            </Link>
           </div>
         </div>
 
-        <div className="container-site py-6 flex flex-col md:flex-row items-center justify-between text-sm text-stone-500">
-          <p>{t('footer.copyright', { year: new Date().getFullYear() })}</p>
+        <div className="container-site py-6 flex flex-col md:flex-row items-center justify-between text-sm text-primary-400">
+          <p>© {new Date().getFullYear()} Viện Y Dược Học Dân Tộc. {t('footer.copyright', { year: new Date().getFullYear() })}</p>
           <div className="flex gap-6 mt-4 md:mt-0">
-            <Link href="/lien-he" className="hover:text-white transition-colors">{t('footer.links.privacy')}</Link>
-            <Link href="/lien-he" className="hover:text-white transition-colors">{t('footer.links.terms')}</Link>
+            <Link href="/chinh-sach-bao-mat" className="hover:text-white transition-colors">{t('footer.links.privacy')}</Link>
+            <Link href="/quy-dinh" className="hover:text-white transition-colors">{t('footer.links.terms')}</Link>
             <Link href="/admin/login" className="hover:text-white transition-colors text-primary-400">{t('footer.links.admin')}</Link>
           </div>
         </div>

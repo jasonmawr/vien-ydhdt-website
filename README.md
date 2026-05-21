@@ -40,9 +40,9 @@ Truy cập tại: **http://localhost:3000**
 
 | Vai trò | Màu | Hex |
 |---|---|---|
-| Màu chủ đạo (Primary) | Xanh Lục Ngọc Bích | `#109173` |
-| Màu điểm nhấn (Accent) | Vàng Kim Loại | `#d97706` |
-| Màu nền (Background) | Giấy Dó | `#fbf9f6` |
+| Màu chủ đạo (Primary) | Xanh dương y tế nhạt (BVDaihoc style) | `#0077b6` |
+| Màu điểm nhấn (Accent) | Cam y tế | `#ea580c` |
+| Màu nền (Background) | Trắng sạch / Xám y tế cực nhẹ | `#ffffff` |
 
 **Font:** Merriweather (tiêu đề) + Plus Jakarta Sans (nội dung)
 

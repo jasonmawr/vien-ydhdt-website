@@ -53,10 +53,12 @@ paymentRouter.post("/generate-qr", async (req: Request, res: Response) => {
 paymentRouter.post("/webhook", async (req: Request, res: Response) => {
   try {
     const payload = req.body;
+    const rawPayload = (req as any).rawBody || payload;
     logger.info("[Webhook] Nhận thông báo thanh toán từ VietinBank: %o", payload);
 
     const signature = typeof req.headers["x-signature"] === "string" ? req.headers["x-signature"] : "";
-    const isValid = verifyIPNSignature(payload, signature, process.env.VIETINBANK_SECRET || "draft");
+    // Truyền rawPayload (Buffer) để verify chữ ký chuẩn xác nhất từ ngân hàng
+    const isValid = verifyIPNSignature(rawPayload, signature);
     if (!isValid) {
       res.status(400).json({ code: "01", message: "Sai chữ ký bảo mật" });
       return;

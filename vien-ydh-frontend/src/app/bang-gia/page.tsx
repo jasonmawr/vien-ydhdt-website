@@ -6,10 +6,12 @@ import { Receipt, Search, Info } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { type ExamPricingDTO, getExamPricing } from "@/services/api";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
+import { translateServiceName } from "@/lib/translations";
 
 export default function BangGiaPage() {
   const t = useTranslations('pricing');
+  const locale = useLocale();
   const [pricingData, setPricingData] = useState<ExamPricingDTO[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -21,10 +23,12 @@ export default function BangGiaPage() {
       .finally(() => setIsLoading(false));
   }, []);
 
-  const filteredPricing = pricingData.filter(p =>
-    p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    p.code.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredPricing = pricingData.filter(p => {
+    const translatedName = translateServiceName(p.name, locale);
+    return translatedName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+           p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+           p.code.toLowerCase().includes(searchTerm.toLowerCase());
+  });
 
   return (
     <div className="min-h-screen bg-stone-50 py-12 md:py-24">
@@ -92,7 +96,7 @@ export default function BangGiaPage() {
                   filteredPricing.map((item, idx) => (
                     <tr key={item.code} className="border-b border-stone-100 hover:bg-stone-50/50 transition-colors">
                       <td className="px-6 py-4 font-mono text-stone-500">{item.code}</td>
-                      <td className="px-6 py-4 font-medium text-stone-900">{item.name}</td>
+                      <td className="px-6 py-4 font-medium text-stone-900">{translateServiceName(item.name, locale)}</td>
                       <td className="px-6 py-4 text-right text-primary-700 font-semibold">
                         {new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(item.priceBHYT)}
                       </td>

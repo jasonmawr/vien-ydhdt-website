@@ -59,6 +59,12 @@ export default function ChatWidget() {
     }
   }, [isOpen]);
 
+  // Phát event báo trạng thái đóng/mở chatbot cho các component khác (như SocialFAB)
+  useEffect(() => {
+    const event = new CustomEvent("chat-widget-toggle", { detail: { isOpen } });
+    window.dispatchEvent(event);
+  }, [isOpen]);
+
   // Check scroll position
   const handleScroll = useCallback(() => {
     const container = messagesContainerRef.current;

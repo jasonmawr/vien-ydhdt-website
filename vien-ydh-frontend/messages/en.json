@@ -6,7 +6,9 @@
     "news": "News",
     "about": "About",
     "contact": "Contact",
-    "admin": "Admin"
+    "admin": "Admin",
+    "instituteName": "INSTITUTE OF ETHNIC MEDICINE",
+    "instituteShort": "HO CHI MINH CITY"
   },
   "hero": {
     "title": "Institute of Ethnic Medicine",
@@ -161,9 +163,15 @@
     "pleaseEnter": "Please enter"
   },
   "footer": {
+    "instituteName": "INSTITUTE OF ETHNIC MEDICINE",
+    "instituteShort": "HO CHI MINH CITY",
     "description": "Leading research and treatment institute for Vietnamese Traditional Medicine, combining traditional wisdom with modern healthcare.",
     "about": {
-      "title": "About Us"
+      "title": "About Us",
+      "intro": "About the Institute",
+      "functions": "Functions & Duties",
+      "structure": "Organization Chart",
+      "news": "News & Events"
     },
     "specialties": {
       "title": "Our Specialties",
@@ -197,7 +205,13 @@
     "rights": "All rights reserved.",
     "privacy": "Privacy Policy",
     "terms": "Terms of Use",
-    "adminPortal": "Admin Portal"
+    "adminPortal": "Admin Portal",
+    "hours": {
+      "title": "Working Hours",
+      "weekday": "Mon–Fri: 06:00–16:30",
+      "evening": "(Afternoon: 13:00–16:30)",
+      "weekend": "Sat, Sun: 07:00–11:30"
+    }
   },
   "search": {
     "title": "Search Medical Information",
@@ -242,7 +256,9 @@
       "research": "Scientific Research",
       "patient": "Patient Guidance"
     },
-    "read": "Read"
+    "read": "Read",
+    "attachments": "Attachments",
+    "uncategorized": "Uncategorized"
   },
   "about": {
     "instituteName": "Institute of Ethnic Medicine HCMC",
@@ -455,8 +471,8 @@
   "home": {
     "header": {
       "logoAlt": "Institute Logo",
-      "instituteName": "Institute of Ethnic Medicine",
-      "instituteShort": "TP.HCM",
+      "instituteName": "INSTITUTE OF ETHNIC MEDICINE",
+      "instituteShort": "HO CHI MINH CITY",
       "nav": {
         "about": "About",
         "booking": "Book Appointment",
@@ -574,6 +590,7 @@
         "embedding": "Book Catgut Embedding",
         "pricing": "Service Price List"
       },
+      "contactTitle": "Contact & Address",
       "infoTitle": "Additional Information",
       "info": {
         "training": "Training - Line Guidance",

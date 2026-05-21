@@ -8,9 +8,9 @@ Mục tiêu: Đẹp, tốc độ tải chớp nhoáng, tối ưu hóa quy trình
 
 ## **2\. HỆ THỐNG MÀU SẮC & TYPOGRAPHY (DESIGN SYSTEM)**
 
-* **Màu chủ đạo (Primary):** Xanh Lục Ngọc Bích \- \#109173 (Tailwind custom token: primary-800).  
-* **Màu điểm nhấn (Accent):** Vàng Kim Loại \- \#d97706 (Tailwind: amber-600).  
-* **Màu nền (Background):** Giấy Dó (Trắng ngà) \- \#fbf9f6.  
+* **Màu chủ đạo (Primary):** Xanh dương y tế nhạt (BVDaihoc style) \- \#0077b6.  
+* **Màu điểm nhấn (Accent):** Màu cam y tế \- \#ea580c.  
+* **Màu nền (Background):** Trắng sạch / Xám y tế cực nhẹ.  
 * **Font chữ:** \- Tiêu đề (Headings): Merriweather (Serif, thể hiện sự uy tín, học thuật).  
   * Văn bản (Body): Plus Jakarta Sans (Dễ đọc trên mọi thiết bị).
 

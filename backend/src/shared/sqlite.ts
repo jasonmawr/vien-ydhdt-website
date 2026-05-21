@@ -26,6 +26,12 @@ export async function getWebDb() {
 }
 
 async function initWebDb(db: Database<sqlite3.Database, sqlite3.Statement>) {
+  // WAL mode — hiệu suất cao hơn với concurrent reads
+  await db.exec(`PRAGMA journal_mode = WAL`);
+  await db.exec(`PRAGMA synchronous = NORMAL`);
+  await db.exec(`PRAGMA busy_timeout = 5000`);
+  await db.exec(`PRAGMA foreign_keys = ON`);
+
   // Tạo bảng danh mục (Categories)
   await db.exec(`
     CREATE TABLE IF NOT EXISTS post_categories (
@@ -121,6 +127,88 @@ async function initWebDb(db: Database<sqlite3.Database, sqlite3.Statement>) {
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
   `);
+
+  // ─── Bảng SMS Reminders ───
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS sms_reminders (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      phone TEXT NOT NULL,
+      patient_name TEXT,
+      doctor_name TEXT,
+      appointment_date TEXT,
+      appointment_time TEXT,
+      send_at DATETIME NOT NULL,
+      appointment_id TEXT,
+      sent INTEGER DEFAULT 0,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  // ─── Bảng OTP Requests (Patient Auth) ───
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS otp_requests (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      phone TEXT NOT NULL,
+      otp TEXT NOT NULL,
+      expires_at DATETIME NOT NULL,
+      used INTEGER DEFAULT 0,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  // ─── Bảng Patients ───
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS patients (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      phone TEXT UNIQUE NOT NULL,
+      full_name TEXT,
+      dob TEXT,
+      gender TEXT,
+      email TEXT,
+      his_login_id INTEGER,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      last_login DATETIME
+    )
+  `);
+
+  // ─── Content Versioning ───
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS post_versions (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      post_id INTEGER NOT NULL,
+      title TEXT,
+      content TEXT,
+      excerpt TEXT,
+      changed_by TEXT,
+      changed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      change_summary TEXT,
+      FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE
+    )
+  `);
+
+  // ─── Doctor Reviews ───
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS doctor_reviews (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      doctor_id TEXT NOT NULL,
+      appointment_id TEXT,
+      rating INTEGER CHECK(rating BETWEEN 1 AND 5),
+      comment TEXT,
+      patient_phone TEXT,
+      is_published INTEGER DEFAULT 0,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  // ─── Scheduled publishing column (nếu chưa có) ───
+  try {
+    await db.exec(`ALTER TABLE posts ADD COLUMN scheduled_at DATETIME`);
+  } catch {}
+
+  // ─── Status 'scheduled' cho posts ───
+  try {
+    await db.exec(`ALTER TABLE posts ADD COLUMN author_id INTEGER`);
+  } catch {}
 
   // Thêm dữ liệu mẫu danh mục nếu bảng trống
   const catRow = await db.get('SELECT COUNT(*) as count FROM post_categories');
