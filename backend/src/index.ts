@@ -73,6 +73,7 @@ const globalLimiter = rateLimit({
   legacyHeaders: false,
   keyGenerator: safeKeyGenerator,
   skip: () => process.env.NODE_ENV !== "production",
+  validate: { ip: false },
 });
 
 const strictLimiter = rateLimit({
@@ -82,6 +83,7 @@ const strictLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   keyGenerator: safeKeyGenerator,
+  validate: { ip: false },
 });
 
 app.use(globalLimiter);
