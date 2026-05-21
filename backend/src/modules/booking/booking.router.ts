@@ -5,6 +5,7 @@ import {
   getInsuranceTuyen,
   getPatientTypes,
   getDoctors,
+  getDoctorAvailability,
 } from "./booking.service";
 
 export const bookingRouter = Router();
@@ -61,5 +62,21 @@ bookingRouter.get("/patient-types", async (_req, res) => {
   } catch (err) {
     console.error("[Booking] getPatientTypes error:", err);
     res.status(500).json({ success: false, error: "Lỗi lấy đối tượng bệnh nhân" });
+  }
+});
+
+// GET /api/booking/availability?doctorId=X&date=YYYY-MM-DD
+bookingRouter.get("/availability", async (req, res) => {
+  try {
+    const { doctorId, date } = req.query as { doctorId?: string; date?: string };
+    if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+      res.status(400).json({ success: false, error: "Thiếu hoặc sai định dạng date (YYYY-MM-DD)" });
+      return;
+    }
+    const data = await getDoctorAvailability(doctorId || '', date);
+    res.json({ success: true, data });
+  } catch (err) {
+    console.error("[Booking] getAvailability error:", err);
+    res.status(500).json({ success: false, error: "Lỗi lấy lịch trống" });
   }
 });

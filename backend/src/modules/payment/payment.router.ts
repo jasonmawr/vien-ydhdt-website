@@ -1,16 +1,39 @@
 import { Router, type Request, type Response } from "express";
-import { createHisPatient, createHisAdmission, createAppointmentRecord, confirmHisPayment } from "../his/his-integration.service";
 import { verifyIPNSignature, generateVietinBankQR } from "./vietinbank.service";
 import { v4 as uuidv4 } from "uuid";
+import { EventEmitter } from "events";
+import { logger } from "../../shared/logger";
 
 export const paymentRouter = Router();
 
-// POST /api/payment/generate-qr (Tạo mã QR thanh toán)
+// Khởi tạo Event Emitter cho SSE
+export const paymentEvents = new EventEmitter();
+
+// GET /api/payment/events/:orderId (SSE endpoint)
+paymentRouter.get("/events/:orderId", (req: Request, res: Response) => {
+  const { orderId } = req.params;
+  
+  res.writeHead(200, {
+    "Content-Type": "text/event-stream",
+    "Cache-Control": "no-cache",
+    "Connection": "keep-alive",
+  });
+
+  const onPaymentSuccess = () => {
+    res.write(`data: ${JSON.stringify({ status: "SUCCESS" })}\n\n`);
+  };
+
+  paymentEvents.once(`success_${orderId}`, onPaymentSuccess);
+
+  req.on("close", () => {
+    paymentEvents.off(`success_${orderId}`, onPaymentSuccess);
+  });
+});
+
+// POST /api/payment/generate-qr
 paymentRouter.post("/generate-qr", async (req: Request, res: Response) => {
   try {
     const { amount, orderInfo } = req.body;
-    
-    // Tạo orderId nội bộ (có thể lưu vào DB ở bước này trạng thái PENDING)
     const orderId = `VTB-${Date.now()}-${uuidv4().substring(0, 4)}`;
 
     const qrCodeUrl = await generateVietinBankQR({
@@ -21,61 +44,34 @@ paymentRouter.post("/generate-qr", async (req: Request, res: Response) => {
 
     res.json({ success: true, data: { qrCodeUrl, orderId } });
   } catch (err) {
-    console.error("[Payment] Generate QR Error:", err);
+    logger.error("[Payment] Generate QR Error:", err);
     res.status(500).json({ success: false, error: "Không thể tạo mã QR" });
   }
 });
 
-// POST /api/payment/webhook (IPN VietinBank gọi về khi KH quét mã thành công)
+// POST /api/payment/webhook
 paymentRouter.post("/webhook", async (req: Request, res: Response) => {
   try {
     const payload = req.body;
+    const rawPayload = (req as any).rawBody || payload;
+    logger.info("[Webhook] Nhận thông báo thanh toán từ VietinBank: %o", payload);
 
-    console.log("[Webhook] Nhận thông báo thanh toán từ VietinBank:", payload);
-
-    // 1. Kiểm tra chữ ký an toàn
     const signature = typeof req.headers["x-signature"] === "string" ? req.headers["x-signature"] : "";
-    const isValid = verifyIPNSignature(payload, signature, process.env.VIETINBANK_SECRET || "draft");
+    // Truyền rawPayload (Buffer) để verify chữ ký chuẩn xác nhất từ ngân hàng
+    const isValid = verifyIPNSignature(rawPayload, signature);
     if (!isValid) {
       res.status(400).json({ code: "01", message: "Sai chữ ký bảo mật" });
       return;
     }
 
     if (payload.status === "SUCCESS") {
-      // 2. Lấy thông tin order từ DB (chờ xử lý)
-      // Giả sử lấy được thông tin bệnh nhân từ orderId
-      const fakePatientData = {
-        fullName: "Bệnh nhân từ Webhook",
-        phone: "090000000",
-      };
-
-      // 3. ĐẨY BỆNH NHÂN VÀO HIS THEO LUỒNG CHUẨN
-      console.log(`[Webhook] Thanh toán thành công. Bắt đầu đẩy dữ liệu vào HIS...`);
-      
-      const patientId = await createHisPatient(fakePatientData);
-      const admissionId = await createHisAdmission({
-        patientId,
-        departmentId: "KHOA_KHAM_BENH", // Should map to actual MAKP from order
-        amount: payload.amount
-      });
-      await createAppointmentRecord({
-        patientId,
-        departmentId: "KHOA_KHAM_BENH",
-        amount: payload.amount,
-        fullName: fakePatientData.fullName,
-        phone: fakePatientData.phone
-      });
-      await confirmHisPayment(admissionId, payload.amount);
-
-      console.log(`[Webhook] Tích hợp HIS hoàn tất cho giao dịch: ${payload.orderId}`);
-
-      // 4. Bắn Socket/SSE cho Frontend biết để cập nhật giao diện
-      // TODO: Tích hợp Socket.io
+      logger.info(`[Webhook] Thanh toán thành công giao dịch: ${payload.orderId}. Bắn SSE Event tới Frontend...`);
+      paymentEvents.emit(`success_${payload.orderId}`);
     }
 
     res.status(200).json({ code: "00", message: "Confirm Success" });
   } catch (err) {
-    console.error("[Webhook] Lỗi xử lý:", err);
+    logger.error("[Webhook] Lỗi xử lý:", err);
     res.status(500).json({ code: "99", message: "Lỗi nội bộ" });
   }
 });

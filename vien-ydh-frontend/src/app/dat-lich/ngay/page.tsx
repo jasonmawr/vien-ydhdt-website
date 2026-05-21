@@ -1,12 +1,18 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import BookingForm from "@/components/features/BookingForm";
 
-export const metadata: Metadata = {
-  title: "Đặt Khám Theo Ngày - Viện Y Dược Học Dân Tộc",
-  description: "Chọn ngày phù hợp lịch cá nhân, xem tất cả khung giờ còn trống.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('booking');
+  return {
+    title: t('modes.date') + " - Viện Y Dược Học Dân Tộc",
+    description: t('datePageDescription'),
+  };
+}
 
-export default function BookingByDatePage() {
+export default async function BookingByDatePage() {
+  const t = await getTranslations('booking');
+
   return (
     <div className="bg-[#fbf9f6] min-h-screen pb-20">
       <section className="bg-primary-800 text-white py-16 md:py-24 relative overflow-hidden">
@@ -15,9 +21,9 @@ export default function BookingByDatePage() {
           <div className="absolute -right-20 bottom-0 h-96 w-96 rounded-full bg-[#d97706] blur-3xl"></div>
         </div>
         <div className="container-site relative z-10 text-center max-w-3xl">
-          <h1 className="font-heading text-4xl md:text-5xl font-bold mb-6">Đặt Khám Theo Ngày</h1>
+          <h1 className="font-heading text-4xl md:text-5xl font-bold mb-6">{t('modes.date')}</h1>
           <p className="text-lg text-emerald-50 leading-relaxed">
-            Chọn ngày phù hợp lịch cá nhân, xem tất cả khung giờ còn trống tại mọi chuyên khoa.
+            {t('datePageSubtitle')}
           </p>
         </div>
       </section>

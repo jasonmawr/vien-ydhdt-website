@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import {
   ChevronRight, ChevronLeft, CheckCircle2,
-  Calendar as CalendarIcon, Clock, User, Phone, FileText, Loader2, ShieldCheck
+  Calendar as CalendarIcon, Clock, User, Phone, FileText, Loader2, ShieldCheck, Download
 } from "lucide-react";
 import {
   getDepartments, getAllDoctors, createAppointment, getDoctorImageUrl, generatePaymentQR,
@@ -12,6 +12,9 @@ import {
 } from "@/services/api";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { useTranslations, useLocale } from "next-intl";
+import AvailabilityCalendar from "./AvailabilityCalendar";
+import { translateSpecialtyName } from "@/lib/translations";
 
 type Step = 1 | 2 | 3 | 4 | 5 | 6;
 
@@ -20,6 +23,8 @@ interface BookingFormProps {
 }
 
 export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
+  const t = useTranslations('booking');
+  const locale = useLocale();
   const [step, setStep] = useState<Step>(initialStep);
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -27,6 +32,7 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
   const [qrUrl, setQrUrl] = useState("");
   const [orderId, setOrderId] = useState("");
   const [appointmentId, setAppointmentId] = useState("");
+  const [stt, setStt] = useState(0);
 
   // Data from API
   const [departments, setDepartments] = useState<DepartmentDTO[]>([]);
@@ -35,6 +41,73 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
   const [pricingList, setPricingList] = useState<ExamPricingDTO[]>([]);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [searchDoctor, setSearchDoctor] = useState("");
+  
+  const ticketRef = useRef<HTMLDivElement>(null);
+
+  const handleDownloadTicket = async () => {
+    try {
+      const canvas = document.createElement("canvas");
+      canvas.width = 600;
+      canvas.height = 400;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) throw new Error("Canvas context not found");
+
+      // 1. Vẽ nền Gradient
+      const gradient = ctx.createLinearGradient(0, 0, 600, 400);
+      gradient.addColorStop(0, "#065f46"); // dark emerald
+      gradient.addColorStop(1, "#047857"); // lighter emerald
+      ctx.fillStyle = gradient;
+      if (typeof ctx.roundRect === 'function') {
+        ctx.roundRect(0, 0, 600, 400, 24);
+        ctx.fill();
+      } else {
+        ctx.fillRect(0, 0, 600, 400);
+      }
+      
+      ctx.fillStyle = "#ffffff";
+      ctx.textAlign = "center";
+      
+      // 2. Vẽ Tiêu đề
+      ctx.font = "bold 24px Arial, sans-serif";
+      ctx.globalAlpha = 0.8;
+      ctx.fillText(t('step6.labelStt'), 300, 100);
+      
+      // 3. Vẽ Số Thứ Tự
+      ctx.font = "bold 130px Arial, sans-serif";
+      ctx.globalAlpha = 1.0;
+      const displayStt = String(Math.abs(Number(stt) || Number(appointmentId?.replace(/\\D/g, "").slice(-3)) || 1)).padStart(3, "0");
+      ctx.fillText(displayStt, 300, 230);
+      
+      // 4. Vẽ Đường kẻ ngang
+      ctx.globalAlpha = 0.2;
+      ctx.fillRect(100, 280, 400, 2);
+      
+      // 5. Vẽ Mã phiếu
+      ctx.globalAlpha = 0.7;
+      ctx.font = "20px Arial, sans-serif";
+      ctx.fillText(t('step6.labelTicketId'), 300, 330);
+      
+      ctx.globalAlpha = 1.0;
+      ctx.font = "bold 28px monospace";
+      ctx.fillText(appointmentId || "WEB-000", 300, 365);
+
+      // 6. Xuất ảnh và tải về
+      canvas.toBlob((blob) => {
+        if (!blob) throw new Error("Blob creation failed");
+        const blobUrl = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.download = `Ticket-${appointmentId || '000'}.png`;
+        link.href = blobUrl;
+        link.click();
+        window.URL.revokeObjectURL(blobUrl);
+        toast.success(t('errors.ticketDownloadSuccess'));
+      }, "image/png");
+
+    } catch (err) {
+      console.error("Lỗi tải ảnh:", err);
+      toast.error(t('errors.ticketDownloadFail'));
+    }
+  };
 
   const [formData, setFormData] = useState({
     departmentId: "",
@@ -43,6 +116,7 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
     appointmentTime: "",
     patientName: "",
     patientPhone: "",
+    patientEmail: "",
     patientDob: "",
     patientGender: "male",
     patientIdNumber: "",
@@ -132,10 +206,10 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
   };
 
   const validateStep4 = () => {
-    if (formData.patientName.length < 2) return "Vui lòng nhập họ tên đầy đủ.";
-    if (!/^(0|\+84)[3|5|7|8|9][0-9]{8}$/.test(formData.patientPhone)) return "Số điện thoại không hợp lệ (cần 10 số hợp lệ).";
-    if (!formData.patientDob) return "Vui lòng chọn ngày sinh.";
-    if (formData.patientType === "bhyt" && formData.bhytNumber.length < 10) return "Vui lòng nhập số thẻ BHYT hợp lệ.";
+    if (formData.patientName.length < 2) return t('validation.nameRequired');
+    if (!/^(0|\+84)[3|5|7|8|9][0-9]{8}$/.test(formData.patientPhone)) return t('validation.phoneInvalid');
+    if (!formData.patientDob) return t('validation.dobRequired');
+    if (formData.patientType === "bhyt" && formData.bhytNumber.length < 10) return t('validation.bhytRequired');
     return null; // OK
   };
 
@@ -149,6 +223,61 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
     }
   };
 
+  const handleCompleteBooking = async () => {
+    setIsSubmitting(true);
+    try {
+      const result = await createAppointment({
+        patientName: formData.patientName,
+        patientPhone: formData.patientPhone,
+        patientEmail: formData.patientEmail || undefined,
+        patientDob: formData.patientDob,
+        patientGender: formData.patientGender,
+        departmentId: formData.departmentId,
+        doctorId: formData.doctorId !== "any" ? formData.doctorId : undefined,
+        appointmentDate: formData.appointmentDate,
+        appointmentTime: formData.appointmentTime,
+        symptoms: formData.symptoms,
+        doctorName: selectedDoctor?.fullName,
+        departmentName: selectedDept?.name,
+      });
+
+      if (result.success) {
+        setSuccessMessage(result.message);
+        setAppointmentId(result.data?.id || orderId);
+        setStt(result.data?.stt || 0);
+        setStep(6);
+      }
+    } catch (err) {
+      console.error("Đặt lịch thất bại:", err);
+      toast.error(t('errors.general'));
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  useEffect(() => {
+    let eventSource: EventSource | null = null;
+    if (step === 5 && orderId) {
+      eventSource = new EventSource(`/api/payment/events/${orderId}`);
+      
+      eventSource.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          if (data.status === "SUCCESS") {
+            if (eventSource) eventSource.close();
+            toast.success(t('common.confirm'));
+            handleCompleteBooking();
+          }
+        } catch (e) {
+          console.error("SSE parse error", e);
+        }
+      };
+    }
+    return () => {
+      if (eventSource) eventSource.close();
+    };
+  }, [step, orderId]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (step < 4 && !isStepValid()) return;
@@ -161,6 +290,12 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
       }
     }
 
+    if (step === 5) {
+      // Dành cho trường hợp User tự bấm nút (Mock/Fallback)
+      await handleCompleteBooking();
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       if (step === 4) {
@@ -171,31 +306,12 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
           setOrderId(qrRes.data.orderId);
           setStep(5);
         } else {
-          toast.error("Không thể tạo mã thanh toán.");
-        }
-      } else if (step === 5) {
-        // Giả lập KH đã quét và IPN báo thành công -> Ghi vào DB
-        const result = await createAppointment({
-          patientName: formData.patientName,
-          patientPhone: formData.patientPhone,
-          patientDob: formData.patientDob,
-          patientGender: formData.patientGender,
-          departmentId: formData.departmentId,
-          doctorId: formData.doctorId !== "any" ? formData.doctorId : undefined,
-          appointmentDate: formData.appointmentDate,
-          appointmentTime: formData.appointmentTime,
-          symptoms: formData.symptoms,
-        });
-
-        if (result.success) {
-          setSuccessMessage(result.message);
-          setAppointmentId(result.data?.id || orderId);
-          setStep(6);
+          toast.error(t('errors.paymentCreation'));
         }
       }
     } catch (err) {
       console.error("Đặt lịch thất bại:", err);
-      toast.error("Đã xảy ra lỗi. Vui lòng thử lại sau.");
+      toast.error(t('errors.general'));
     } finally {
       setIsSubmitting(false);
     }
@@ -207,7 +323,7 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
 
   const renderStep1 = () => (
     <div className="space-y-4 animate-fade-in-up">
-      <h3 className="text-xl font-bold text-[#1a1a1a] mb-4">1. Chọn Chuyên Khoa</h3>
+      <h3 className="text-xl font-bold text-[#1a1a1a] mb-4">{t('step1.title')}</h3>
       {isLoading ? (
         <div className="flex items-center justify-center py-10">
           <Loader2 className="h-8 w-8 animate-spin text-primary-700" />
@@ -225,7 +341,7 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
                   : "border-gray-200 bg-white hover:border-primary-800/30 hover:bg-gray-50"
               )}
             >
-              <h4 className="font-semibold text-[#1a1a1a]">{dept.name}</h4>
+              <h4 className="font-semibold text-[#1a1a1a]">{translateSpecialtyName(dept.name, locale)}</h4>
               <p className="text-sm text-gray-500 mt-1 line-clamp-2">{dept.description}</p>
             </div>
           ))}
@@ -237,11 +353,11 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
   const renderStep2 = () => (
     <div className="space-y-4 animate-fade-in-up">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
-        <h3 className="text-xl font-bold text-[#1a1a1a]">2. Chọn Bác Sĩ</h3>
+        <h3 className="text-xl font-bold text-[#1a1a1a]">{t('step2.title')}</h3>
         <div className="relative w-full sm:w-64">
           <input
             type="text"
-            placeholder="Tìm theo tên bác sĩ..."
+            placeholder={t('step2.searchPlaceholder')}
             value={searchDoctor}
             onChange={(e) => setSearchDoctor(e.target.value)}
             className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-800 focus:border-transparent text-sm transition-all"
@@ -262,10 +378,10 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
                 : "border-gray-200 bg-white hover:border-primary-800/30 hover:bg-gray-50"
             )}
           >
-            <span className="font-semibold text-[#1a1a1a]">Không chọn bác sĩ cụ thể</span>
-            <span className="text-xs text-gray-500 block mt-1">(Tự động phân bổ theo lịch trống)</span>
+            <span className="font-semibold text-[#1a1a1a]">{t('step2.noSelection')}</span>
+            <span className="text-xs text-gray-500 block mt-1">{t('step2.autoAllocate')}</span>
           </div>
-          
+
           {availableDoctors.map((doc) => (
             <div
               key={doc.id}
@@ -285,7 +401,7 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
               />
               <div>
                 <h4 className="font-semibold text-[#1a1a1a]">{doc.degree} {doc.fullName}</h4>
-                <p className="text-sm text-primary-800">{doc.specialty ?? "Y học cổ truyền"}</p>
+                <p className="text-sm text-primary-800">{translateSpecialtyName(doc.specialty || "", locale) ?? t('step2.defaultSpecialty')}</p>
               </div>
             </div>
           ))}
@@ -295,10 +411,10 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
 
   const renderStep3 = () => (
     <div className="space-y-6 animate-fade-in-up">
-      <h3 className="text-xl font-bold text-[#1a1a1a] mb-4">3. Chọn Ngày &amp; Giờ</h3>
+      <h3 className="text-xl font-bold text-[#1a1a1a] mb-4">{t('step3.title')}</h3>
 
       <div>
-        <label className="mb-2 block text-sm font-semibold text-gray-700">Ngày khám</label>
+        <label className="mb-2 block text-sm font-semibold text-gray-700">{t('step3.labelDate')}</label>
         <div className="grid gap-3 grid-cols-2 sm:grid-cols-5">
           {availableDates.map((date) => {
             const dateStr = date.toISOString().split("T")[0];
@@ -330,23 +446,12 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
 
       {formData.appointmentDate && (
         <div className="animate-fade-in-up">
-          <label className="mb-2 block text-sm font-semibold text-gray-700">Khung giờ trống</label>
-          <div className="grid gap-3 grid-cols-3 sm:grid-cols-4">
-            {["06:30", "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30"].map((time) => (
-              <div
-                key={time}
-                onClick={() => updateForm("appointmentTime", time)}
-                className={cn(
-                  "cursor-pointer rounded-lg border py-2 text-center text-sm font-medium transition-all",
-                  formData.appointmentTime === time
-                    ? "border-[#d97706] bg-[#fef3c7] text-[#d97706]"
-                    : "border-gray-200 bg-white text-gray-700 hover:border-[#d97706]/50"
-                )}
-              >
-                {time}
-              </div>
-            ))}
-          </div>
+          <AvailabilityCalendar
+            doctorId={formData.doctorId}
+            date={formData.appointmentDate}
+            selectedTime={formData.appointmentTime}
+            onSelectTime={(time) => updateForm("appointmentTime", time)}
+          />
         </div>
       )}
     </div>
@@ -354,11 +459,11 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
 
   const renderStep4 = () => (
     <div className="space-y-4 animate-fade-in-up">
-      <h3 className="text-xl font-bold text-[#1a1a1a] mb-4">4. Thông Tin Bệnh Nhân</h3>
+      <h3 className="text-xl font-bold text-[#1a1a1a] mb-4">{t('step4.title')}</h3>
 
       <div className="grid gap-5 sm:grid-cols-2">
         <div className="sm:col-span-2">
-          <label htmlFor="patientName" className="mb-1.5 block text-sm font-medium text-gray-700">Họ và tên *</label>
+          <label htmlFor="patientName" className="mb-1.5 block text-sm font-medium text-gray-700">{t('step4.labelName')}</label>
           <div className="relative">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
               <User className="h-4 w-4 text-gray-400" />
@@ -368,7 +473,7 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
               type="text"
               required
               className="block w-full rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-10 pr-3 text-sm focus:border-primary-800 focus:bg-white focus:ring-1 focus:ring-primary-800 outline-none"
-              placeholder="VD: Nguyễn Văn A"
+              placeholder={t('step4.labelName').replace(' *', '')}
               value={formData.patientName}
               onChange={(e) => updateForm("patientName", e.target.value)}
             />
@@ -376,7 +481,7 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
         </div>
 
         <div>
-          <label htmlFor="patientPhone" className="mb-1.5 block text-sm font-medium text-gray-700">Số điện thoại *</label>
+          <label htmlFor="patientPhone" className="mb-1.5 block text-sm font-medium text-gray-700">{t('step4.labelPhone')}</label>
           <div className="relative">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
               <Phone className="h-4 w-4 text-gray-400" />
@@ -386,15 +491,35 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
               type="tel"
               required
               className="block w-full rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-10 pr-3 text-sm focus:border-primary-800 focus:bg-white focus:ring-1 focus:ring-primary-800 outline-none"
-              placeholder="VD: 0912345678"
+              placeholder={t('step4.labelPhone').replace(' *', '')}
               value={formData.patientPhone}
               onChange={(e) => updateForm("patientPhone", e.target.value)}
             />
           </div>
         </div>
 
+        {/* Email field — tùy chọn để nhận xác nhận */}
         <div>
-          <label htmlFor="patientDob" className="mb-1.5 block text-sm font-medium text-gray-700">Ngày sinh *</label>
+          <label htmlFor="patientEmail" className="mb-1.5 block text-sm font-medium text-gray-700">
+            Email <span className="text-gray-400 font-normal text-xs">(tùy chọn — nhận xác nhận qua email)</span>
+          </label>
+          <div className="relative">
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+              <svg className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+            </div>
+            <input
+              id="patientEmail"
+              type="email"
+              className="block w-full rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-10 pr-3 text-sm focus:border-primary-800 focus:bg-white focus:ring-1 focus:ring-primary-800 outline-none"
+              placeholder="email@gmail.com"
+              value={formData.patientEmail}
+              onChange={(e) => updateForm("patientEmail", e.target.value)}
+            />
+          </div>
+        </div>
+
+        <div>
+          <label htmlFor="patientDob" className="mb-1.5 block text-sm font-medium text-gray-700">{t('step4.labelDob')}</label>
           <input
             id="patientDob"
             type="date"
@@ -406,7 +531,7 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
         </div>
 
         <div className="sm:col-span-2">
-          <label className="mb-1.5 block text-sm font-medium text-gray-700">Giới tính</label>
+          <label className="mb-1.5 block text-sm font-medium text-gray-700">{t('step4.labelGender')}</label>
           <div className="flex gap-4">
             {(["male", "female"] as const).map((g) => (
               <label key={g} className="flex items-center gap-2 cursor-pointer">
@@ -418,19 +543,19 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
                   onChange={(e) => updateForm("patientGender", e.target.value)}
                   className="text-primary-800 focus:ring-primary-800"
                 />
-                <span className="text-sm">{g === "male" ? "Nam" : "Nữ"}</span>
+                <span className="text-sm">{t(`step4.${g}`)}</span>
               </label>
             ))}
           </div>
         </div>
 
         <div>
-          <label htmlFor="patientIdNumber" className="mb-1.5 block text-sm font-medium text-gray-700">Số CMND/CCCD</label>
+          <label htmlFor="patientIdNumber" className="mb-1.5 block text-sm font-medium text-gray-700">{t('step4.labelIdNumber')}</label>
           <input
             id="patientIdNumber"
             type="text"
             className="block w-full rounded-xl border border-gray-200 bg-gray-50 py-2.5 px-3 text-sm focus:border-primary-800 focus:bg-white focus:ring-1 focus:ring-primary-800 outline-none"
-            placeholder="VD: 079123456789"
+            placeholder={t('step4.labelIdNumber')}
             value={formData.patientIdNumber}
             onChange={(e) => updateForm("patientIdNumber", e.target.value)}
           />
@@ -438,13 +563,13 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
 
         {/* Đối tượng khám */}
         <div className="sm:col-span-2 pt-4 border-t border-gray-100">
-          <label className="mb-3 block text-sm font-semibold text-gray-800">Đối tượng khám bệnh *</label>
+          <label className="mb-3 block text-sm font-semibold text-gray-800">{t('step4.labelPatientType')}</label>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[
-              { value: "bhyt", label: "BHYT", desc: "Bảo hiểm Y tế", color: "emerald" },
-              { value: "dich-vu", label: "Dịch vụ", desc: "Không BHYT", color: "blue" },
-              { value: "yeu-cau", label: "Yêu cầu", desc: "Khám theo yêu cầu", color: "amber" },
-              { value: "chuyen-gia", label: "Chuyên gia", desc: "BS Chuyên gia", color: "purple" },
+              { value: "bhyt", color: "emerald" },
+              { value: "dich-vu", color: "blue" },
+              { value: "yeu-cau", color: "amber" },
+              { value: "chuyen-gia", color: "purple" },
             ].map((pt) => (
               <label
                 key={pt.value}
@@ -463,8 +588,8 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
                   onChange={(e) => updateForm("patientType", e.target.value)}
                   className="sr-only"
                 />
-                <span className="text-sm font-bold">{pt.label}</span>
-                <span className="text-xs text-gray-500 mt-1">{pt.desc}</span>
+                <span className="text-sm font-bold">{t(`step4.patientType.${pt.value}`)}</span>
+                <span className="text-xs text-gray-500 mt-1">{t(`step4.patientTypeDesc.${pt.value}`)}</span>
               </label>
             ))}
           </div>
@@ -475,28 +600,28 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
           <div className="sm:col-span-2 p-5 bg-emerald-50 rounded-xl border border-emerald-200 space-y-5">
             <p className="text-sm font-semibold text-emerald-800 flex items-center gap-2">
               <ShieldCheck className="h-5 w-5" />
-              Thông tin Bảo hiểm Y tế
+              {t('step4.bhytInfoTitle')}
             </p>
             <div>
-              <label className="mb-2 block text-sm font-medium text-gray-700">Số thẻ BHYT *</label>
+              <label className="mb-2 block text-sm font-medium text-gray-700">{t('step4.bhytNumberLabel')}</label>
               <input
                 type="text"
                 maxLength={15}
                 className="block w-full sm:w-1/2 rounded-lg border border-emerald-200 bg-white py-2.5 px-3 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none font-mono"
-                placeholder="VD: GD49632584585"
+                placeholder={t('step4.bhytNumberPlaceholder')}
                 value={formData.bhytNumber}
                 onChange={(e) => updateForm("bhytNumber", e.target.value.toUpperCase())}
               />
             </div>
-            
+
             <div className="bg-white p-4 rounded-lg border border-emerald-100">
-              <label className="mb-3 block text-sm font-semibold text-gray-800">Chọn đối tượng Bảo hiểm Y tế *</label>
+              <label className="mb-3 block text-sm font-semibold text-gray-800">{t('step4.bhytTuyenLabel')}</label>
               <div className="space-y-3">
                 {[
-                  { id: "1.1", label: "Có thẻ BHYT đăng ký khám chữa bệnh ban đầu tại Viện YDHDT" },
-                  { id: "1.5", label: "Có tái khám theo hẹn trên đơn thuốc BHYT của Viện YDHDT" },
-                  { id: "1.3", label: "Có giấy chuyển BHYT đúng tuyến đến Viện YDHDT" },
-                  { id: "khac", label: "Không phải 3 trường hợp trên (Khám trái tuyến)" },
+                  { id: "1.1", key: "option1" },
+                  { id: "1.5", key: "option2" },
+                  { id: "1.3", key: "option3" },
+                  { id: "khac", key: "option4" },
                 ].map((option) => (
                   <label key={option.id} className="flex items-start gap-3 cursor-pointer group">
                     <div className="flex h-5 items-center">
@@ -509,7 +634,7 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
                         className="h-4 w-4 text-emerald-600 border-gray-300 focus:ring-emerald-600"
                       />
                     </div>
-                    <div className="text-sm text-gray-700 group-hover:text-emerald-800">{option.label}</div>
+                    <div className="text-sm text-gray-700 group-hover:text-emerald-800">{t(`step4.bhytOptions.${option.key}`)}</div>
                   </label>
                 ))}
               </div>
@@ -518,7 +643,7 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
         )}
 
         <div className="sm:col-span-2">
-          <label htmlFor="symptoms" className="mb-1.5 block text-sm font-medium text-gray-700">Triệu chứng (Không bắt buộc)</label>
+          <label htmlFor="symptoms" className="mb-1.5 block text-sm font-medium text-gray-700">{t('step4.labelSymptoms')}</label>
           <div className="relative">
             <div className="pointer-events-none absolute top-3 left-3">
               <FileText className="h-4 w-4 text-gray-400" />
@@ -527,7 +652,7 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
               id="symptoms"
               rows={3}
               className="block w-full rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-10 pr-3 text-sm focus:border-primary-800 focus:bg-white focus:ring-1 focus:ring-primary-800 outline-none"
-              placeholder="Mô tả ngắn gọn vấn đề sức khỏe của bạn..."
+              placeholder={t('step4.symptomsPlaceholder')}
               value={formData.symptoms}
               onChange={(e) => updateForm("symptoms", e.target.value)}
             />
@@ -539,9 +664,9 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
 
   const renderStep5 = () => (
     <div className="space-y-6 animate-fade-in-up flex flex-col items-center text-center">
-      <h3 className="text-xl font-bold text-[#1a1a1a] mb-2">5. Thanh Toán Lệ Phí Khám</h3>
-      <p className="text-sm text-gray-500 mb-6">Sử dụng App Ngân hàng hoặc Ví điện tử quét mã VietQR bên dưới</p>
-      
+      <h3 className="text-xl font-bold text-[#1a1a1a] mb-2">{t('step5.title')}</h3>
+      <p className="text-sm text-gray-500 mb-6">{t('step5.instruction')}</p>
+
       <div className="bg-white p-4 border-2 border-dashed border-primary-300 rounded-2xl shadow-sm inline-block">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={qrUrl} alt="VietinBank QR Code" className="w-64 h-64 object-contain" />
@@ -549,13 +674,13 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
 
       <div className="mt-4 bg-blue-50 text-blue-800 p-4 rounded-xl text-sm max-w-sm mx-auto">
         <p className="font-semibold">
-          Số tiền: {new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(summaryPrice)}
+          {t('step5.amountLabel')}: {new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(summaryPrice)}
         </p>
-        <p>Mã đơn: <span className="font-mono">{orderId}</span></p>
+        <p>{t('step5.orderIdLabel')}: <span className="font-mono">{orderId}</span></p>
       </div>
-      
+
       <p className="text-xs text-gray-400 mt-4 italic max-w-md">
-        (Hệ thống sẽ tự động chuyển sang trang Vé Khám Điện Tử khi thanh toán thành công qua VietinBank IPN. Trong lúc Dev, hãy bấm nút Xác nhận bên dưới để giả lập IPN).
+        {t('step5.devNote')}
       </p>
     </div>
   );
@@ -565,53 +690,58 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
       <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100">
         <CheckCircle2 className="h-10 w-10 text-primary-800" />
       </div>
-      <h3 className="mb-2 font-heading text-2xl font-bold text-[#1a1a1a]">Đặt Lịch Thành Công!</h3>
+      <h3 className="mb-2 font-heading text-2xl font-bold text-[#1a1a1a]">{t('step6.title')}</h3>
       <p className="mb-8 text-gray-600 max-w-md mx-auto">
-        {successMessage || "Cảm ơn bạn đã tin tưởng Viện Y Dược Học Dân Tộc. Nhân viên y tế sẽ gọi điện xác nhận trong thời gian sớm nhất."}
+        {successMessage || t('step6.defaultMessage')}
       </p>
       <div className="inline-block text-left bg-gray-50 rounded-2xl p-6 border border-gray-100 min-w-[300px]">
         <div className="flex items-center gap-3 mb-3 pb-3 border-b border-gray-200">
           <CalendarIcon className="h-5 w-5 text-[#d97706]" />
           <div>
-            <p className="text-xs text-gray-500 uppercase font-semibold">Thời gian</p>
+            <p className="text-xs text-gray-500 uppercase font-semibold">{t('step6.labelTime')}</p>
             <p className="font-medium">{formData.appointmentTime} - {formData.appointmentDate}</p>
           </div>
         </div>
         <div className="flex items-center gap-3 mb-3 pb-3 border-b border-gray-200">
           <User className="h-5 w-5 text-primary-800" />
           <div>
-            <p className="text-xs text-gray-500 uppercase font-semibold">Bệnh nhân</p>
+            <p className="text-xs text-gray-500 uppercase font-semibold">{t('step6.labelPatient')}</p>
             <p className="font-medium">{formData.patientName}</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
           <Clock className="h-5 w-5 text-gray-400" />
           <div>
-            <p className="text-xs text-gray-500 uppercase font-semibold">Chuyên khoa</p>
-            <p className="font-medium">{selectedDept?.name || "Chưa xác định"}</p>
+            <p className="text-xs text-gray-500 uppercase font-semibold">{t('step6.labelDepartment')}</p>
+            <p className="font-medium">{translateSpecialtyName(selectedDept?.name || "", locale) || "---"}</p>
           </div>
         </div>
       </div>
-      
+
       {/* Số Thứ Tự Khám (Tự sinh) */}
-      <div className="mt-6 mx-auto bg-gradient-to-br from-primary-800 to-emerald-700 text-white p-6 rounded-2xl max-w-[280px] flex flex-col items-center shadow-lg">
-        <p className="text-xs font-bold uppercase mb-1 opacity-80 tracking-wider">Số Thứ Tự Khám</p>
+      <div
+        ref={ticketRef}
+        className="mt-6 mx-auto text-white p-6 rounded-2xl max-w-[280px] flex flex-col items-center shadow-lg"
+        style={{ backgroundColor: '#065f46', backgroundImage: 'linear-gradient(to bottom right, #115e59, #047857)' }}
+      >
+        <p className="text-xs font-bold uppercase mb-1 opacity-80 tracking-wider">{t('step6.labelStt')}</p>
         <p className="text-5xl font-black tabular-nums">
-          {String(Math.abs(Number(appointmentId?.replace(/\D/g, "").slice(-3)) || 1)).padStart(3, "0")}
+          {String(Math.abs(Number(stt) || Number(appointmentId?.replace(/\D/g, "").slice(-3)) || 1)).padStart(3, "0")}
         </p>
         <div className="mt-3 pt-3 border-t border-white/20 w-full text-center">
-          <p className="text-xs opacity-70">Mã phiếu</p>
+          <p className="text-xs opacity-70">{t('step6.labelTicketId')}</p>
           <p className="text-sm font-mono font-semibold">{appointmentId}</p>
         </div>
       </div>
-      <p className="text-sm text-gray-500 mt-4 max-w-sm mx-auto">
-        Vui lòng ghi nhớ <strong>Số Thứ Tự</strong> và đến viện đúng ngày giờ đã hẹn. 
-        Đưa <strong>Mã Phiếu</strong> cho nhân viên tiếp nhận để được phục vụ nhanh nhất.
-      </p>
+      <p className="text-sm text-gray-500 mt-4 max-w-sm mx-auto" dangerouslySetInnerHTML={{ __html: t('step6.instruction') }} />
 
-      <div className="mt-8">
-        <button onClick={() => window.location.reload()} className="btn-outline">
-          Đặt lịch mới
+      <div className="mt-8 flex flex-col gap-3 max-w-[280px] mx-auto">
+        <button onClick={handleDownloadTicket} className="btn-primary w-full flex items-center justify-center gap-2">
+          <Download className="w-4 h-4" />
+          {t('step6.downloadTicket')}
+        </button>
+        <button onClick={() => window.location.reload()} className="btn-outline w-full text-sm py-2">
+          {t('step6.newBooking')}
         </button>
       </div>
     </div>
@@ -627,16 +757,15 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
             <div className="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-4">
               <ShieldCheck className="h-8 w-8" />
             </div>
-            <h4 className="text-lg font-bold text-gray-900 mb-2">Chuyển Đối Tượng</h4>
-            <p className="text-sm text-gray-600 mb-6">
-              Bạn chọn Khám Trái Tuyến. Theo quy định, chi phí khám sẽ được tính theo giá <strong className="text-blue-700">Dịch vụ (Không BHYT)</strong>.
+            <h4 className="text-lg font-bold text-gray-900 mb-2">{t('modal.title')}</h4>
+            <p className="text-sm text-gray-600 mb-6" dangerouslySetInnerHTML={{ __html: t('modal.message') }}>
             </p>
-            <button 
+            <button
               type="button"
               onClick={() => setIsAlertOpen(false)}
               className="w-full btn-primary py-2.5 rounded-xl"
             >
-              Tôi đã hiểu
+              {t('modal.button')}
             </button>
           </div>
         </div>
@@ -662,7 +791,7 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
             ))}
           </div>
           <div className="text-sm font-medium text-gray-500">
-            Bước {step}/5
+            {t('common.progressLabel', { step })}
           </div>
         </div>
       )}
@@ -689,7 +818,7 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
                 )}
               >
                 <ChevronLeft className="h-4 w-4" />
-                Quay lại
+                {t('common.back')}
               </button>
 
               {step < 4 ? (
@@ -702,7 +831,7 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
                     !isStepValid() && "opacity-50 cursor-not-allowed hover:bg-primary-800"
                   )}
                 >
-                  Tiếp tục
+                  {t('common.continue')}
                   <ChevronRight className="h-4 w-4" />
                 </button>
               ) : step === 4 ? (
@@ -717,10 +846,10 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
                   {isSubmitting ? (
                     <>
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      Đang tạo mã QR...
+                      {t('common.generatingQR')}
                     </>
                   ) : (
-                    "Tiến hành Thanh toán"
+                    t('common.payNow')
                   )}
                 </button>
               ) : (
@@ -736,10 +865,10 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
                   {isSubmitting ? (
                     <>
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      Đang xác nhận...
+                      {t('common.confirming')}
                     </>
                   ) : (
-                    "Đã thanh toán (Giả lập IPN)"
+                    t('common.confirm')
                   )}
                 </button>
               )}
@@ -752,50 +881,50 @@ export default function BookingForm({ initialStep = 1 }: BookingFormProps) {
           <div className="lg:w-80 bg-gray-50 border-t lg:border-t-0 lg:border-l border-gray-100 p-6 md:p-10">
             <h4 className="font-bold text-[#1a1a1a] mb-6 flex items-center gap-2">
               <FileText className="h-5 w-5 text-primary-800" />
-              Hồ sơ đăng ký
+              {t('summary.title')}
             </h4>
             <div className="space-y-4 text-sm">
               <div className="flex justify-between border-b border-gray-200 pb-3">
-                <span className="text-gray-500">Chuyên khoa</span>
-                <span className="font-medium text-right max-w-[150px]">{selectedDept?.name || "---"}</span>
+                <span className="text-gray-500">{t('summary.department')}</span>
+                <span className="font-medium text-right max-w-[150px]">{translateSpecialtyName(selectedDept?.name || "", locale) || "---"}</span>
               </div>
               <div className="flex justify-between border-b border-gray-200 pb-3">
-                <span className="text-gray-500">Bác sĩ</span>
+                <span className="text-gray-500">{t('summary.doctor')}</span>
                 <span className="font-medium text-right max-w-[150px]">
-                  {formData.doctorId === "any" ? "Phân bổ tự động" : (selectedDoctor ? selectedDoctor.fullName : "---")}
+                  {formData.doctorId === "any" ? t('common.autoAllocateDoctor') : (selectedDoctor ? selectedDoctor.fullName : "---")}
                 </span>
               </div>
               <div className="flex justify-between border-b border-gray-200 pb-3">
-                <span className="text-gray-500">Thời gian</span>
+                <span className="text-gray-500">{t('summary.time')}</span>
                 <span className="font-medium text-right">
                   {formData.appointmentTime || "---"} <br/>
                   {formData.appointmentDate || "---"}
                 </span>
               </div>
               <div className="flex justify-between border-b border-gray-200 pb-3">
-                <span className="text-gray-500">Đối tượng</span>
+                <span className="text-gray-500">{t('summary.patientType')}</span>
                 <span className="font-medium text-right">
-                  {formData.patientType === "bhyt" ? "Bảo hiểm Y tế" : 
-                   formData.patientType === "dich-vu" ? "Dịch vụ (Không BHYT)" :
-                   formData.patientType === "yeu-cau" ? "Khám theo Yêu cầu" :
-                   formData.patientType === "chuyen-gia" ? "Khám Chuyên gia" : "---"}
+                  {formData.patientType === "bhyt" ? t('step4.patientTypeDesc.bhyt') :
+                   formData.patientType === "dich-vu" ? t('step4.patientTypeDesc.dich-vu') :
+                   formData.patientType === "yeu-cau" ? t('step4.patientTypeDesc.yeu-cau') :
+                   formData.patientType === "chuyen-gia" ? t('step4.patientTypeDesc.chuyen-gia') : "---"}
                 </span>
               </div>
               {formData.patientType === "bhyt" && formData.bhytNumber && (
                 <div className="flex justify-between border-b border-gray-200 pb-3 text-emerald-700">
-                  <span className="opacity-80">Số thẻ BHYT</span>
+                  <span className="opacity-80">{t('summary.bhytNumber')}</span>
                   <span className="font-mono font-bold">{formData.bhytNumber}</span>
                 </div>
               )}
             </div>
-            
+
             {step >= 4 && summaryPrice > 0 && (
               <div className="mt-8 bg-blue-50 p-4 rounded-xl border border-blue-100">
-                <p className="text-xs text-blue-600 mb-1 font-semibold uppercase">Tổng tiền khám (Tạm tính)</p>
+                <p className="text-xs text-blue-600 mb-1 font-semibold uppercase">{t('summary.priceSummary')}</p>
                 <p className="text-xl font-bold text-blue-800">
                   {new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(summaryPrice)}
                 </p>
-                <p className="text-xs text-blue-600/70 mt-2">Đã bao gồm phí tiện ích. BHYT (nếu có) sẽ được khấu trừ tại viện.</p>
+                <p className="text-xs text-blue-600/70 mt-2">{t('summary.priceNote')}</p>
               </div>
             )}
           </div>

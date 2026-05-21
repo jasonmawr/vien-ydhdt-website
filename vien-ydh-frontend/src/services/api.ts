@@ -40,6 +40,7 @@ export interface DoctorDTO {
 export interface CreateAppointmentPayload {
   patientName: string;
   patientPhone: string;
+  patientEmail?: string;
   patientDob?: string;
   patientGender?: string;
   departmentId?: string;
@@ -47,6 +48,8 @@ export interface CreateAppointmentPayload {
   appointmentDate?: string;
   appointmentTime?: string;
   symptoms?: string;
+  doctorName?: string;
+  departmentName?: string;
 }
 
 export interface AppointmentRecord {
@@ -155,7 +158,7 @@ export async function createAppointment(payload: CreateAppointmentPayload) {
   return apiFetch<{
     success: boolean;
     message: string;
-    data?: { id: string; patientName: string; status: string };
+    data?: { id: string; patientName: string; status: string; stt?: number };
   }>("/api/appointments", {
     method: "POST",
     body: JSON.stringify(payload),
@@ -250,20 +253,54 @@ export async function getPatientTypes(): Promise<PatientTypeDTO[]> {
 // Web CMS API (Lấy từ SQLite Backend)
 // ─────────────────────────────────────────
 
+export interface CategoryDTO {
+  id: number;
+  name: string;
+  slug: string;
+  parent_id: number | null;
+  description: string | null;
+  display_order: number;
+  created_at: string;
+}
+
+export interface AttachmentDTO {
+  id?: number;
+  file_name: string;
+  file_url: string;
+  file_type?: string;
+  file_size?: number;
+}
+
 export interface PostDTO {
   id: number;
   title: string;
   slug: string;
-  category: string;
+  category_id: number | null;
+  category_name?: string;
+  category_slug_name?: string;
   excerpt: string;
   content: string;
   thumbnail: string | null;
   author: string;
   status: string;
   tags: string | null;
+  meta_title?: string;
+  meta_description?: string;
+  keywords?: string;
+  is_featured?: boolean;
+  published_at?: string;
+  scheduled_at?: string;
+  attachments?: AttachmentDTO[];
   view_count: number;
   created_at: string;
   updated_at: string;
+}
+
+export interface AdminUserDTO {
+  id: string;
+  username: string;
+  role: string;
+  createdAt: string;
 }
 
 export interface PaginatedPosts {
@@ -275,11 +312,12 @@ export interface PaginatedPosts {
   };
 }
 
-export async function getPosts(category?: string, search?: string, limit = 10, offset = 0, admin = false): Promise<PaginatedPosts> {
+export async function getPosts(category_slug?: string, search?: string, limit = 10, offset = 0, admin = false, featured = false): Promise<PaginatedPosts> {
   let url = `/api/cms/posts?limit=${limit}&offset=${offset}`;
   if (admin) url += `&admin=1`;
-  if (category && category !== "Tất cả") url += `&category=${encodeURIComponent(category)}`;
+  if (category_slug && category_slug !== "Tất cả") url += `&category_slug=${encodeURIComponent(category_slug)}`;
   if (search) url += `&search=${encodeURIComponent(search)}`;
+  if (featured) url += `&featured=true`;
   
   const response = await apiFetch<{ success: boolean; data: PostDTO[]; pagination: any }>(url);
   return {
@@ -322,9 +360,90 @@ export async function deletePost(id: number, token: string): Promise<void> {
   });
 }
 
-export async function getCategories(): Promise<string[]> {
-  const response = await apiFetch<{ success: boolean; data: string[] }>("/api/cms/categories");
+export async function bulkActionPosts(action: 'publish' | 'unpublish' | 'delete', ids: number[], token: string): Promise<void> {
+  await apiFetch<{ success: boolean }>("/api/cms/posts/bulk-action", {
+    method: "POST",
+    headers: { "Authorization": `Bearer ${token}` },
+    body: JSON.stringify({ action, ids })
+  });
+}
+
+export async function getAdminUsers(token: string): Promise<AdminUserDTO[]> {
+  const response = await apiFetch<{ success: boolean; data: AdminUserDTO[] }>("/api/users", {
+    headers: { "Authorization": `Bearer ${token}` }
+  });
   return response.data;
+}
+
+export async function createAdminUser(data: { username: string; password: string; role: string }, token: string): Promise<void> {
+  await apiFetch<{ success: boolean }>("/api/users", {
+    method: "POST",
+    headers: { "Authorization": `Bearer ${token}` },
+    body: JSON.stringify(data)
+  });
+}
+
+export async function updateAdminUser(id: string, data: { role?: string; password?: string }, token: string): Promise<void> {
+  await apiFetch<{ success: boolean }>(`/api/users/${id}`, {
+    method: "PUT",
+    headers: { "Authorization": `Bearer ${token}` },
+    body: JSON.stringify(data)
+  });
+}
+
+export async function deleteAdminUser(id: string, token: string): Promise<void> {
+  await apiFetch<{ success: boolean }>(`/api/users/${id}`, {
+    method: "DELETE",
+    headers: { "Authorization": `Bearer ${token}` }
+  });
+}
+
+export async function getCategories(): Promise<CategoryDTO[]> {
+  const response = await apiFetch<{ success: boolean; data: CategoryDTO[] }>("/api/cms/categories");
+  return response.data;
+}
+
+export async function createCategory(data: Partial<CategoryDTO>, token: string): Promise<any> {
+  const response = await apiFetch<{ success: boolean; data: any }>("/api/cms/categories", {
+    method: "POST",
+    headers: { "Authorization": `Bearer ${token}` },
+    body: JSON.stringify(data)
+  });
+  return response.data;
+}
+
+export async function updateCategory(id: number, data: Partial<CategoryDTO>, token: string): Promise<void> {
+  await apiFetch<{ success: boolean }>(`/api/cms/categories/${id}`, {
+    method: "PUT",
+    headers: { "Authorization": `Bearer ${token}` },
+    body: JSON.stringify(data)
+  });
+}
+
+export async function deleteCategory(id: number, token: string): Promise<void> {
+  await apiFetch<{ success: boolean }>(`/api/cms/categories/${id}`, {
+    method: "DELETE",
+    headers: { "Authorization": `Bearer ${token}` }
+  });
+}
+
+export async function uploadFile(file: File, token: string): Promise<{url: string, filename: string, mimetype: string, size: number}> {
+  const formData = new FormData();
+  formData.append('file', file);
+  
+  const url = `${API_BASE_URL}/api/upload`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      "Authorization": `Bearer ${token}`
+    },
+    body: formData
+  });
+  if (!res.ok) {
+    throw new Error('Upload failed');
+  }
+  const result = await res.json();
+  return result.data;
 }
 
 export async function getWebDoctor(mabs: string, token: string): Promise<any> {
@@ -344,4 +463,100 @@ export async function updateWebDoctor(data: any, token: string): Promise<any> {
     body: JSON.stringify(data)
   });
   return response;
+}
+
+// ─────────────────────────────────────────
+// Patient Auth API
+// ─────────────────────────────────────────
+
+export async function sendPatientOtp(phone: string): Promise<{ message: string; expiresIn: number }> {
+  return apiFetch<any>("/api/patient/auth/send-otp", {
+    method: "POST",
+    body: JSON.stringify({ phone }),
+  });
+}
+
+export async function verifyPatientOtp(phone: string, otp: string): Promise<{ token: string; patient: { id: string; phone: string; fullName: string | null; email: string | null } }> {
+  return apiFetch<any>("/api/patient/auth/verify-otp", {
+    method: "POST",
+    body: JSON.stringify({ phone, otp }),
+  });
+}
+
+export interface PatientAppointment {
+  id: string;
+  doctorId?: string;
+  doctorName?: string;
+  departmentName?: string;
+  appointmentDate: string | null;
+  appointmentTime: string | null;
+  status: string;
+  symptoms?: string;
+  stt?: number;
+  createdAt?: string;
+}
+
+export async function getPatientAppointments(token: string): Promise<PatientAppointment[]> {
+  const data = await apiFetch<{ success: boolean; data: PatientAppointment[] }>("/api/patient/appointments", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return data.data;
+}
+
+export async function getPatientMe(token: string): Promise<any> {
+  const data = await apiFetch<{ success: boolean; data: any }>("/api/patient/me", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return data.data;
+}
+
+export async function duplicatePost(id: number, token: string): Promise<{ id: number; message: string }> {
+  const response = await apiFetch<{ success: boolean; data: { id: number; message: string } }>(`/api/cms/posts/${id}/duplicate`, {
+    method: "POST",
+    headers: { "Authorization": `Bearer ${token}` },
+  });
+  return response.data;
+}
+
+export async function getPostVersions(id: number, token: string): Promise<any[]> {
+  const response = await apiFetch<{ success: boolean; data: any[] }>(`/api/cms/posts/${id}/versions`, {
+    headers: { "Authorization": `Bearer ${token}` },
+  });
+  return response.data;
+}
+
+export async function submitDoctorReview(data: { doctor_id: string; appointment_id?: string; rating: number; comment?: string; patient_phone?: string }): Promise<void> {
+  await apiFetch<{ success: boolean }>("/api/reviews", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+export interface DoctorReview {
+  id: number;
+  rating: number;
+  comment: string | null;
+  created_at: string;
+}
+
+export interface DoctorReviewStats {
+  total: number;
+  avg_rating: number;
+}
+
+export async function getDoctorReviews(doctorId: string): Promise<{ reviews: DoctorReview[]; stats: DoctorReviewStats }> {
+  const response = await apiFetch<{ success: boolean; data: DoctorReview[]; stats: DoctorReviewStats }>(
+    `/api/reviews/doctor/${doctorId}`
+  );
+  return { reviews: response.data, stats: response.stats };
+}
+
+export async function getLogs(token: string, file?: string): Promise<any> {
+  let url = "/api/cms/logs";
+  if (file) url += `?file=${encodeURIComponent(file)}`;
+  
+  const response = await apiFetch<{ success: boolean; data: any }>(url, {
+    headers: { "Authorization": `Bearer ${token}` }
+  });
+  return response.data;
 }

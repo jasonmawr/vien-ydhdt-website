@@ -1,6 +1,6 @@
 # MASTER PLAN: HỆ SINH THÁI Y TẾ SỐ TOÀN DIỆN
 ## Viện Y Dược Học Dân Tộc TP.HCM — Website & Super App
-### *Tài liệu chuẩn dự án — Cập nhật: 2026-04-22*
+### *Tài liệu chuẩn dự án — Cập nhật: 2026-05-04*
 
 > **MỤC ĐÍCH CỦA FILE NÀY:**
 > Bất kỳ phiên làm việc nào (bất kỳ AI Agent hoặc Developer nào) chỉ cần đọc file này
@@ -250,7 +250,10 @@ VIETINBANK_CERT_PATH=<optional, mặc định đọc từ docs/>
 | 9 | Admin JWT Auth + Cookies | ✅ Hoàn thành |
 | 10 | VietinBank VietQR + Booking 5-step + STT | ✅ Hoàn thành |
 | **11** | **Advanced Booking Engine (3 luồng, BHYT, HIS APIs)** | **✅ Hoàn thành** |
-| **12** | **HIS Write (INSERT W_HEN khi thanh toán OK)** | ⏳ Chờ IT cung cấp SQL/Stored Procedure chuẩn |
+| **12** | **HIS Write (INSERT W_HEN, TBL_STTKHAM khi thanh toán OK)** | **✅ Hoàn thành (2026-04-28)** |
+| **12.5** | **Hệ thống Notification & Ticket Download** | **✅ Hoàn thành (2026-04-28)** |
+| | — Khung Zalo ZNS Service chờ IT cấp Token | ✅ |
+| | — Tải ảnh Phiếu Khám điện tử miễn phí (HTML5 Canvas Native) | ✅ |
 | **13** | **Trợ lý AI Y Dược (Google Gemini + RAG)** | **✅ Hoàn thành (2026-04-22)** |
 | | — Floating Chat Widget (premium UI, suggested questions) | ✅ |
 | | — Knowledge Base bệnh viện (dịch vụ, giá, giờ, quy trình) | ✅ |
@@ -274,7 +277,26 @@ VIETINBANK_CERT_PATH=<optional, mặc định đọc từ docs/>
 | | — Chuyển Alert native sang Sonner Toast hiện đại | ✅ |
 | | — Đổi cấu trúc Layout Logo chuẩn (Viện Y Dược) | ✅ |
 | 18 | Mobile App (React Native / Flutter) | 📋 Giai đoạn 2 |
-| 19 | Đa ngôn ngữ (EN, 中文) | 📋 Giai đoạn 2 |
+| **19** | **Đa ngôn ngữ (EN, 中文) — Cookie-based i18n** | **✅ Hoàn thành (2026-05-03)** |
+| | — next-intl v4 (without i18n routing, cookie NEXT_LOCALE) | ✅ |
+| | — 3 bộ dịch thuật: vi.json, en.json, zh.json (~72KB tổng) | ✅ |
+| | — LanguageSwitcher component (cờ 🇻🇳🇺🇸🇨🇳, API /api/locale) | ✅ |
+| | — Chuyển toàn bộ hardcode text → useTranslations() (20+ files) | ✅ |
+| **19.5** | **Security, Stability & Real-time Optimization** | **✅ Hoàn thành** |
+| | — Chống Spam (Rate-limit) | ✅ |
+| | — Xử lý Race Condition (Oracle `SELECT FOR UPDATE`) | ✅ |
+| | — Ghi Log lỗi (Winston/Pino) | ✅ |
+| | — Tối ưu thanh toán VietQR với Webhook SSE | ✅ |
+| **19.8** | **Enterprise CMS Architecture** | **✅ Hoàn thành (2026-05-04)** |
+| | — Hệ thống danh mục động đa cấp (Taxonomy) | ✅ |
+| | — Upload & Quản lý file đính kèm (Multer, 50MB/file) | ✅ |
+| | — Tối ưu SEO bài viết (Meta tags, Keywords) | ✅ |
+| | — Chức năng ghim bài (Featured) & Lên lịch xuất bản | ✅ |
+| **19.9** | **UI/UX Premium Polish — BVDaiHoc-style** | **✅ Hoàn thành (2026-05-04)** |
+| | — Redesign Hero Section: full-width mosaic banner (ảnh trái + lưới ảnh phải) | ✅ |
+| | — Stats Bar dưới hero (60+ năm, 116+ BS, 500K+ BN, 100% tận tâm) | ✅ |
+| | — Admin Dashboard: banner enterprise, số liệu thống kê động (real-time từ HIS + CMS) | ✅ |
+| | — Fix: số bác sĩ Dashboard đồng bộ chính xác với API (bỏ hardcode 253) | ✅ |
 | 20 | Deploy Production (IIS + SSL) | 📋 Giai đoạn cuối |
 
 ---
@@ -306,7 +328,7 @@ npm run dev            # → http://localhost:3000
 - `main` — Production
 - `develop` — Staging
 - `feature/phase-XX-*` — Feature branches
-- **Nhánh hiện tại:** `feature/phase-17-seo`
+- **Nhánh hiện tại:** `feature/enterprise-cms` (cần merge vào `main` khi deploy)
 
 ---
 
@@ -327,11 +349,15 @@ npm run dev            # → http://localhost:3000
 | GET | /api/booking/insurance-tuyen | Tuyến BHYT (HIS) | ❌ |
 | GET | /api/booking/patient-types | Đối tượng BN (HIS) | ❌ |
 | GET | /api/cms/categories | Danh mục bài viết (SSOT) | ❌ |
+| POST| /api/cms/categories | Thêm mới danh mục | ✅ JWT |
+| PUT | /api/cms/categories/:id | Cập nhật danh mục | ✅ JWT |
+| DELETE | /api/cms/categories/:id | Xóa danh mục | ✅ JWT |
 | GET | /api/cms/posts | Danh sách bài viết (?admin=1 xem draft) | ❌ |
 | GET | /api/cms/posts/:id | Chi tiết bài viết | ❌ |
-| POST | /api/cms/posts | Tạo bài viết mới | ❌ (cần thêm JWT) |
-| PUT | /api/cms/posts/:id | Cập nhật bài viết | ❌ (cần thêm JWT) |
-| DELETE | /api/cms/posts/:id | Xóa bài viết | ❌ (cần thêm JWT) |
+| POST | /api/cms/posts | Tạo bài viết mới | ✅ JWT |
+| PUT | /api/cms/posts/:id | Cập nhật bài viết | ✅ JWT |
+| DELETE | /api/cms/posts/:id | Xóa bài viết | ✅ JWT |
+| POST | /api/upload | Tải lên file đính kèm | ✅ JWT |
 | GET | /api/cms/doctors/:mabs | Web profile bác sĩ (SQLite) | ❌ |
 | POST | /api/cms/doctors | Upsert web profile bác sĩ (SQLite) | ❌ |
 | POST | /api/chatbot/message | Gửi tin nhắn cho AI Chatbot | ❌ |
@@ -382,3 +408,28 @@ GEMINI_API_KEY=<your-gemini-api-key>
 3. Cập nhật file này sau mỗi Phase
 4. Không hardcode bất kỳ key/secret nào trong source code
 5. Mọi dữ liệu nhạy cảm đọc từ `.env` (đã gitignore)
+
+---
+
+## VIII. TRẠNG THÁI BÀN GIAO & KẾ HOẠCH TIẾP THEO (Handover)
+
+### 1. Trạng thái hiện tại (Tính đến 2026-05-04)
+- **Website Frontend:** Đã hoàn thiện thiết kế Premium, Redesign 100% Mobile-first.
+- **Logo & Brand:** Đã thay thế Logo chuẩn của Viện (tròn), gỡ bỏ các khung bao cũ.
+- **UI/UX:** Đã gỡ bỏ toàn bộ `alert()` native, thay bằng hệ thống **Sonner Toast** hiện đại.
+- **Performance:** Đã fix lỗi Next.js Image warnings (thiếu sizes) và Tailwind v4 Specificity.
+- **AI Chatbot:** Tích hợp Gemini 2.0 Flash thành công, hỗ trợ trả lời dựa trên Knowledge Base.
+- **Đa ngôn ngữ (Phase 19):** Hoàn thành hệ thống i18n 3 ngôn ngữ (VI/EN/ZH) bằng `next-intl` v4 cookie-based.
+- **Enterprise CMS (Phase 19.8):** Nâng cấp hệ thống CMS lên kiến trúc Enterprise-grade. Thay thế hoàn toàn danh mục tĩnh bằng cây danh mục động đa cấp (Taxonomy), hỗ trợ tải lên file đính kèm đa định dạng, tích hợp đầy đủ công cụ SEO nâng cao (Meta title, description, keywords), hỗ trợ ghim tin bài nổi bật và tự động lên lịch xuất bản. Giao diện Admin đã hoàn thiện và chạy mượt mà, sẵn sàng phục vụ cấp quản lý. Mọi vấn đề kỹ thuật liên quan đã được giải quyết triệt để 100%.
+
+### 2. Kế hoạch Phase tiếp theo: Phase 12 (HIS Integration - Ghi dữ liệu) -> Đã hoàn thành
+- **Mục tiêu đạt được:** Khi bệnh nhân đặt lịch thành công, Backend thực hiện INSERT dữ liệu vào bảng `MEDI.W_LOGIN`, `MEDI.W_HEN`, `MEDI.W_HENCT` trong Oracle.
+- **Số thứ tự (STT):** Tự động sinh số thứ tự từ bảng `MEDI.TBL_STTKHAM` và trả về hiển thị trên Frontend.
+
+### 2. Ghi chú cho phiên làm việc tiếp theo
+- **Nhánh Git:** `feature/enterprise-cms` đã hoàn tất, chuẩn bị merge vào main. Phần Mobile App đang được gác lại.
+- **Cần làm:** 
+  1. Triển khai Phase 20 (Deploy Server & CI/CD) cho production.
+  2. Bổ sung cơ chế Polling / SSE (Server-Sent Events) cho trang Thanh toán (Phase 10) để Frontend tự động biết khi Backend nhận được IPN của VietinBank.
+- **Lưu ý Next.js 16:** Middleware convention đang deprecated, sẽ chuyển sang "proxy" convention trong bản tiếp theo.
+- **Vấn đề tồn đọng:** Hiện tại toàn bộ các phase ưu tiên lõi (Core features, CMS, AI, Backend API, HIS integration, VietQR) đều đã hoàn thiện 100% không còn blocker nào. Dấu chấm hỏi duy nhất chỉ còn nằm ở thời điểm deploy thực tế lên hạ tầng của bệnh viện.

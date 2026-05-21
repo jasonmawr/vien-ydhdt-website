@@ -24,5 +24,6 @@ export interface AppointmentResponse {
     patientPhone: string;
     status: string;
     createdAt: string;
+    stt?: number;
   };
 }

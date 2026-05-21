@@ -1,14 +1,27 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
+import PageLayout from "@/components/layout/PageLayout";
+import { BreadcrumbJsonLd } from "@/components/seo/BreadcrumbJsonLd";
 
-export const metadata: Metadata = {
-  title: "Tin Tức & Y Khoa - Viện Y Dược Học Dân Tộc",
-  description: "Cập nhật các bản tin y khoa, nghiên cứu khoa học, hoạt động của Viện Y Dược Học Dân Tộc TP.HCM.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const tTitle = await getTranslations('nav');
+  const tDesc = await getTranslations('news');
+  const tMeta = await getTranslations('metadata');
 
-export default function TinTucLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return <>{children}</>;
+  return {
+    title: `${tTitle('news')} - ${tMeta('siteName')}`,
+    description: tDesc('subtitle'),
+  };
+}
+
+export default function Layout({ children }: { children: React.ReactNode }) {
+  return (
+    <PageLayout>
+      <BreadcrumbJsonLd items={[
+        { name: "Trang chủ", url: "/" },
+        { name: "Tin tức", url: "/tin-tuc" },
+      ]} />
+      {children}
+    </PageLayout>
+  );
 }

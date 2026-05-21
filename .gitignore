@@ -33,6 +33,8 @@ yarn-error.log*
 # backend
 backend/dist/
 backend/node_modules/
+backend/logs/
+logs/
 
 # vercel
 .vercel

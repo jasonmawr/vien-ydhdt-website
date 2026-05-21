@@ -12,7 +12,6 @@ import {
   Mail,
   MapPin,
   Phone,
-  Globe,
   Video,
   ArrowUpRight,
   Sparkles,
@@ -25,9 +24,9 @@ import {
   CheckCircle2
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { DoctorDTO, getAllDoctors } from "@/services/api"
+import { useTranslations } from "next-intl"
+import LanguageSwitcher from "@/components/layout/LanguageSwitcher"
+import { SITE_CONFIG } from "@/lib/siteConfig"
 
 // Animation variants
 const fadeIn = {
@@ -59,24 +58,9 @@ const itemFadeIn = {
 }
 
 export function HospitalLandingPage() {
+  const t = useTranslations('home');
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [scrollY, setScrollY] = useState(0)
-
-  const [featuredDoctors, setFeaturedDoctors] = useState<DoctorDTO[]>([]);
-
-  useEffect(() => {
-    const fetchDoctors = async () => {
-      try {
-        const docs = await getAllDoctors();
-        // Lấy 8 bác sĩ đầu tiên làm featured
-        setFeaturedDoctors(docs?.slice(0, 8) || []);
-      } catch {
-        // Không block trang chủ nếu backend chưa sẵn sàng
-        setFeaturedDoctors([]);
-      }
-    };
-    fetchDoctors();
-  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -106,48 +90,56 @@ export function HospitalLandingPage() {
               <motion.div
                 whileHover={{ rotate: 5, scale: 1.1 }}
                 transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                className="h-10 w-10 rounded-xl bg-primary-600 flex items-center justify-center shadow-lg"
+                className="relative h-12 w-12 lg:h-14 lg:w-14 overflow-hidden"
               >
-                <Leaf className="h-6 w-6 text-white" />
+                <Image
+                  src="/images/logo.png"
+                  alt={t('header.logoAlt')}
+                  fill
+                  className="object-contain"
+                />
               </motion.div>
-              <div className="leading-tight">
-                <span className="font-bold text-lg text-primary-900 block">Viện Y Dược Học</span>
-                <span className="text-xs font-semibold text-stone-500 uppercase tracking-widest">Dân Tộc TP.HCM</span>
+              <div className="leading-tight select-none">
+                <span className="text-[10px] font-bold text-primary-800 lg:text-[13px] block uppercase tracking-wide whitespace-nowrap">{t('header.instituteName')}</span>
+                <span className="text-[9px] font-semibold text-primary-700 lg:text-[11px] block uppercase tracking-wider whitespace-nowrap">{t('header.instituteShort')}</span>
               </div>
             </Link>
           </div>
           <nav className="hidden md:flex gap-6">
             <Link href="/gioi-thieu" className="text-sm font-semibold text-stone-700 transition-colors hover:text-primary-600">
-              Giới Thiệu
+              {t('header.nav.about')}
             </Link>
             <Link href="/dat-lich" className="text-sm font-semibold text-stone-700 transition-colors hover:text-primary-600">
-              Đặt Lịch Khám
+              {t('header.nav.booking')}
             </Link>
             <Link href="/tin-tuc" className="text-sm font-semibold text-stone-700 transition-colors hover:text-primary-600">
-              Tin Tức
+              {t('header.nav.news')}
             </Link>
             <Link href="/bang-gia" className="text-sm font-semibold text-stone-700 transition-colors hover:text-primary-600">
-              Bảng Giá
+              {t('header.nav.pricing')}
             </Link>
             <Link href="/lien-he" className="text-sm font-semibold text-stone-700 transition-colors hover:text-primary-600">
-              Liên Hệ
+              {t('header.nav.contact')}
             </Link>
           </nav>
           <div className="hidden md:flex items-center gap-3">
-            <a href="tel:0964392632">
+            <a href={SITE_CONFIG.hotlineTel}>
               <Button variant="outline" size="sm" className="rounded-xl border-primary-200 text-primary-700 hover:bg-primary-50">
-                0964 392 632
+                {t('header.hotline')}
               </Button>
             </a>
             <Link href="/dat-lich">
               <Button size="sm" className="rounded-xl bg-primary-600 hover:bg-primary-700 text-white shadow-md">
-                Đặt Lịch Khám
+                {t('header.bookNow')}
               </Button>
             </Link>
+            <div className="border-l border-stone-200 pl-3">
+              <LanguageSwitcher align="bottom" variant="light" dropdownAlign="right" compact={true} />
+            </div>
           </div>
           <button className="flex md:hidden text-stone-700 hover:text-primary-600 transition-colors" onClick={toggleMenu}>
             <Menu className="h-6 w-6" />
-            <span className="sr-only">Mở menu</span>
+            <span className="sr-only">{t('header.menuOpen')}</span>
           </button>
         </div>
       </motion.header>
@@ -166,12 +158,12 @@ export function HospitalLandingPage() {
                 <div className="h-10 w-10 rounded-xl bg-primary-600 flex items-center justify-center">
                   <Leaf className="h-6 w-6 text-white" />
                 </div>
-                <span className="font-bold text-lg text-primary-900">Viện Y Dược Học</span>
+                <span className="font-bold text-lg text-primary-900">{t('header.instituteName')}</span>
               </Link>
             </div>
             <button onClick={toggleMenu} className="text-stone-700">
               <X className="h-6 w-6" />
-              <span className="sr-only">Đóng menu</span>
+              <span className="sr-only">{t('header.menuClose')}</span>
             </button>
           </div>
           <motion.nav
@@ -181,12 +173,12 @@ export function HospitalLandingPage() {
             className="container-site grid gap-3 pb-8 pt-6"
           >
             {[
-              { href: "/gioi-thieu", label: "Giới Thiệu" },
-              { href: "/dat-lich", label: "Đặt Lịch Khám" },
-              { href: "/tin-tuc", label: "Tin Tức" },
-              { href: "/bang-gia", label: "Bảng Giá Dịch Vụ" },
-              { href: "/tra-cuu", label: "Tra Cứu Lịch Khám" },
-              { href: "/lien-he", label: "Liên Hệ" }
+              { href: "/gioi-thieu", labelKey: "mobileMenu.about" },
+              { href: "/dat-lich", labelKey: "mobileMenu.booking" },
+              { href: "/tin-tuc", labelKey: "mobileMenu.news" },
+              { href: "/bang-gia", labelKey: "mobileMenu.pricing" },
+              { href: "/tra-cuu", labelKey: "mobileMenu.search" },
+              { href: "/lien-he", labelKey: "mobileMenu.contact" }
             ].map((item, index) => (
               <motion.div key={index} variants={itemFadeIn}>
                 <Link
@@ -194,20 +186,23 @@ export function HospitalLandingPage() {
                   className="flex items-center justify-between rounded-xl px-4 py-3 text-lg font-semibold text-stone-800 hover:bg-stone-100 hover:text-primary-600 transition-colors"
                   onClick={toggleMenu}
                 >
-                  {item.label}
+                  {t(item.labelKey)}
                   <ChevronRight className="h-5 w-5 text-stone-400" />
                 </Link>
               </motion.div>
             ))}
             <motion.div variants={itemFadeIn} className="flex flex-col gap-3 pt-6 px-2">
-              <a href="tel:0964392632" className="w-full">
+              <div className="flex items-center justify-center py-2">
+                <LanguageSwitcher align="bottom" variant="light" dropdownAlign="left" compact={true} />
+              </div>
+              <a href={SITE_CONFIG.hotlineTel} className="w-full">
                 <Button variant="outline" className="w-full rounded-xl border-primary-200 text-primary-700 h-12 text-base font-semibold">
-                  Gọi: 0964 392 632
+                  {t('mobileMenu.call')}
                 </Button>
               </a>
               <Link href="/dat-lich" onClick={toggleMenu} className="w-full">
                 <Button className="w-full rounded-xl bg-primary-600 hover:bg-primary-700 text-white h-12 text-base font-semibold">
-                  Đặt Lịch Khám
+                  {t('mobileMenu.bookNow')}
                 </Button>
               </Link>
             </motion.div>
@@ -216,90 +211,177 @@ export function HospitalLandingPage() {
       )}
 
       <main className="flex-1">
-        {/* Hero Section */}
-        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 overflow-hidden">
-          <div className="container-site px-4 md:px-6 border border-stone-200/60 rounded-3xl bg-gradient-to-br from-white to-stone-50/50 shadow-sm">
-            <div className="grid gap-8 lg:grid-cols-[1fr_450px] lg:gap-12 xl:grid-cols-[1fr_650px] items-center">
-              <motion.div
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={fadeIn}
-                className="flex flex-col justify-center space-y-6 py-10"
-              >
-                <div className="space-y-4">
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.5 }}
-                    className="inline-flex items-center rounded-full bg-primary-50 border border-primary-100 px-4 py-1.5 text-sm font-medium text-primary-700"
-                  >
-                    <Sparkles className="mr-2 h-4 w-4 text-primary-500" />
-                    Chăm sóc sức khỏe toàn diện
-                  </motion.div>
-                  <motion.h1
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.7, delay: 0.2 }}
-                    className="text-4xl font-extrabold tracking-tight sm:text-5xl xl:text-6xl text-stone-900 leading-[1.1]"
-                  >
-                    Kết hợp tinh hoa <br className="hidden sm:block" />
-                    <span className="bg-gradient-to-r from-primary-600 to-teal-500 bg-clip-text text-transparent">
-                      Y học cổ truyền & Hiện đại
-                    </span>
-                  </motion.h1>
-                  <motion.p
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.7, delay: 0.4 }}
-                    className="max-w-[600px] text-stone-600 md:text-xl leading-relaxed"
-                  >
-                    Đơn vị khám chữa bệnh uy tín hàng đầu khu vực phía Nam. Chúng tôi cam kết mang lại sự an tâm và hiệu quả điều trị tối ưu cho mọi bệnh nhân.
-                  </motion.p>
-                </div>
+        {/* Hero Section — BVDaiHoc style: full-width mosaic banner */}
+        <section className="w-full overflow-hidden">
+          <div className="relative w-full min-h-[520px] md:min-h-[620px] lg:min-h-[680px] flex">
+
+            {/* LEFT — Large photo with gradient overlay & text */}
+            <motion.div
+              initial={{ opacity: 0, x: -40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              className="relative flex-1 min-w-0"
+            >
+              <Image
+                src="/images/hero_medicine.png"
+                alt="Khuôn viên Viện Y Dược Học Dân Tộc"
+                fill
+                sizes="65vw"
+                className="object-cover"
+                priority
+              />
+              {/* Blue gradient overlay matching the hospital theme */}
+              <div className="absolute inset-0 bg-gradient-to-r from-primary-900/80 via-primary-800/60 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-primary-900/70 via-transparent to-transparent" />
+
+              {/* Text Content */}
+              <div className="absolute bottom-0 left-0 p-8 md:p-12 lg:p-16 max-w-xl z-10">
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                  className="inline-flex items-center rounded-full bg-white/20 backdrop-blur-sm border border-white/30 px-4 py-1.5 text-sm font-medium text-white mb-5"
+                >
+                  <Sparkles className="mr-2 h-4 w-4 text-teal-300" />
+                  {t('hero.badge')}
+                </motion.div>
+
+                <motion.h1
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.7, delay: 0.4 }}
+                  className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-white leading-tight mb-4 drop-shadow-lg"
+                >
+                  {t('hero.title')}
+                  <br />
+                  <span className="text-teal-300">{t('hero.titleBreak')}</span>
+                </motion.h1>
+
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.7, delay: 0.6 }}
+                  className="text-white/85 text-base md:text-lg leading-relaxed mb-8"
+                >
+                  {t('hero.description')}
+                </motion.p>
+
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.7, delay: 0.6 }}
-                  className="flex flex-col gap-4 sm:flex-row"
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.7, delay: 0.8 }}
+                  className="flex flex-col sm:flex-row gap-3"
                 >
                   <Link href="/dat-lich">
-                    <Button size="lg" className="rounded-xl group bg-primary-600 hover:bg-primary-700 text-white shadow-lg shadow-primary-500/30 text-base h-14 px-8">
-                      Đặt Lịch Khám Ngay
-                      <motion.span
-                        initial={{ x: 0 }}
-                        whileHover={{ x: 5 }}
-                        transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                      >
-                        <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-                      </motion.span>
+                    <Button size="lg" className="rounded-xl bg-white text-primary-700 hover:bg-primary-50 font-bold shadow-xl text-base h-13 px-8 border-2 border-white">
+                      {t('hero.bookNow')}
+                      <ArrowRight className="ml-2 h-5 w-5" />
                     </Button>
                   </Link>
-                  <Button variant="outline" size="lg" className="rounded-xl border-stone-300 text-stone-700 hover:bg-stone-50 hover:text-primary-700 text-base h-14 px-8">
-                    Tìm Hiểu Thêm
-                  </Button>
+                  <Link href="/gioi-thieu">
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      className="rounded-xl border-2 border-white/60 text-white hover:bg-white/15 backdrop-blur-sm text-base h-13 px-8"
+                    >
+                      {t('hero.learnMore')}
+                    </Button>
+                  </Link>
                 </motion.div>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, x: 100 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8 }}
-                className="flex items-center justify-center relative"
-              >
-                <div className="absolute inset-0 bg-primary-100 rounded-[2.5rem] transform rotate-3 scale-105 opacity-50"></div>
-                <div className="relative h-[400px] w-full md:h-[500px] lg:h-[550px] xl:h-[600px] overflow-hidden rounded-[2rem] shadow-2xl border-4 border-white">
-                  <Image
-                    src="/images/hero_medicine.png"
-                    alt="Khuôn viên Viện Y Dược Học Dân Tộc"
-                    fill
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    className="object-cover"
-                    priority
-                  />
-                </div>
-              </motion.div>
+              </div>
+            </motion.div>
+
+            {/* RIGHT — Photo mosaic grid (2×2 → 4 cells) */}
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="hidden md:grid grid-cols-2 grid-rows-2 w-[38%] lg:w-[35%] flex-shrink-0"
+            >
+              {/* Cell 1 — top-left */}
+              <div className="relative overflow-hidden group">
+                <Image
+                  src="/images/acupuncture_room.png"
+                  alt="Phòng châm cứu"
+                  fill
+                  sizes="19vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-primary-900/20 group-hover:bg-primary-900/10 transition-colors duration-300" />
+              </div>
+              {/* Cell 2 — top-right */}
+              <div className="relative overflow-hidden group">
+                <Image
+                  src="/images/herbal_medicine.png"
+                  alt="Dược liệu y học cổ truyền"
+                  fill
+                  sizes="19vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-teal-900/20 group-hover:bg-teal-900/10 transition-colors duration-300" />
+              </div>
+              {/* Cell 3 — bottom-left */}
+              <div className="relative overflow-hidden group">
+                <Image
+                  src="/images/zen_garden.png"
+                  alt="Không gian điều trị"
+                  fill
+                  sizes="19vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-primary-900/20 group-hover:bg-primary-900/10 transition-colors duration-300" />
+              </div>
+              {/* Cell 4 — bottom-right */}
+              <div className="relative overflow-hidden group">
+                <Image
+                  src="/images/clinic_room.png"
+                  alt="Phòng khám hiện đại"
+                  fill
+                  sizes="19vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-teal-900/20 group-hover:bg-teal-900/10 transition-colors duration-300" />
+              </div>
+            </motion.div>
+
+            {/* Hiệu ứng Động Sóng nước Parallax 3D (Y học Cổ truyền Thủy hải) */}
+            <div className="absolute bottom-0 left-0 right-0 w-full overflow-hidden leading-none z-20 pointer-events-none">
+              <svg className="relative block w-full h-[40px] md:h-[60px] lg:h-[80px]" viewBox="0 24 150 28" preserveAspectRatio="none" shapeRendering="auto">
+                <defs>
+                  <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18v44h-352z" />
+                </defs>
+                <g className="parallax">
+                  <use href="#gentle-wave" x="48" y="0" fill="rgba(240, 249, 255, 0.45)" />
+                  <use href="#gentle-wave" x="48" y="3" fill="rgba(186, 230, 253, 0.35)" />
+                  <use href="#gentle-wave" x="48" y="5" fill="rgba(56, 189, 248, 0.25)" />
+                  <use href="#gentle-wave" x="48" y="7" fill="var(--color-primary-700)" />
+                </g>
+              </svg>
             </div>
+
           </div>
+
+          {/* Stats bar below hero */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 1 }}
+            className="bg-primary-700 text-white"
+          >
+            <div className="container-site grid grid-cols-2 md:grid-cols-4 divide-x divide-white/20">
+              {[
+                { value: "50+", label: "Năm thành lập & phát triển" },
+                { value: "253+", label: "Bác sĩ, chuyên gia hàng đầu" },
+                { value: "100K+", label: "Bệnh nhân được điều trị/năm" },
+                { value: "100%", label: "Tận tâm & An toàn" },
+              ].map((stat, i) => (
+                <div key={i} className="flex flex-col items-center justify-center py-4 px-6 text-center">
+                  <span className="text-2xl md:text-3xl font-extrabold text-white">{stat.value}</span>
+                  <span className="text-xs md:text-sm text-primary-200 mt-1 font-medium">{stat.label}</span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
         </section>
 
         {/* Services Section */}
@@ -319,7 +401,7 @@ export function HospitalLandingPage() {
                   transition={{ duration: 0.5 }}
                   className="inline-block rounded-full bg-primary-50 border border-primary-100 px-4 py-1.5 text-sm font-semibold text-primary-700 uppercase tracking-widest"
                 >
-                  Chuyên Khoa Mũi Nhọn
+                  {t('services.sectionBadge')}
                 </motion.div>
                 <motion.h2
                   initial={{ opacity: 0, y: 20 }}
@@ -327,7 +409,7 @@ export function HospitalLandingPage() {
                   transition={{ duration: 0.5, delay: 0.2 }}
                   className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl text-stone-900"
                 >
-                  Các Dịch Vụ Nổi Bật
+                  {t('services.sectionTitle')}
                 </motion.h2>
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
@@ -335,7 +417,7 @@ export function HospitalLandingPage() {
                   transition={{ duration: 0.5, delay: 0.3 }}
                   className="mx-auto max-w-[800px] text-stone-600 md:text-xl/relaxed lg:text-lg/relaxed xl:text-xl/relaxed"
                 >
-                  Chúng tôi cung cấp các phương pháp điều trị tiên tiến, kết hợp ưu điểm của Y học cổ truyền và công nghệ hiện đại.
+                  {t('services.sectionDescription')}
                 </motion.p>
               </div>
             </div>
@@ -349,33 +431,33 @@ export function HospitalLandingPage() {
               {[
                 {
                   icon: <Activity className="h-8 w-8 text-primary-600" />,
-                  title: "Châm Cứu - Phục Hồi",
-                  description: "Điều trị hiệu quả các chứng đau thần kinh tọa, thoái hóa cột sống, và phục hồi chức năng sau tai biến.",
+                  titleKey: "items.0.title",
+                  descKey: "items.0.description"
                 },
                 {
                   icon: <Stethoscope className="h-8 w-8 text-primary-600" />,
-                  title: "Khám Tổng Quát",
-                  description: "Đánh giá tình trạng sức khỏe toàn diện với sự hỗ trợ của các trang thiết bị chẩn đoán hiện đại.",
+                  titleKey: "items.1.title",
+                  descKey: "items.1.description"
                 },
                 {
                   icon: <Leaf className="h-8 w-8 text-primary-600" />,
-                  title: "Dược Liệu YHCT",
-                  description: "Sử dụng các bài thuốc Nam, thuốc Bắc nguồn gốc rõ ràng, đạt tiêu chuẩn chất lượng cao.",
+                  titleKey: "items.2.title",
+                  descKey: "items.2.description"
                 },
                 {
                   icon: <HeartPulse className="h-8 w-8 text-primary-600" />,
-                  title: "Vật Lý Trị Liệu",
-                  description: "Các bài tập vận động, kéo giãn cột sống, siêu âm trị liệu giúp phục hồi cơ xương khớp.",
+                  titleKey: "items.3.title",
+                  descKey: "items.3.description"
                 },
                 {
                   icon: <Microscope className="h-8 w-8 text-primary-600" />,
-                  title: "Cận Lâm Sàng",
-                  description: "Hệ thống xét nghiệm sinh hóa, huyết học, X-Quang, Siêu âm màu chuẩn xác và nhanh chóng.",
+                  titleKey: "items.4.title",
+                  descKey: "items.4.description"
                 },
                 {
                   icon: <ShieldCheck className="h-8 w-8 text-primary-600" />,
-                  title: "Cấy Chỉ Trị Liệu",
-                  description: "Phương pháp đột phá ứng dụng chỉ tự tiêu vào huyệt đạo, mang lại tác dụng điều trị kéo dài.",
+                  titleKey: "items.5.title",
+                  descKey: "items.5.description"
                 },
               ].map((service, index) => (
                 <motion.div
@@ -389,12 +471,12 @@ export function HospitalLandingPage() {
                     <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-primary-50 text-primary-600 shadow-inner">
                       {service.icon}
                     </div>
-                    <h3 className="text-xl font-bold text-stone-900">{service.title}</h3>
-                    <p className="text-stone-600 leading-relaxed">{service.description}</p>
+                    <h3 className="text-xl font-bold text-stone-900">{t(`services.${service.titleKey}`)}</h3>
+                    <p className="text-stone-600 leading-relaxed">{t(`services.${service.descKey}`)}</p>
                   </div>
                   <div className="relative z-10 mt-8 flex items-center justify-between">
-                    <Link href="#" className="text-sm font-bold text-primary-600 uppercase tracking-wide hover:text-primary-800 transition-colors">
-                      Tìm hiểu thêm
+                    <Link href="/dat-lich" className="text-sm font-bold text-primary-600 uppercase tracking-wide hover:text-primary-800 transition-colors">
+                      {t('services.learnMore')}
                     </Link>
                     <motion.div whileHover={{ x: 5 }} transition={{ type: "spring", stiffness: 400, damping: 10 }}>
                       <ArrowRight className="h-5 w-5 text-primary-600" />
@@ -423,7 +505,7 @@ export function HospitalLandingPage() {
                   transition={{ duration: 0.5 }}
                   className="inline-block rounded-full bg-primary-50 border border-primary-100 px-4 py-1.5 text-sm font-semibold text-primary-700 uppercase tracking-widest"
                 >
-                  Hoạt Động & Cơ Sở
+                  {t('portfolio.sectionBadge')}
                 </motion.div>
                 <motion.h2
                   initial={{ opacity: 0, y: 20 }}
@@ -431,7 +513,7 @@ export function HospitalLandingPage() {
                   transition={{ duration: 0.5, delay: 0.2 }}
                   className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl text-stone-900"
                 >
-                  Không Gian Khám Chữa Bệnh
+                  {t('portfolio.sectionTitle')}
                 </motion.h2>
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
@@ -439,7 +521,7 @@ export function HospitalLandingPage() {
                   transition={{ duration: 0.5, delay: 0.3 }}
                   className="mx-auto max-w-[800px] text-stone-600 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed"
                 >
-                  Môi trường điều trị xanh mát, thanh tịnh mang đậm bản sắc Y học Cổ truyền.
+                  {t('portfolio.sectionDescription')}
                 </motion.p>
               </div>
             </div>
@@ -457,17 +539,17 @@ export function HospitalLandingPage() {
                 transition={{ duration: 0.3 }}
                 className="group relative overflow-hidden rounded-[2rem] md:col-span-2 md:row-span-2 h-[400px] md:h-auto shadow-md"
               >
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10 z-10 pointer-events-none"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-primary-950/85 via-primary-900/30 to-transparent z-10 pointer-events-none"></div>
                 <Image
                   src="/images/zen_garden.png"
-                  alt="Vườn Y Đạo"
+                  alt={t('portfolio.items.0.title')}
                   fill
                   sizes="(max-width: 768px) 100vw, 33vw"
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 flex flex-col justify-end p-8 z-20">
-                  <h3 className="text-2xl font-bold mb-2 !text-white drop-shadow-md">Vườn Y Đạo Tượng Danh Y</h3>
-                  <p className="!text-white/90 text-lg mb-6 drop-shadow-md">Khuôn viên lưu giữ tinh hoa y học truyền thống Việt Nam</p>
+                  <h3 className="text-2xl font-bold mb-2 !text-white drop-shadow-md">{t('portfolio.items.0.title')}</h3>
+                  <p className="!text-white/90 text-lg mb-6 drop-shadow-md">{t('portfolio.items.0.description')}</p>
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -477,7 +559,7 @@ export function HospitalLandingPage() {
                       variant="outline"
                       className="rounded-xl bg-white/20 backdrop-blur-md border-white/40 text-white hover:bg-white hover:text-stone-900 transition-colors"
                     >
-                      Khám phá thêm <ArrowUpRight className="ml-2 h-4 w-4" />
+                      {t('portfolio.items.0.cta')} <ArrowUpRight className="ml-2 h-4 w-4" />
                     </Button>
                   </motion.div>
                 </div>
@@ -491,14 +573,14 @@ export function HospitalLandingPage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10 z-10 pointer-events-none"></div>
                 <Image
                   src="/images/acupuncture_room.png"
-                  alt="Khu vực điều trị"
+                  alt={t('portfolio.items.1.title')}
                   fill
                   sizes="(max-width: 768px) 100vw, 33vw"
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 flex flex-col justify-end p-6 z-20">
-                  <h3 className="text-xl font-bold !text-white drop-shadow-md">Khu Vực Phục Hồi</h3>
-                  <p className="text-sm !text-white/90 drop-shadow-md">Yên tĩnh và chuyên biệt</p>
+                  <h3 className="text-xl font-bold !text-white drop-shadow-md">{t('portfolio.items.1.title')}</h3>
+                  <p className="text-sm !text-white/90 drop-shadow-md">{t('portfolio.items.1.description')}</p>
                 </div>
               </motion.div>
               <motion.div
@@ -510,14 +592,14 @@ export function HospitalLandingPage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10 z-10 pointer-events-none"></div>
                 <Image
                   src="/images/herbal_medicine.png"
-                  alt="Cơ sở vật chất"
+                  alt={t('portfolio.items.2.title')}
                   fill
                   sizes="(max-width: 768px) 100vw, 33vw"
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 flex flex-col justify-end p-6 z-20">
-                  <h3 className="text-xl font-bold !text-white drop-shadow-md">Cảnh Quan Thiên Nhiên</h3>
-                  <p className="text-sm !text-white/90 drop-shadow-md">Không gian xanh hỗ trợ chữa lành</p>
+                  <h3 className="text-xl font-bold !text-white drop-shadow-md">{t('portfolio.items.2.title')}</h3>
+                  <p className="text-sm !text-white/90 drop-shadow-md">{t('portfolio.items.2.description')}</p>
                 </div>
               </motion.div>
               <motion.div
@@ -526,32 +608,34 @@ export function HospitalLandingPage() {
                 transition={{ duration: 0.3 }}
                 className="group relative overflow-hidden rounded-[2rem] md:col-span-2 h-[250px] shadow-md"
               >
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10 z-10 pointer-events-none"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-primary-950/85 via-primary-900/30 to-transparent z-10 pointer-events-none"></div>
                 <Image
                   src="/images/clinic_room.png"
-                  alt="Hoạt động khám bệnh"
+                  alt={t('portfolio.items.3.title')}
                   fill
                   sizes="(max-width: 768px) 100vw, 33vw"
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 flex flex-col justify-end p-6 z-20">
-                  <h3 className="text-xl font-bold !text-white drop-shadow-md">Phòng Chẩn Trị</h3>
-                  <p className="text-sm !text-white/90 drop-shadow-md">Trang thiết bị hiện đại, sạch sẽ</p>
+                  <h3 className="text-xl font-bold !text-white drop-shadow-md">{t('portfolio.items.3.title')}</h3>
+                  <p className="text-sm !text-white/90 drop-shadow-md">{t('portfolio.items.3.description')}</p>
                 </div>
               </motion.div>
             </motion.div>
             <div className="flex justify-center pb-10 mt-4">
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button size="lg" className="rounded-xl group bg-primary-600 text-white hover:bg-primary-700 h-14 px-8 text-base shadow-lg">
-                  Xem Tất Cả Hình Ảnh
-                  <motion.span
-                    initial={{ x: 0 }}
-                    whileHover={{ x: 5 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                  >
-                    <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-                  </motion.span>
-                </Button>
+                <Link href="/gioi-thieu">
+                  <Button size="lg" className="rounded-xl group bg-primary-600 text-white hover:bg-primary-700 h-14 px-8 text-base shadow-lg">
+                    {t('portfolio.viewAll')}
+                    <motion.span
+                      initial={{ x: 0 }}
+                      whileHover={{ x: 5 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                    >
+                      <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                    </motion.span>
+                  </Button>
+                </Link>
               </motion.div>
             </div>
           </motion.div>
@@ -572,10 +656,10 @@ export function HospitalLandingPage() {
               transition={{ duration: 0.6 }}
               className="space-y-6 p-8 lg:p-12"
             >
-              <div className="inline-block rounded-full bg-primary-100 px-4 py-1.5 text-sm font-semibold text-primary-800 uppercase tracking-widest">Liên Hệ & Đặt Lịch</div>
-              <h2 className="text-3xl font-bold tracking-tight md:text-4xl/tight text-stone-900">Sẵn sàng chăm sóc<br/>sức khỏe cho bạn</h2>
+              <div className="inline-block rounded-full bg-primary-100 px-4 py-1.5 text-sm font-semibold text-primary-800 uppercase tracking-widest">{t('contact.sectionBadge')}</div>
+              <h2 className="text-3xl font-bold tracking-tight md:text-4xl/tight text-stone-900" dangerouslySetInnerHTML={{ __html: t('contact.sectionTitle') }} />
               <p className="max-w-[600px] text-stone-600 md:text-xl/relaxed">
-                Đội ngũ bác sĩ và nhân viên y tế của Viện Y Dược Học Dân Tộc luôn sẵn lòng hỗ trợ. Hãy để lại thông tin hoặc gọi điện trực tiếp.
+                {t('contact.description')}
               </p>
               <div className="mt-10 space-y-6">
                 <motion.div whileHover={{ x: 5 }} className="flex items-start gap-4 p-4 rounded-2xl hover:bg-white transition-colors">
@@ -583,8 +667,8 @@ export function HospitalLandingPage() {
                     <MapPin className="h-6 w-6 text-primary-700" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-stone-900 text-lg">Địa chỉ</h3>
-                    <p className="text-stone-600 mt-1">273 - 275 Nguyễn Văn Trỗi, Phường 10, Quận Phú Nhuận, TP.HCM</p>
+                    <h3 className="font-bold text-stone-900 text-lg">{t('contact.addressTitle')}</h3>
+                    <p className="text-stone-600 mt-1">{t('contact.address')}</p>
                   </div>
                 </motion.div>
                 <motion.div whileHover={{ x: 5 }} className="flex items-start gap-4 p-4 rounded-2xl hover:bg-white transition-colors">
@@ -592,8 +676,8 @@ export function HospitalLandingPage() {
                     <Mail className="h-6 w-6 text-primary-700" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-stone-900 text-lg">Email</h3>
-                    <p className="text-stone-600 mt-1">v.ydhdt@tphcm.gov.vn</p>
+                    <h3 className="font-bold text-stone-900 text-lg">{t('contact.emailTitle')}</h3>
+                    <p className="text-stone-600 mt-1">{t('contact.email')}</p>
                   </div>
                 </motion.div>
                 <motion.div whileHover={{ x: 5 }} className="flex items-start gap-4 p-4 rounded-2xl hover:bg-white transition-colors">
@@ -601,8 +685,8 @@ export function HospitalLandingPage() {
                     <Phone className="h-6 w-6 text-primary-700" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-stone-900 text-lg">Hotline tư vấn</h3>
-                    <p className="text-primary-700 font-semibold mt-1 text-lg">0964 392 632</p>
+                    <h3 className="font-bold text-stone-900 text-lg">{t('contact.hotlineTitle')}</h3>
+                    <p className="text-primary-700 font-semibold mt-1 text-lg">{t('contact.hotline')}</p>
                   </div>
                 </motion.div>
               </div>
@@ -617,23 +701,23 @@ export function HospitalLandingPage() {
               <div className="h-20 w-20 rounded-full bg-primary-50 flex items-center justify-center mb-6 text-primary-600 shadow-inner">
                 <Sparkles className="h-10 w-10" />
               </div>
-              <h3 className="text-3xl font-bold text-stone-900 mb-4">Đặt Lịch Nhanh Chóng</h3>
+              <h3 className="text-3xl font-bold text-stone-900 mb-4">{t('contact.quickBooking.title')}</h3>
               <p className="text-stone-600 mb-8 max-w-md">
-                Hệ thống đặt lịch trực tuyến mới cho phép bạn chọn ngày giờ, bác sĩ yêu thích và thanh toán ngay lập tức chỉ với vài thao tác.
+                {t('contact.quickBooking.description')}
               </p>
-              
+
               <Link href="/dat-lich" className="w-full max-w-sm">
                 <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                   <Button className="w-full rounded-2xl bg-primary-600 hover:bg-primary-700 h-16 text-lg font-bold shadow-xl shadow-primary-500/30">
-                    Bắt Đầu Đặt Lịch
+                    {t('contact.quickBooking.button')}
                     <ArrowRight className="ml-2 h-6 w-6" />
                   </Button>
                 </motion.div>
               </Link>
-              
+
               <div className="flex items-center gap-4 mt-8 text-sm text-stone-500 font-medium">
-                <div className="flex items-center gap-1"><CheckCircle2 className="h-4 w-4 text-green-500"/> Xác nhận tức thì</div>
-                <div className="flex items-center gap-1"><CheckCircle2 className="h-4 w-4 text-green-500"/> Không chờ đợi</div>
+                <div className="flex items-center gap-1"><CheckCircle2 className="h-4 w-4 text-green-500"/> {t('contact.quickBooking.confirm')}</div>
+                <div className="flex items-center gap-1"><CheckCircle2 className="h-4 w-4 text-green-500"/> {t('contact.quickBooking.noWait')}</div>
               </div>
             </motion.div>
           </motion.div>
@@ -641,75 +725,88 @@ export function HospitalLandingPage() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full bg-stone-900 text-stone-300 pt-16">
-        <div className="container-site grid gap-10 px-4 md:px-6 lg:grid-cols-4 border-b border-stone-800 pb-16">
+      <footer className="w-full bg-gradient-to-b from-primary-900 via-primary-950 to-primary-950 text-primary-100 pt-16 border-t border-primary-800">
+        <div className="container-site grid gap-10 px-4 md:px-6 lg:grid-cols-4 border-b border-primary-800 pb-16">
           <div className="space-y-6">
             <Link href="/" className="flex items-center space-x-3">
-              <div className="h-12 w-12 rounded-xl bg-primary-600 flex items-center justify-center">
-                <Leaf className="h-7 w-7 text-white" />
+              <div className="relative h-14 w-14 overflow-hidden shrink-0">
+                <Image
+                  src="/images/logo.png"
+                  alt={t('header.logoAlt')}
+                  fill
+                  className="object-contain"
+                />
               </div>
-              <div className="leading-tight">
-                <span className="font-bold text-xl text-white block">Viện Y Dược Học</span>
-                <span className="text-sm font-semibold text-primary-400 uppercase tracking-widest">Dân Tộc TP.HCM</span>
+              <div className="leading-tight select-none">
+                <span className="text-[13px] font-bold text-white uppercase tracking-widest block whitespace-nowrap">{t('header.instituteName')}</span>
+                <span className="text-[11px] font-semibold text-primary-300 uppercase tracking-widest block whitespace-nowrap">{t('header.instituteShort')}</span>
               </div>
             </Link>
-            <p className="text-stone-400 leading-relaxed">
-              Kế thừa tinh hoa Y học cổ truyền Việt Nam, kết hợp cùng các phương pháp điều trị hiện đại nhằm mang lại sức khỏe tốt nhất cho cộng đồng.
+            <p className="text-primary-200 text-[15px] leading-relaxed">
+              {t('footer.description')}
             </p>
-            <div className="flex space-x-4">
-              <Link href="#" className="h-10 w-10 rounded-full bg-stone-800 flex items-center justify-center hover:bg-primary-600 hover:text-white transition-colors">
-                <Globe className="h-5 w-5" />
-              </Link>
-              <Link href="#" className="h-10 w-10 rounded-full bg-stone-800 flex items-center justify-center hover:bg-primary-600 hover:text-white transition-colors">
+            <div className="flex space-x-4 items-center">
+              <LanguageSwitcher align="top" variant="dark" dropdownAlign="left" />
+              <a href="https://www.youtube.com/@vienyduochocdantoctpHCM" target="_blank" rel="noopener noreferrer" className="h-10 w-10 rounded-full bg-primary-800/60 flex items-center justify-center hover:bg-red-600 hover:text-white transition-colors" aria-label="YouTube">
                 <Video className="h-5 w-5" />
-              </Link>
+              </a>
             </div>
           </div>
-          
+
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-1 lg:ml-12">
             <div>
-              <h3 className="text-lg font-bold text-white mb-6">Chuyên Khoa & Dịch Vụ</h3>
-              <nav className="flex flex-col space-y-4">
-                <Link href="/dat-lich" className="text-stone-400 hover:text-primary-400 transition-colors">Khám Bệnh Ban Đầu</Link>
-                <Link href="/tra-cuu" className="text-stone-400 hover:text-primary-400 transition-colors">Tra Cứu Lịch Sử Khám</Link>
-                <Link href="/dat-lich" className="text-stone-400 hover:text-primary-400 transition-colors">Đặt Lịch Cấy Chỉ</Link>
-                <Link href="/bang-gia" className="text-stone-400 hover:text-primary-400 transition-colors">Bảng Giá Dịch Vụ</Link>
+              <h3 className="text-[15px] font-bold text-white uppercase tracking-wider mb-6">{t('footer.specialtiesTitle')}</h3>
+              <nav className="flex flex-col space-y-3.5">
+                <Link href="/dat-lich" className="text-[15px] text-primary-200 hover:text-white hover:translate-x-0.5 transition-all duration-200">{t('footer.services.initialExam')}</Link>
+                <Link href="/tra-cuu" className="text-[15px] text-primary-200 hover:text-white hover:translate-x-0.5 transition-all duration-200">{t('footer.services.historySearch')}</Link>
+                <Link href="/dat-lich" className="text-[15px] text-primary-200 hover:text-white hover:translate-x-0.5 transition-all duration-200">{t('footer.services.embedding')}</Link>
+                <Link href="/bang-gia" className="text-[15px] text-primary-200 hover:text-white hover:translate-x-0.5 transition-all duration-200">{t('footer.services.pricing')}</Link>
               </nav>
             </div>
           </div>
-          
+
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-1 lg:ml-8">
             <div>
-              <h3 className="text-lg font-bold text-white mb-6">Thông Tin Phụ Trợ</h3>
-              <nav className="flex flex-col space-y-4">
-                <Link href="/gioi-thieu" className="text-stone-400 hover:text-primary-400 transition-colors">Đào Tạo - Chỉ Đạo Tuyến</Link>
-                <Link href="/tin-tuc" className="text-stone-400 hover:text-primary-400 transition-colors">Nghiên Cứu Khoa Học</Link>
-                <Link href="/duoc-lieu" className="text-stone-400 hover:text-primary-400 transition-colors">Sản Phẩm Thuốc YHCT</Link>
-                <Link href="/tin-tuc" className="text-stone-400 hover:text-primary-400 transition-colors">Tin Tức Hoạt Động</Link>
+              <h3 className="text-[15px] font-bold text-white uppercase tracking-wider mb-6">{t('footer.infoTitle')}</h3>
+              <nav className="flex flex-col space-y-3.5">
+                <Link href="/gioi-thieu" className="text-[15px] text-primary-200 hover:text-white hover:translate-x-0.5 transition-all duration-200">{t('footer.info.training')}</Link>
+                <Link href="/tin-tuc" className="text-[15px] text-primary-200 hover:text-white hover:translate-x-0.5 transition-all duration-200">{t('footer.info.research')}</Link>
+                <Link href="/duoc-lieu" className="text-[15px] text-primary-200 hover:text-white hover:translate-x-0.5 transition-all duration-200">{t('footer.info.herbalProducts')}</Link>
+                <Link href="/tin-tuc" className="text-[15px] text-primary-200 hover:text-white hover:translate-x-0.5 transition-all duration-200">{t('footer.info.news')}</Link>
               </nav>
             </div>
           </div>
-          
+
           <div className="space-y-6">
-            <h3 className="text-lg font-bold text-white">Bản Tin Sức Khỏe</h3>
-            <p className="text-stone-400">
-              Đăng ký email để nhận các lời khuyên chăm sóc sức khỏe bằng Đông Y hữu ích nhất.
-            </p>
-            <form className="flex flex-col gap-3 mt-2">
-              <Input type="email" placeholder="Nhập địa chỉ email..." className="bg-stone-800 border-stone-700 text-white placeholder:text-stone-500 h-12 rounded-xl focus-visible:ring-primary-500" />
-              <Button type="button" className="rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-bold h-12">
-                Đăng Ký
+            <h3 className="text-[15px] font-bold text-white uppercase tracking-wider">{t('footer.contactTitle')}</h3>
+            <div className="flex flex-col gap-4 text-primary-200 text-[15px]">
+              <div className="flex items-start gap-3">
+                <MapPin className="h-5 w-5 text-primary-300 shrink-0 mt-0.5" />
+                <span>273–275 Nguyễn Văn Trỗi, P.10, Q. Phú Nhuận, TP.HCM</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <Phone className="h-5 w-5 text-primary-300 shrink-0" />
+                <a href="tel:0964392632" className="hover:text-white transition-colors">Hotline: 0964 392 632</a>
+              </div>
+              <div className="flex items-center gap-3">
+                <Mail className="h-5 w-5 text-primary-300 shrink-0" />
+                <a href="mailto:v.ydhdt@tphcm.gov.vn" className="hover:text-white transition-colors">v.ydhdt@tphcm.gov.vn</a>
+              </div>
+            </div>
+            <Link href="/dat-lich" className="block pt-2">
+              <Button className="w-full rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-bold h-12 shadow-md">
+                {t('header.bookNow')}
               </Button>
-            </form>
+            </Link>
           </div>
         </div>
-        
-        <div className="container-site py-6 flex flex-col md:flex-row items-center justify-between text-sm text-stone-500">
-          <p>&copy; {new Date().getFullYear()} Viện Y Dược Học Dân Tộc TP.HCM. Bảo lưu mọi quyền.</p>
+
+        <div className="container-site py-6 flex flex-col md:flex-row items-center justify-between text-sm text-primary-400">
+          <p>© {new Date().getFullYear()} Viện Y Dược Học Dân Tộc. {t('footer.copyright', { year: new Date().getFullYear() })}</p>
           <div className="flex gap-6 mt-4 md:mt-0">
-            <Link href="/lien-he" className="hover:text-white transition-colors">Chính sách bảo mật</Link>
-            <Link href="/lien-he" className="hover:text-white transition-colors">Điều khoản sử dụng</Link>
-            <Link href="/admin/login" className="hover:text-white transition-colors text-primary-400">Cổng nội bộ</Link>
+            <Link href="/chinh-sach-bao-mat" className="hover:text-white transition-colors">{t('footer.links.privacy')}</Link>
+            <Link href="/quy-dinh" className="hover:text-white transition-colors">{t('footer.links.terms')}</Link>
+            <Link href="/admin/login" className="hover:text-white transition-colors text-primary-400">{t('footer.links.admin')}</Link>
           </div>
         </div>
       </footer>

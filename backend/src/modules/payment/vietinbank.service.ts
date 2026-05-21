@@ -84,7 +84,14 @@ export async function generateVietinBankQR(params: CreatePaymentParams): Promise
  */
 export function verifyIPNSignature(payload: any, signature: string, certPath?: string): boolean {
   try {
-    const dataToVerify = JSON.stringify(payload);
+    let dataToVerify: string | Buffer;
+    if (Buffer.isBuffer(payload)) {
+      dataToVerify = payload;
+    } else if (typeof payload === "string") {
+      dataToVerify = payload;
+    } else {
+      dataToVerify = JSON.stringify(payload);
+    }
 
     // Đọc certificate từ file .cer1 trong thư mục docs (không hardcode)
     const defaultCertPath = path.resolve(
