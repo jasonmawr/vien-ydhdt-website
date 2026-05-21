@@ -17,6 +17,7 @@ export interface OracleDoctor {
   DIENTHOAI: string | null;
   HIDE: number | null;
   STT: number | null;
+  NHOM: string | null;
 }
 
 /** Cấu trúc trả về cho Frontend (camelCase, an toàn) */
@@ -35,4 +36,5 @@ export interface DoctorDTO {
 export interface DoctorDetailDTO extends DoctorDTO {
   specialty?: string;
   departmentName?: string;
+  staffGroup?: string;
 }

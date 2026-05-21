@@ -10,7 +10,19 @@ const languages = [
   { code: "zh", label: "中文", flag: "🇨🇳" },
 ];
 
-export default function LanguageSwitcher() {
+interface LanguageSwitcherProps {
+  align?: "top" | "bottom";
+  variant?: "light" | "dark" | "transparent";
+  dropdownAlign?: "left" | "right";
+  compact?: boolean;
+}
+
+export default function LanguageSwitcher({
+  align = "top",
+  variant = "dark",
+  dropdownAlign = "left",
+  compact = false,
+}: LanguageSwitcherProps) {
   const locale = useLocale();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -48,17 +60,33 @@ export default function LanguageSwitcher() {
 
   const currentLang = languages.find((l) => l.code === locale) || languages[0];
 
+  const buttonStyles = {
+    dark: "bg-white/10 hover:bg-white/20 border border-white/20 text-white",
+    light: "bg-stone-50 hover:bg-stone-100 border border-stone-200 text-stone-700",
+    transparent: "bg-transparent hover:bg-stone-100 border border-transparent text-stone-700",
+  }[variant];
+
   return (
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 border border-white/20 transition-colors text-sm text-current"
+        className={`flex items-center transition-colors font-medium whitespace-nowrap select-none ${
+          compact
+            ? `gap-1.5 px-2.5 py-1.5 rounded-lg text-xs ${buttonStyles}`
+            : `gap-2 px-3 py-2 rounded-lg text-sm ${buttonStyles}`
+        }`}
         aria-label="Select language"
         disabled={isLoading}
       >
-        <Globe className="h-4 w-4" />
-        <span>{currentLang.flag}</span>
-        <span className="hidden sm:inline font-medium">{currentLang.label}</span>
+        <Globe className={compact ? "h-3.5 w-3.5" : "h-4 w-4"} />
+        {compact ? (
+          <span className="uppercase font-semibold tracking-wider text-[11px]">{currentLang.code}</span>
+        ) : (
+          <>
+            <span>{currentLang.flag}</span>
+            <span className="hidden sm:inline font-medium">{currentLang.label}</span>
+          </>
+        )}
         {isLoading && (
           <span className="h-3 w-3 border-2 border-current border-t-transparent rounded-full animate-spin" />
         )}
@@ -66,7 +94,11 @@ export default function LanguageSwitcher() {
 
       {/* Dropdown — mở bằng click, không phải hover */}
       {isOpen && (
-        <div className="absolute left-0 bottom-full mb-2 w-44 bg-white rounded-xl shadow-lg border border-gray-100 z-50 overflow-hidden">
+        <div className={`absolute w-44 bg-white rounded-xl shadow-lg border border-gray-100 z-50 overflow-hidden ${
+          align === "top" ? "bottom-full mb-2" : "top-full mt-2"
+        } ${
+          dropdownAlign === "right" ? "right-0" : "left-0"
+        }`}>
           {languages.map((lang) => (
             <button
               key={lang.code}

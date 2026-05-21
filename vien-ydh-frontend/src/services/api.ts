@@ -40,6 +40,7 @@ export interface DoctorDTO {
 export interface CreateAppointmentPayload {
   patientName: string;
   patientPhone: string;
+  patientEmail?: string;
   patientDob?: string;
   patientGender?: string;
   departmentId?: string;
@@ -47,6 +48,8 @@ export interface CreateAppointmentPayload {
   appointmentDate?: string;
   appointmentTime?: string;
   symptoms?: string;
+  doctorName?: string;
+  departmentName?: string;
 }
 
 export interface AppointmentRecord {
@@ -286,10 +289,18 @@ export interface PostDTO {
   keywords?: string;
   is_featured?: boolean;
   published_at?: string;
+  scheduled_at?: string;
   attachments?: AttachmentDTO[];
   view_count: number;
   created_at: string;
   updated_at: string;
+}
+
+export interface AdminUserDTO {
+  id: string;
+  username: string;
+  role: string;
+  createdAt: string;
 }
 
 export interface PaginatedPosts {
@@ -344,6 +355,44 @@ export async function updatePost(id: number, data: Partial<PostDTO>, token: stri
 
 export async function deletePost(id: number, token: string): Promise<void> {
   await apiFetch<{ success: boolean }>(`/api/cms/posts/${id}`, {
+    method: "DELETE",
+    headers: { "Authorization": `Bearer ${token}` }
+  });
+}
+
+export async function bulkActionPosts(action: 'publish' | 'unpublish' | 'delete', ids: number[], token: string): Promise<void> {
+  await apiFetch<{ success: boolean }>("/api/cms/posts/bulk-action", {
+    method: "POST",
+    headers: { "Authorization": `Bearer ${token}` },
+    body: JSON.stringify({ action, ids })
+  });
+}
+
+export async function getAdminUsers(token: string): Promise<AdminUserDTO[]> {
+  const response = await apiFetch<{ success: boolean; data: AdminUserDTO[] }>("/api/users", {
+    headers: { "Authorization": `Bearer ${token}` }
+  });
+  return response.data;
+}
+
+export async function createAdminUser(data: { username: string; password: string; role: string }, token: string): Promise<void> {
+  await apiFetch<{ success: boolean }>("/api/users", {
+    method: "POST",
+    headers: { "Authorization": `Bearer ${token}` },
+    body: JSON.stringify(data)
+  });
+}
+
+export async function updateAdminUser(id: string, data: { role?: string; password?: string }, token: string): Promise<void> {
+  await apiFetch<{ success: boolean }>(`/api/users/${id}`, {
+    method: "PUT",
+    headers: { "Authorization": `Bearer ${token}` },
+    body: JSON.stringify(data)
+  });
+}
+
+export async function deleteAdminUser(id: string, token: string): Promise<void> {
+  await apiFetch<{ success: boolean }>(`/api/users/${id}`, {
     method: "DELETE",
     headers: { "Authorization": `Bearer ${token}` }
   });
@@ -414,6 +463,92 @@ export async function updateWebDoctor(data: any, token: string): Promise<any> {
     body: JSON.stringify(data)
   });
   return response;
+}
+
+// ─────────────────────────────────────────
+// Patient Auth API
+// ─────────────────────────────────────────
+
+export async function sendPatientOtp(phone: string): Promise<{ message: string; expiresIn: number }> {
+  return apiFetch<any>("/api/patient/auth/send-otp", {
+    method: "POST",
+    body: JSON.stringify({ phone }),
+  });
+}
+
+export async function verifyPatientOtp(phone: string, otp: string): Promise<{ token: string; patient: { id: string; phone: string; fullName: string | null; email: string | null } }> {
+  return apiFetch<any>("/api/patient/auth/verify-otp", {
+    method: "POST",
+    body: JSON.stringify({ phone, otp }),
+  });
+}
+
+export interface PatientAppointment {
+  id: string;
+  doctorId?: string;
+  doctorName?: string;
+  departmentName?: string;
+  appointmentDate: string | null;
+  appointmentTime: string | null;
+  status: string;
+  symptoms?: string;
+  stt?: number;
+  createdAt?: string;
+}
+
+export async function getPatientAppointments(token: string): Promise<PatientAppointment[]> {
+  const data = await apiFetch<{ success: boolean; data: PatientAppointment[] }>("/api/patient/appointments", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return data.data;
+}
+
+export async function getPatientMe(token: string): Promise<any> {
+  const data = await apiFetch<{ success: boolean; data: any }>("/api/patient/me", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return data.data;
+}
+
+export async function duplicatePost(id: number, token: string): Promise<{ id: number; message: string }> {
+  const response = await apiFetch<{ success: boolean; data: { id: number; message: string } }>(`/api/cms/posts/${id}/duplicate`, {
+    method: "POST",
+    headers: { "Authorization": `Bearer ${token}` },
+  });
+  return response.data;
+}
+
+export async function getPostVersions(id: number, token: string): Promise<any[]> {
+  const response = await apiFetch<{ success: boolean; data: any[] }>(`/api/cms/posts/${id}/versions`, {
+    headers: { "Authorization": `Bearer ${token}` },
+  });
+  return response.data;
+}
+
+export async function submitDoctorReview(data: { doctor_id: string; appointment_id?: string; rating: number; comment?: string; patient_phone?: string }): Promise<void> {
+  await apiFetch<{ success: boolean }>("/api/reviews", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+export interface DoctorReview {
+  id: number;
+  rating: number;
+  comment: string | null;
+  created_at: string;
+}
+
+export interface DoctorReviewStats {
+  total: number;
+  avg_rating: number;
+}
+
+export async function getDoctorReviews(doctorId: string): Promise<{ reviews: DoctorReview[]; stats: DoctorReviewStats }> {
+  const response = await apiFetch<{ success: boolean; data: DoctorReview[]; stats: DoctorReviewStats }>(
+    `/api/reviews/doctor/${doctorId}`
+  );
+  return { reviews: response.data, stats: response.stats };
 }
 
 export async function getLogs(token: string, file?: string): Promise<any> {

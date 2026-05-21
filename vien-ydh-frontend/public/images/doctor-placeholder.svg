@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="375" viewBox="0 0 300 375">
+  <rect width="300" height="375" fill="#f0fdf4"/>
+  <!-- Body / coat -->
+  <rect x="75" y="220" width="150" height="155" rx="12" fill="#e0f2fe"/>
+  <!-- Collar / tie area -->
+  <path d="M130 220 L150 270 L170 220 Z" fill="#0369a1"/>
+  <!-- Stethoscope -->
+  <path d="M110 245 Q95 270 100 290 Q105 310 120 315 Q135 320 140 305 Q145 290 135 280" stroke="#0369a1" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <circle cx="107" cy="243" r="6" fill="#0369a1"/>
+  <!-- Head -->
+  <circle cx="150" cy="155" r="60" fill="#fed7aa"/>
+  <!-- Hair -->
+  <path d="M90 140 Q95 90 150 88 Q205 90 210 140 Q205 105 150 100 Q95 105 90 140Z" fill="#7c3aed"/>
+  <!-- Eyes -->
+  <ellipse cx="130" cy="152" rx="7" ry="8" fill="#1e293b"/>
+  <ellipse cx="170" cy="152" rx="7" ry="8" fill="#1e293b"/>
+  <circle cx="133" cy="149" r="2.5" fill="white"/>
+  <circle cx="173" cy="149" r="2.5" fill="white"/>
+  <!-- Nose -->
+  <path d="M147 162 Q150 170 153 162" stroke="#c2856a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <!-- Smile -->
+  <path d="M136 176 Q150 188 164 176" stroke="#c2856a" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <!-- Ears -->
+  <ellipse cx="90" cy="158" rx="9" ry="12" fill="#fed7aa"/>
+  <ellipse cx="210" cy="158" rx="9" ry="12" fill="#fed7aa"/>
+</svg>

@@ -1,8 +1,13 @@
 import { Router } from 'express';
 import { getWebDb } from '../../shared/sqlite';
-import { requireAdmin } from '../auth/auth.middleware';
+import { requireAdmin, requireAnyAdmin, requireMinRole } from '../auth/auth.middleware';
 import fs from 'fs';
 import path from 'path';
+
+// Helpers tắt gọn cho các role guard thường dùng
+const canEdit   = requireMinRole('EDITOR');      // EDITOR, MODERATOR, ADMIN, SUPER_ADMIN
+const canPublish = requireMinRole('MODERATOR');  // MODERATOR, ADMIN, SUPER_ADMIN
+const canAdmin  = requireAdmin;                  // ADMIN, SUPER_ADMIN
 
 export const cmsRouter = Router();
 
@@ -23,7 +28,7 @@ cmsRouter.get('/categories', async (_req, res) => {
 });
 
 // POST /api/cms/categories
-cmsRouter.post('/categories', requireAdmin, async (req, res) => {
+cmsRouter.post('/categories', canAdmin, async (req, res) => {
   try {
     const { name, slug, parent_id, description, display_order } = req.body;
     if (!name || !slug) return res.status(400).json({ success: false, error: 'Tên và Slug là bắt buộc' });
@@ -44,7 +49,7 @@ cmsRouter.post('/categories', requireAdmin, async (req, res) => {
 });
 
 // PUT /api/cms/categories/:id
-cmsRouter.put('/categories/:id', requireAdmin, async (req, res) => {
+cmsRouter.put('/categories/:id', canAdmin, async (req, res) => {
   try {
     const { name, slug, parent_id, description, display_order } = req.body;
     const db = await getWebDb();
@@ -60,7 +65,7 @@ cmsRouter.put('/categories/:id', requireAdmin, async (req, res) => {
 });
 
 // DELETE /api/cms/categories/:id
-cmsRouter.delete('/categories/:id', requireAdmin, async (req, res) => {
+cmsRouter.delete('/categories/:id', canAdmin, async (req, res) => {
   try {
     const db = await getWebDb();
     // Chuyển bài viết sang category NULL
@@ -198,13 +203,48 @@ cmsRouter.get('/posts/:id', async (req, res) => {
   }
 });
 
-// POST /api/cms/posts
-cmsRouter.post('/posts', requireAdmin, async (req, res) => {
+// POST /api/cms/posts/bulk-action
+cmsRouter.post('/posts/bulk-action', canPublish, async (req, res) => {
   try {
-    const { 
+    const { action, ids } = req.body;
+    if (!action || !Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ success: false, error: 'Thieu action hoac ids' });
+    }
+    // Xóa hàng loạt yêu cầu quyền ADMIN trở lên
+    if (action === 'delete') {
+      const userRole = (req as any).user?.role?.toUpperCase() ?? '';
+      const adminLevel = { SUPER_ADMIN: 5, ADMIN: 4, EDITOR: 3, MODERATOR: 2, VIEWER: 1 };
+      if ((adminLevel[userRole as keyof typeof adminLevel] ?? 0) < 4) {
+        return res.status(403).json({ success: false, error: 'Xóa hàng loạt yêu cầu quyền ADMIN' });
+      }
+    }
+
+    const db = await getWebDb();
+    const placeholders = ids.map(() => '?').join(',');
+    if (action === 'publish') {
+      await db.run(`UPDATE posts SET status='published', updated_at=CURRENT_TIMESTAMP WHERE id IN (${placeholders})`, ids);
+    } else if (action === 'unpublish') {
+      await db.run(`UPDATE posts SET status='draft', updated_at=CURRENT_TIMESTAMP WHERE id IN (${placeholders})`, ids);
+    } else if (action === 'delete') {
+      await db.run(`DELETE FROM posts WHERE id IN (${placeholders})`, ids);
+    } else {
+      return res.status(400).json({ success: false, error: 'Action không hợp lệ' });
+    }
+    res.json({ success: true, message: `Đã thực hiện ${action} cho ${ids.length} bài viết` });
+  } catch (error) {
+    console.error('[CMS] bulkAction error:', error);
+    res.status(500).json({ success: false, error: 'Loi thuc hien hanh dong' });
+  }
+});
+
+// POST /api/cms/posts
+cmsRouter.post('/posts', canEdit, async (req, res) => {
+  try {
+    const {
       title, slug, category_id, excerpt, content, thumbnail, status = 'published',
-      meta_title, meta_description, keywords, is_featured, published_at, attachments
+      meta_title, meta_description, keywords, is_featured, published_at, scheduled_at, attachments
     } = req.body;
+    const finalStatus = scheduled_at ? 'scheduled' : status;
     
     if (!title || !content) return res.status(400).json({ success: false, error: 'Thiếu tiêu đề hoặc nội dung' });
     
@@ -213,12 +253,13 @@ cmsRouter.post('/posts', requireAdmin, async (req, res) => {
     
     const result = await db.run(
       `INSERT INTO posts (
-        title, slug, category_id, category, excerpt, content, thumbnail, status, 
-        meta_title, meta_description, keywords, is_featured, published_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        title, slug, category_id, category, excerpt, content, thumbnail, status,
+        meta_title, meta_description, keywords, is_featured, published_at, scheduled_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
-        title, finalSlug, category_id || null, 'Legacy', excerpt, content, thumbnail, status,
-        meta_title, meta_description, keywords, is_featured ? 1 : 0, published_at || null
+        title, finalSlug, category_id || null, 'Legacy', excerpt, content, thumbnail, finalStatus,
+        meta_title, meta_description, keywords, is_featured ? 1 : 0,
+        scheduled_at ? null : (published_at || null), scheduled_at || null
       ]
     );
     
@@ -242,25 +283,35 @@ cmsRouter.post('/posts', requireAdmin, async (req, res) => {
 });
 
 // PUT /api/cms/posts/:id
-cmsRouter.put('/posts/:id', requireAdmin, async (req, res) => {
+cmsRouter.put('/posts/:id', canEdit, async (req, res) => {
   try {
-    const { 
+    const {
       title, slug, category_id, excerpt, content, thumbnail, status,
-      meta_title, meta_description, keywords, is_featured, published_at, attachments
+      meta_title, meta_description, keywords, is_featured, published_at, scheduled_at, attachments
     } = req.body;
+    const finalUpdateStatus = scheduled_at ? 'scheduled' : status;
     const db = await getWebDb();
     
-    const existing = await db.get('SELECT id FROM posts WHERE id = ?', [req.params.id]);
+    const existing = await db.get('SELECT id, title, content, excerpt FROM posts WHERE id = ?', [req.params.id]);
     if (!existing) return res.status(404).json({ success: false, error: 'Bài viết không tồn tại' });
-    
+
+    // Save version snapshot before update
+    try {
+      await db.run(
+        `INSERT INTO post_versions (post_id, title, content, excerpt, changed_by, change_summary) VALUES (?, ?, ?, ?, ?, ?)`,
+        [req.params.id, existing.title, existing.content, existing.excerpt, (req as any).user?.username || 'admin', `Cập nhật: ${new Date().toLocaleString('vi-VN')}`]
+      );
+    } catch {}
+
     await db.run(
-      `UPDATE posts SET 
-        title=?, slug=?, category_id=?, excerpt=?, content=?, thumbnail=?, status=?, 
-        meta_title=?, meta_description=?, keywords=?, is_featured=?, published_at=?, updated_at=CURRENT_TIMESTAMP 
+      `UPDATE posts SET
+        title=?, slug=?, category_id=?, excerpt=?, content=?, thumbnail=?, status=?,
+        meta_title=?, meta_description=?, keywords=?, is_featured=?, published_at=?, scheduled_at=?, updated_at=CURRENT_TIMESTAMP
       WHERE id=?`,
       [
-        title, slug, category_id || null, excerpt, content, thumbnail, status,
-        meta_title, meta_description, keywords, is_featured ? 1 : 0, published_at || null, req.params.id
+        title, slug, category_id || null, excerpt, content, thumbnail, finalUpdateStatus,
+        meta_title, meta_description, keywords, is_featured ? 1 : 0,
+        scheduled_at ? null : (published_at || null), scheduled_at || null, req.params.id
       ]
     );
 
@@ -285,7 +336,7 @@ cmsRouter.put('/posts/:id', requireAdmin, async (req, res) => {
 });
 
 // DELETE /api/cms/posts/:id
-cmsRouter.delete('/posts/:id', requireAdmin, async (req, res) => {
+cmsRouter.delete('/posts/:id', canAdmin, async (req, res) => {
   try {
     const db = await getWebDb();
     await db.run('DELETE FROM posts WHERE id = ?', [req.params.id]);
@@ -294,6 +345,84 @@ cmsRouter.delete('/posts/:id', requireAdmin, async (req, res) => {
   } catch (error) {
     console.error('[CMS] deletePost error:', error);
     res.status(500).json({ success: false, error: 'Lỗi xóa bài viết' });
+  }
+});
+
+// GET /api/cms/posts/:id/versions — Version history
+cmsRouter.get('/posts/:id/versions', canEdit, async (req, res) => {
+  try {
+    const db = await getWebDb();
+    const versions = await db.all(
+      `SELECT id, post_id, title, changed_by, changed_at, change_summary FROM post_versions WHERE post_id = ? ORDER BY changed_at DESC LIMIT 20`,
+      [req.params.id]
+    );
+    res.json({ success: true, data: versions });
+  } catch (error) {
+    console.error('[CMS] getVersions error:', error);
+    res.status(500).json({ success: false, error: 'Lỗi lấy lịch sử' });
+  }
+});
+
+// GET /api/cms/posts/:id/versions/:versionId — Get version content
+cmsRouter.get('/posts/:id/versions/:versionId', canEdit, async (req, res) => {
+  try {
+    const db = await getWebDb();
+    const version = await db.get(
+      `SELECT * FROM post_versions WHERE id = ? AND post_id = ?`,
+      [req.params.versionId, req.params.id]
+    );
+    if (!version) return res.status(404).json({ success: false, error: 'Không tìm thấy version' });
+    res.json({ success: true, data: version });
+  } catch (error) {
+    res.status(500).json({ success: false, error: 'Lỗi lấy version' });
+  }
+});
+
+// POST /api/cms/posts/:id/duplicate — Duplicate post
+cmsRouter.post('/posts/:id/duplicate', canEdit, async (req, res) => {
+  try {
+    const db = await getWebDb();
+    const post = await db.get(`SELECT * FROM posts WHERE id = ?`, [req.params.id]);
+    if (!post) return res.status(404).json({ success: false, error: 'Bài viết không tồn tại' });
+
+    const newSlug = `${post.slug}-ban-sao-${Date.now()}`;
+    const result = await db.run(
+      `INSERT INTO posts (title, slug, category, category_id, excerpt, content, thumbnail, author, status, tags, meta_title, meta_description, keywords, is_featured)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'draft', ?, ?, ?, ?, ?)`,
+      [`${post.title} (Bản sao)`, newSlug, post.category, post.category_id, post.excerpt, post.content, post.thumbnail, post.author, post.tags, post.meta_title, post.meta_description, post.keywords, post.is_featured]
+    );
+    res.json({ success: true, data: { id: result.lastID, message: 'Đã tạo bản sao' } });
+  } catch (error) {
+    console.error('[CMS] duplicatePost error:', error);
+    res.status(500).json({ success: false, error: 'Lỗi nhân bản bài viết' });
+  }
+});
+
+// ==========================================
+// REVIEWS (Public)
+// ==========================================
+
+// POST /api/cms/reviews — Submit doctor review
+cmsRouter.post('/reviews', async (req, res) => {
+  try {
+    const { doctor_id, appointment_id, rating, comment, patient_phone } = req.body;
+    if (!doctor_id || !rating || rating < 1 || rating > 5) {
+      return res.status(400).json({ success: false, error: 'Thiếu thông tin hoặc số sao không hợp lệ (1–5)' });
+    }
+    const db = await getWebDb();
+    // Prevent duplicate submission for same appointment
+    if (appointment_id) {
+      const existing = await db.get(`SELECT id FROM doctor_reviews WHERE appointment_id = ?`, [appointment_id]);
+      if (existing) return res.status(409).json({ success: false, error: 'Lịch hẹn này đã được đánh giá' });
+    }
+    await db.run(
+      `INSERT INTO doctor_reviews (doctor_id, appointment_id, rating, comment, patient_phone) VALUES (?, ?, ?, ?, ?)`,
+      [doctor_id, appointment_id || null, rating, comment || null, patient_phone || null]
+    );
+    res.json({ success: true, message: 'Cảm ơn đánh giá của bạn!' });
+  } catch (error) {
+    console.error('[CMS] submitReview error:', error);
+    res.status(500).json({ success: false, error: 'Lỗi gửi đánh giá' });
   }
 });
 
@@ -313,7 +442,7 @@ cmsRouter.get('/doctors/:mabs', async (req, res) => {
   }
 });
 
-cmsRouter.post('/doctors', requireAdmin, async (req, res) => {
+cmsRouter.post('/doctors', canAdmin, async (req, res) => {
   try {
     const db = await getWebDb();
     const { mabs, avatar_url, bio, experience_years, special_titles } = req.body;
@@ -342,7 +471,7 @@ cmsRouter.post('/doctors', requireAdmin, async (req, res) => {
 // LOGS
 // ==========================================
 
-cmsRouter.get('/logs', requireAdmin, async (req, res) => {
+cmsRouter.get('/logs', requireAnyAdmin, async (req, res) => {
   try {
     const logDir = path.join(process.cwd(), 'logs');
     if (!fs.existsSync(logDir)) {

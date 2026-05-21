@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Save, Send, Upload, Paperclip, X } from "lucide-react";
+import { ArrowLeft, Save, Send, Upload, Paperclip, X, Clock, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { RichTextEditor } from "@/components/ui/RichTextEditor";
@@ -10,12 +10,14 @@ import { createPost, getCategories, uploadFile, CategoryDTO, AttachmentDTO } fro
 import { getAuthToken } from "@/services/auth";
 import { toast } from "sonner";
 
+const META_DESC_MAX = 160;
+
 export default function CreatePostPage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [categories, setCategories] = useState<CategoryDTO[]>([]);
-  
+
   const [formData, setFormData] = useState({
     title: "",
     slug: "",
@@ -27,7 +29,7 @@ export default function CreatePostPage() {
     meta_description: "",
     keywords: "",
     is_featured: false,
-    published_at: "",
+    scheduled_at: "",
   });
 
   const [attachments, setAttachments] = useState<AttachmentDTO[]>([]);
@@ -55,7 +57,7 @@ export default function CreatePostPage() {
     setFormData(prev => {
       const newData = { ...prev, [name]: type === 'checkbox' ? checked : value };
       if (name === "title" && !prev.slug) {
-        newData.slug = value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)+/g, "");
+        newData.slug = value.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)+/g, "");
       }
       return newData;
     });
@@ -77,7 +79,6 @@ export default function CreatePostPage() {
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
         const uploadedData = await uploadFile(file, token);
-        
         setAttachments(prev => [...prev, {
           file_name: uploadedData.filename,
           file_url: uploadedData.url,
@@ -86,11 +87,10 @@ export default function CreatePostPage() {
         }]);
       }
       toast.success("Tải lên tệp đính kèm thành công");
-    } catch (error) {
+    } catch {
       toast.error("Lỗi tải lên tệp");
     } finally {
       setIsUploading(false);
-      // Reset input
       e.target.value = '';
     }
   };
@@ -99,7 +99,7 @@ export default function CreatePostPage() {
     setAttachments(prev => prev.filter((_, i) => i !== index));
   };
 
-  const handleSubmit = async (status: 'draft' | 'published') => {
+  const handleSubmit = async (submitStatus: 'draft' | 'published') => {
     if (!formData.title || !formData.content) {
       toast.error("Vui lòng nhập đầy đủ Tiêu đề và Nội dung bài viết.");
       return;
@@ -109,24 +109,31 @@ export default function CreatePostPage() {
     try {
       const token = await getAuthToken();
       if (!token) throw new Error("Chưa đăng nhập");
-      
-      const payload = { 
-        ...formData, 
+
+      const payload = {
+        ...formData,
         category_id: formData.category_id ? parseInt(formData.category_id) : null,
-        status,
+        status: submitStatus,
         attachments
       };
-      
+
       await createPost(payload, token);
-      toast.success(status === 'published' ? "Đã xuất bản bài viết thành công!" : "Đã lưu bản nháp thành công!");
+      if (formData.scheduled_at) {
+        toast.success("Đã lên lịch đăng bài thành công!");
+      } else {
+        toast.success(submitStatus === 'published' ? "Đã xuất bản bài viết thành công!" : "Đã lưu bản nháp thành công!");
+      }
       router.push("/admin/posts");
-    } catch (error) {
-      console.error(error);
+    } catch {
       toast.error("Đã có lỗi xảy ra. Vui lòng thử lại.");
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  const [showPreview, setShowPreview] = useState(false);
+  const metaDescLen = formData.meta_description.length;
+  const isScheduled = !!formData.scheduled_at;
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-stone-200 p-6 max-w-6xl mx-auto">
@@ -141,34 +148,75 @@ export default function CreatePostPage() {
           </div>
         </div>
         <div className="flex gap-3">
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
+            onClick={() => setShowPreview(p => !p)}
+            className={`flex items-center gap-2 ${showPreview ? "bg-stone-100 text-stone-800" : ""}`}
+          >
+            <Eye size={16} /> {showPreview ? "Đóng Preview" : "Preview"}
+          </Button>
+          <Button
+            variant="outline"
             onClick={() => handleSubmit('draft')}
             disabled={isSubmitting || isUploading}
             className="flex items-center gap-2"
           >
             <Save size={16} /> Lưu nháp
           </Button>
-          <Button 
-            onClick={() => handleSubmit('published')}
-            disabled={isSubmitting || isUploading}
-            className="bg-primary-600 hover:bg-primary-700 text-white flex items-center gap-2"
-          >
-            <Send size={16} /> Xuất bản ngay
-          </Button>
+          {isScheduled ? (
+            <Button
+              onClick={() => handleSubmit('published')}
+              disabled={isSubmitting || isUploading}
+              className="bg-amber-600 hover:bg-amber-700 text-white flex items-center gap-2"
+            >
+              <Clock size={16} /> Lên lịch đăng
+            </Button>
+          ) : (
+            <Button
+              onClick={() => handleSubmit('published')}
+              disabled={isSubmitting || isUploading}
+              className="bg-primary-600 hover:bg-primary-700 text-white flex items-center gap-2"
+            >
+              <Send size={16} /> Xuất bản ngay
+            </Button>
+          )}
         </div>
       </div>
+
+      {/* Preview Panel */}
+      {showPreview && (
+        <div className="mb-8 border border-stone-200 rounded-2xl overflow-hidden">
+          <div className="bg-stone-50 px-5 py-3 border-b border-stone-200 flex items-center gap-2">
+            <Eye size={14} className="text-stone-500" />
+            <span className="text-sm font-semibold text-stone-600">Xem trước bài viết</span>
+            <span className="text-xs text-stone-400 ml-auto">Đây là giao diện ước lượng, không hoàn toàn chính xác với trang live</span>
+          </div>
+          <div className="p-8 bg-white max-h-150 overflow-y-auto">
+            {formData.thumbnail && (
+              <img src={formData.thumbnail} alt="Thumbnail" className="w-full h-64 object-cover rounded-xl mb-6" />
+            )}
+            <h1 className="text-3xl font-bold text-stone-900 mb-4">{formData.title || "(Chưa có tiêu đề)"}</h1>
+            {formData.excerpt && (
+              <p className="text-lg text-stone-600 italic border-l-4 border-primary-400 pl-4 mb-6">{formData.excerpt}</p>
+            )}
+            <div
+              className="prose prose-stone max-w-none"
+              dangerouslySetInnerHTML={{ __html: formData.content }}
+            />
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main Content Area */}
         <div className="lg:col-span-2 space-y-6">
           <div>
             <label className="block text-sm font-semibold text-stone-700 mb-2">Tiêu đề bài viết <span className="text-red-500">*</span></label>
-            <Input 
+            <Input
               name="title"
               value={formData.title}
               onChange={handleChange}
-              placeholder="Nhập tiêu đề hấp dẫn..." 
+              placeholder="Nhập tiêu đề hấp dẫn..."
               className="text-lg font-medium h-12 rounded-xl"
             />
           </div>
@@ -182,23 +230,22 @@ export default function CreatePostPage() {
             <h3 className="font-semibold text-stone-800 mb-4 border-b border-stone-200 pb-2">Tài liệu đính kèm (Thông báo, Quyết định...)</h3>
             <div className="space-y-4">
               <div>
-                <input 
-                  type="file" 
-                  id="file-upload" 
-                  multiple 
-                  className="hidden" 
+                <input
+                  type="file"
+                  id="file-upload"
+                  multiple
+                  className="hidden"
                   onChange={handleFileUpload}
                   disabled={isUploading}
                 />
-                <label 
-                  htmlFor="file-upload" 
+                <label
+                  htmlFor="file-upload"
                   className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-stone-300 rounded-md shadow-sm text-sm font-medium text-stone-700 hover:bg-stone-50 cursor-pointer"
                 >
                   <Upload size={16} />
                   {isUploading ? "Đang tải lên..." : "Tải lên tệp đính kèm"}
                 </label>
               </div>
-
               {attachments.length > 0 && (
                 <ul className="space-y-2">
                   {attachments.map((file, idx) => (
@@ -208,11 +255,7 @@ export default function CreatePostPage() {
                         <span className="text-sm font-medium text-stone-700 truncate">{file.file_name}</span>
                         <span className="text-xs text-stone-400">({Math.round((file.file_size || 0) / 1024)} KB)</span>
                       </div>
-                      <button 
-                        type="button" 
-                        onClick={() => removeAttachment(idx)}
-                        className="text-red-500 hover:text-red-700"
-                      >
+                      <button type="button" onClick={() => removeAttachment(idx)} className="text-red-500 hover:text-red-700">
                         <X size={16} />
                       </button>
                     </li>
@@ -227,22 +270,22 @@ export default function CreatePostPage() {
         <div className="space-y-6">
           <div className="bg-stone-50 p-5 rounded-xl border border-stone-200">
             <h3 className="font-semibold text-stone-800 mb-4 border-b border-stone-200 pb-2">Thiết lập chung</h3>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-stone-600 mb-1">Đường dẫn (Slug)</label>
-                <Input 
+                <Input
                   name="slug"
                   value={formData.slug}
                   onChange={handleChange}
-                  placeholder="duong-dan-bai-viet" 
+                  placeholder="duong-dan-bai-viet"
                   className="text-sm bg-white"
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-stone-600 mb-1">Danh mục</label>
-                <select 
+                <select
                   name="category_id"
                   value={formData.category_id}
                   onChange={handleChange}
@@ -257,44 +300,58 @@ export default function CreatePostPage() {
 
               <div>
                 <label className="block text-sm font-medium text-stone-600 mb-1">Mô tả ngắn (Excerpt)</label>
-                <textarea 
+                <textarea
                   name="excerpt"
                   value={formData.excerpt}
                   onChange={handleChange}
                   placeholder="Tóm tắt nội dung để hiển thị trên trang chủ..."
-                  className="w-full rounded-md border border-stone-200 bg-white p-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 min-h-[100px] resize-none"
+                  className="w-full rounded-md border border-stone-200 bg-white p-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 min-h-20 resize-none"
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-stone-600 mb-1">Ảnh bìa (Thumbnail URL)</label>
-                <Input 
+                <Input
                   name="thumbnail"
                   value={formData.thumbnail}
                   onChange={handleChange}
-                  placeholder="https://..." 
+                  placeholder="https://..."
                   className="text-sm bg-white"
                 />
+                {formData.thumbnail && (
+                  <div className="mt-2 relative h-24 rounded-lg overflow-hidden border border-stone-200">
+                    <img src={formData.thumbnail} alt="Preview" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                    <div className="absolute inset-0 flex items-center justify-center bg-stone-100/50">
+                      <Eye size={16} className="text-stone-400" />
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-stone-600 mb-1">Lên lịch xuất bản</label>
-                <Input 
+                <label className="flex items-center gap-1 text-sm font-medium text-stone-600 mb-1">
+                  <Clock size={14} /> Lên lịch xuất bản
+                </label>
+                <Input
                   type="datetime-local"
-                  name="published_at"
-                  value={formData.published_at}
+                  name="scheduled_at"
+                  value={formData.scheduled_at}
                   onChange={handleChange}
                   className="text-sm bg-white"
                 />
-                <p className="text-xs text-stone-400 mt-1">Để trống nếu muốn đăng ngay</p>
+                {isScheduled ? (
+                  <p className="text-xs text-amber-600 mt-1 font-medium">Bài viết sẽ tự động đăng vào thời điểm trên</p>
+                ) : (
+                  <p className="text-xs text-stone-400 mt-1">Để trống nếu muốn đăng ngay</p>
+                )}
               </div>
 
               <div className="flex items-center gap-2 pt-2">
-                <input 
-                  type="checkbox" 
-                  id="is_featured" 
+                <input
+                  type="checkbox"
+                  id="is_featured"
                   name="is_featured"
-                  checked={formData.is_featured}
+                  checked={formData.is_featured as boolean}
                   onChange={handleChange}
                   className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-stone-300 rounded"
                 />
@@ -307,43 +364,50 @@ export default function CreatePostPage() {
 
           <div className="bg-stone-50 p-5 rounded-xl border border-stone-200">
             <h3 className="font-semibold text-stone-800 mb-4 border-b border-stone-200 pb-2">Tối ưu SEO</h3>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-stone-600 mb-1">Meta Title</label>
-                <Input 
+                <Input
                   name="meta_title"
                   value={formData.meta_title}
                   onChange={handleChange}
-                  placeholder="Tiêu đề SEO..." 
+                  placeholder="Tiêu đề SEO..."
                   className="text-sm bg-white"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-stone-600 mb-1">Meta Description</label>
-                <textarea 
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-sm font-medium text-stone-600">Meta Description</label>
+                  <span className={`text-xs font-mono ${metaDescLen > META_DESC_MAX ? 'text-red-600 font-bold' : metaDescLen > 130 ? 'text-amber-600' : 'text-stone-400'}`}>
+                    {metaDescLen}/{META_DESC_MAX}
+                  </span>
+                </div>
+                <textarea
                   name="meta_description"
                   value={formData.meta_description}
                   onChange={handleChange}
-                  placeholder="Mô tả SEO..."
-                  className="w-full rounded-md border border-stone-200 bg-white p-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 min-h-[80px] resize-none"
+                  placeholder="Mô tả SEO (tối đa 160 ký tự)..."
+                  className={`w-full rounded-md border bg-white p-3 text-sm focus:outline-none focus:ring-2 min-h-20 resize-none ${metaDescLen > META_DESC_MAX ? 'border-red-300 focus:ring-red-400' : 'border-stone-200 focus:ring-primary-500'}`}
                 />
+                {metaDescLen > META_DESC_MAX && (
+                  <p className="text-xs text-red-600 mt-1">Vượt quá {metaDescLen - META_DESC_MAX} ký tự</p>
+                )}
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-stone-600 mb-1">Keywords</label>
-                <Input 
+                <Input
                   name="keywords"
                   value={formData.keywords}
                   onChange={handleChange}
-                  placeholder="y học cổ truyền, châm cứu..." 
+                  placeholder="y học cổ truyền, châm cứu..."
                   className="text-sm bg-white"
                 />
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </div>

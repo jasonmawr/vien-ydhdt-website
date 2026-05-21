@@ -11,6 +11,7 @@ import {
   getDoctorImage,
   getDoctorsByDepartment,
 } from "./doctors.service";
+import sharp from "sharp";
 
 const router = Router();
 
@@ -32,6 +33,7 @@ router.get("/", async (req: Request, res: Response) => {
       doctors = await getAllDoctors(limit ? Number(limit) : undefined);
     }
 
+    res.set("Cache-Control", "public, max-age=300, stale-while-revalidate=60");
     res.json({ success: true, data: doctors, total: doctors.length });
   } catch (err) {
     console.error("[doctors] GET /:", err);
@@ -54,17 +56,20 @@ router.get("/:id", async (req: Request, res: Response) => {
   }
 });
 
-// GET /api/doctors/:id/image — Stream ảnh BLOB từ Oracle (có cache)
+// GET /api/doctors/:id/image?w=400&q=80 — Stream ảnh BLOB từ Oracle với resize WebP
 router.get("/:id/image", async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
+    const width = Math.min(Number(req.query.w) || 0, 800);
+    const quality = Math.min(Math.max(Number(req.query.q) || 80, 20), 100);
+    const cacheKey = width ? `${id}:${width}:${quality}` : id;
 
     // Kiểm tra cache trước
-    const cached = imageCache.get(id);
+    const cached = imageCache.get(cacheKey);
     if (cached && Date.now() - cached.cachedAt < IMAGE_CACHE_TTL) {
       res.set({
         "Content-Type": cached.contentType,
-        "Cache-Control": "public, max-age=86400",
+        "Cache-Control": "public, max-age=604800",
         "Content-Length": cached.buffer.length.toString(),
         "X-Cache": "HIT",
       });
@@ -73,33 +78,47 @@ router.get("/:id/image", async (req: Request, res: Response) => {
     }
 
     const imageBuffer = await getDoctorImage(id);
-
     if (!imageBuffer) {
-      res.status(204).end(); // No Content — tránh redirect loop
+      res.status(404).end();
       return;
     }
 
-    // Detect content type từ magic bytes
-    let contentType = "image/jpeg";
-    if (imageBuffer[0] === 0x89 && imageBuffer[1] === 0x50) {
-      contentType = "image/png";
-    } else if (imageBuffer[0] === 0x47 && imageBuffer[1] === 0x49) {
-      contentType = "image/gif";
+    let finalBuffer: Buffer;
+    let contentType: string;
+
+    if (width) {
+      // Resize và convert sang WebP với sharp
+      try {
+        finalBuffer = await sharp(imageBuffer)
+          .resize(width, Math.round(width * 1.25), { fit: "cover", position: "top" })
+          .webp({ quality })
+          .toBuffer();
+        contentType = "image/webp";
+      } catch {
+        // Fallback nếu sharp thất bại
+        finalBuffer = imageBuffer;
+        contentType = "image/jpeg";
+      }
+    } else {
+      finalBuffer = imageBuffer;
+      // Detect content type
+      contentType = "image/jpeg";
+      if (imageBuffer[0] === 0x89 && imageBuffer[1] === 0x50) contentType = "image/png";
+      else if (imageBuffer[0] === 0x47 && imageBuffer[1] === 0x49) contentType = "image/gif";
     }
 
-    // Lưu vào cache
-    imageCache.set(id, { buffer: imageBuffer, contentType, cachedAt: Date.now() });
+    imageCache.set(cacheKey, { buffer: finalBuffer, contentType, cachedAt: Date.now() });
 
     res.set({
       "Content-Type": contentType,
-      "Cache-Control": "public, max-age=86400",
-      "Content-Length": imageBuffer.length.toString(),
+      "Cache-Control": "public, max-age=604800",
+      "Content-Length": finalBuffer.length.toString(),
       "X-Cache": "MISS",
     });
-    res.send(imageBuffer);
+    res.send(finalBuffer);
   } catch (err) {
     console.error("[doctors] GET /:id/image:", err);
-    res.status(204).end();
+    res.status(404).end();
   }
 });
 

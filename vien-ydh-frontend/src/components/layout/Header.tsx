@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Menu, X, Search, ChevronDown, Calendar, Phone, Globe } from 'lucide-react';
+import { Menu, X, Search, ChevronDown, Calendar, Phone, Globe, UserCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTranslations } from 'next-intl';
 import LanguageSwitcher from './LanguageSwitcher';
@@ -16,7 +16,7 @@ interface NavItem {
 
 const TOP_NAV_ITEMS: NavItem[] = [
   { label: 'Người bệnh & Cộng đồng', href: '/' },
-  { label: 'Chuyên gia y tế', href: '/chuyen-gia-y-te' },
+  { label: 'Chuyên gia y tế', href: '/gioi-thieu' },
   { label: 'Đấu thầu', href: '/dau-thau' },
   { label: 'Liên hệ', href: '/lien-he' },
 ];
@@ -26,48 +26,52 @@ const MAIN_NAV_ITEMS: NavItem[] = [
     label: 'Giới thiệu',
     href: '/gioi-thieu',
     children: [
-      { label: 'Giới thiệu chung', href: '/gioi-thieu/chung' },
-      { label: 'Chức năng - Nhiệm vụ', href: '/gioi-thieu/chuc-nang' },
-      { label: 'Lịch sử hình thành và phát triển', href: '/gioi-thieu/lich-su' },
-      { label: 'Sơ đồ tổ chức', href: '/gioi-thieu/so-do' },
-      { label: 'Thành tích đạt được', href: '/gioi-thieu/thanh-tich' },
+      { label: 'Giới thiệu chung', href: '/gioi-thieu' },
+      { label: 'Chức năng - Nhiệm vụ', href: '/gioi-thieu' },
+      { label: 'Lịch sử hình thành và phát triển', href: '/gioi-thieu' },
+      { label: 'Sơ đồ tổ chức', href: '/gioi-thieu' },
+      { label: 'Thành tích đạt được', href: '/gioi-thieu' },
     ],
   },
   {
     label: 'Tin tức',
     href: '/tin-tuc',
     children: [
-      { label: 'Thông tin trong nước', href: '/tin-tuc/trong-nuoc' },
-      { label: 'Thông tin Viện', href: '/tin-tuc/vien' },
-      { label: 'Thông báo', href: '/tin-tuc/thong-bao' },
-      { label: 'Hợp tác quốc tế', href: '/tin-tuc/quoc-te' },
+      { label: 'Thông tin trong nước', href: '/tin-tuc' },
+      { label: 'Thông tin Viện', href: '/tin-tuc' },
+      { label: 'Thông báo', href: '/tin-tuc' },
+      { label: 'Hợp tác quốc tế', href: '/tin-tuc' },
     ],
   },
   {
     label: 'Khám chữa bệnh',
     href: '/kham-chua-benh',
     children: [
-      { label: 'Gương mặt tiêu biểu', href: '/kham-chua-benh/guong-mat-tieu-bieu' },
-      { label: 'Dịch vụ khám', href: '/dich-vu' },
-    ]
+      { label: 'Gương mặt tiêu biểu', href: '/bac-si' },
+      { label: 'Dịch vụ khám', href: '/kham-chua-benh' },
+      { label: 'Bảng giá dịch vụ', href: '/bang-gia' },
+      { label: 'Đặt lịch khám', href: '/dat-lich' },
+    ],
   },
   {
     label: 'Sản phẩm thuốc',
     href: '/thuoc-yhct',
     children: [
-      { label: 'Thuốc do viện sản xuất', href: '/thuoc-yhct/do-vien-san-xuat' },
-      { label: 'Thuốc liên doanh liên kết', href: '/thuoc-yhct/lien-doanh' },
+      { label: 'Thuốc YHCT', href: '/thuoc-yhct' },
+      { label: 'Dược liệu', href: '/duoc-lieu' },
     ],
   },
   {
-    label: 'Đào tạo - Chỉ đạo tuyến',
+    label: 'Đào tạo',
     href: '/dao-tao',
     children: [
-      { label: 'Chỉ đạo tuyến', href: '/dao-tao/chi-dao-tuyen' },
-      { label: 'Đào tạo liên tục', href: '/dao-tao/lien-tuc' },
-      { label: 'Cơ sở thực hành', href: '/dao-tao/co-so-thuc-hanh' },
-    ]
+      { label: 'Chỉ đạo tuyến', href: '/dao-tao' },
+      { label: 'Đào tạo liên tục', href: '/dao-tao' },
+      { label: 'Cơ sở thực hành', href: '/dao-tao' },
+    ],
   },
+  { label: 'Chuyên khoa', href: '/chuyen-khoa' },
+  { label: 'Bác sĩ', href: '/bac-si' },
 ];
 
 export default function Header() {
@@ -80,6 +84,7 @@ export default function Header() {
 
   const headerRef = useRef<HTMLElement>(null);
   const searchRef = useRef<HTMLDivElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -111,6 +116,30 @@ export default function Header() {
   useEffect(() => {
     document.body.style.overflow = isMenuOpen ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
+  }, [isMenuOpen]);
+
+  // Focus trap for mobile menu
+  useEffect(() => {
+    if (!isMenuOpen || !mobileMenuRef.current) return;
+    const menu = mobileMenuRef.current;
+    const focusable = menu.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    first.focus();
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') { setIsMenuOpen(false); return; }
+      if (e.key !== 'Tab') return;
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      } else {
+        if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isMenuOpen]);
 
   const handleSearch = (e: React.FormEvent) => {
@@ -152,7 +181,7 @@ export default function Header() {
               <span>Hotline: 0964 392 632</span>
             </a>
             <div className="h-4 w-px bg-primary-700"></div>
-            <LanguageSwitcher />
+            <LanguageSwitcher align="bottom" variant="dark" dropdownAlign="right" compact={true} />
           </div>
         </div>
       </div>
@@ -176,17 +205,19 @@ export default function Header() {
                   className="object-contain"
                 />
               </div>
-              <div className="leading-tight">
-                <p className="text-[10px] font-medium text-gray-500 lg:text-xs">VIỆN Y DƯỢC</p>
-                <p className="font-sans text-sm font-bold text-primary-800 lg:text-lg">
-                  Học Dân Tộc TP.HCM
+              <div className="leading-tight select-none">
+                <p className="text-[10px] font-bold text-primary-800 lg:text-[13px] uppercase tracking-wide whitespace-nowrap">
+                  {t('instituteName') || 'VIỆN Y DƯỢC HỌC DÂN TỘC'}
+                </p>
+                <p className="text-[9px] font-semibold text-primary-700 lg:text-[11px] uppercase tracking-wider whitespace-nowrap">
+                  {t('instituteShort') || 'THÀNH PHỐ HỒ CHÍ MINH'}
                 </p>
               </div>
             </Link>
 
             {/* Nav Desktop */}
             <nav
-              className="hidden items-center gap-1 xl:gap-2 lg:flex"
+              className="hidden items-center gap-0.5 lg:flex"
               aria-label="Điều hướng chính"
               onMouseLeave={() => setActiveDropdown(null)}
             >
@@ -199,7 +230,7 @@ export default function Header() {
                   {item.children ? (
                     <button
                       className={cn(
-                        "flex items-center gap-1 px-3 py-2 text-[15px] font-semibold transition-all rounded-md",
+                        "flex items-center gap-0.5 px-2.5 py-2 text-[13px] xl:text-sm font-semibold whitespace-nowrap transition-all rounded-md",
                         activeDropdown === item.href
                           ? "text-primary-700 bg-primary-50"
                           : "text-gray-700 hover:text-primary-700 hover:bg-gray-50"
@@ -209,7 +240,7 @@ export default function Header() {
                       {item.label}
                       <ChevronDown
                         className={cn(
-                          'h-4 w-4 transition-transform',
+                          'h-3.5 w-3.5 transition-transform shrink-0',
                           activeDropdown === item.href && 'rotate-180'
                         )}
                       />
@@ -217,7 +248,7 @@ export default function Header() {
                   ) : (
                     <Link
                       href={item.href}
-                      className="px-3 py-2 text-[15px] font-semibold text-gray-700 transition-all hover:text-primary-700 hover:bg-gray-50 rounded-md"
+                      className="px-2.5 py-2 text-[13px] xl:text-sm font-semibold whitespace-nowrap text-gray-700 transition-all hover:text-primary-700 hover:bg-gray-50 rounded-md"
                     >
                       {item.label}
                     </Link>
@@ -225,10 +256,10 @@ export default function Header() {
 
                   {/* Dropdown */}
                   {item.children && activeDropdown === item.href && (
-                    <div className="absolute left-0 top-[70px] w-64 bg-white rounded-b-xl shadow-card-premium border-t-2 border-primary-500 py-3 z-50 animate-fade-in-up" style={{ animationDuration: '0.2s' }}>
+                    <div className="absolute left-0 top-17.5 w-64 bg-white rounded-b-xl shadow-card-premium border-t-2 border-primary-500 py-3 z-50 animate-fade-in-up" style={{ animationDuration: '0.2s' }}>
                       {item.children.map((child) => (
                         <Link
-                          key={child.href}
+                          key={child.label}
                           href={child.href}
                           className="block px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition-colors"
                           onClick={() => setActiveDropdown(null)}
@@ -282,20 +313,33 @@ export default function Header() {
               {/* CTA */}
               <Link
                 href="/tra-cuu"
-                className="hidden xl:inline-flex items-center px-4 py-2.5 text-sm font-semibold text-primary-700 bg-primary-50 rounded-lg hover:bg-primary-100 transition-colors"
+                className="hidden 2xl:inline-flex items-center px-3 py-2 text-sm font-semibold text-primary-700 bg-primary-50 rounded-lg hover:bg-primary-100 transition-colors whitespace-nowrap"
               >
                 Tra cứu lịch
               </Link>
               <Link
+                href="/tai-khoan"
+                className="hidden xl:flex h-9 w-9 items-center justify-center rounded-full text-gray-600 hover:bg-gray-100 transition-colors"
+                aria-label="Tài khoản bệnh nhân"
+                title="Tài khoản bệnh nhân"
+              >
+                <UserCircle className="h-5 w-5" />
+              </Link>
+              <Link
                 href="/dat-lich"
-                className="hidden sm:inline-flex btn-accent !px-5 !py-2.5"
+                className="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-accent-600 hover:bg-accent-700 text-white text-sm font-semibold whitespace-nowrap transition-colors"
               >
                 {t('booking')}
               </Link>
 
+              {/* Language Switcher (Desktop Main Bar) */}
+              <div className="hidden lg:block border-l border-gray-200 pl-3">
+                <LanguageSwitcher align="bottom" variant="light" dropdownAlign="right" compact={true} />
+              </div>
+
               {/* Language Switcher (Mobile) */}
               <div className="lg:hidden">
-                <LanguageSwitcher />
+                <LanguageSwitcher align="bottom" variant="light" dropdownAlign="right" compact={true} />
               </div>
 
               {/* Hamburger */}
@@ -333,8 +377,12 @@ export default function Header() {
 
       {/* Mobile Menu */}
       <div
+        ref={mobileMenuRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Menu điều hướng"
         className={cn(
-          'fixed inset-x-0 top-[64px] bg-white border-t border-gray-100 transition-all duration-300 lg:hidden overflow-y-auto max-h-[calc(100vh-64px)] z-40',
+          'fixed inset-x-0 top-16 bg-white border-t border-gray-100 transition-all duration-300 lg:hidden overflow-y-auto max-h-[calc(100vh-64px)] z-40',
           isMenuOpen ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 pointer-events-none'
         )}
       >
@@ -361,7 +409,7 @@ export default function Header() {
                     <div className="bg-gray-50 px-4 py-2 space-y-1">
                       {item.children.map((child) => (
                         <Link
-                          key={child.href}
+                          key={child.label}
                           href={child.href}
                           className="block py-2.5 text-[15px] text-gray-600 hover:text-primary-700"
                           onClick={() => { setIsMenuOpen(false); setActiveDropdown(null); }}

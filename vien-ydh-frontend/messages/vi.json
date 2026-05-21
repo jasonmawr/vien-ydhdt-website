@@ -6,7 +6,9 @@
     "news": "Tin tức",
     "about": "Giới thiệu",
     "contact": "Liên hệ",
-    "admin": "Quản trị"
+    "admin": "Quản trị",
+    "instituteName": "VIỆN Y DƯỢC HỌC DÂN TỘC",
+    "instituteShort": "THÀNH PHỐ HỒ CHÍ MINH"
   },
   "hero": {
     "title": "Viện Y Dược Học Dân Tộc",
@@ -169,9 +171,15 @@
     "pleaseEnter": "Vui lòng nhập"
   },
   "footer": {
+    "instituteName": "VIỆN Y DƯỢC HỌC DÂN TỘC",
+    "instituteShort": "THÀNH PHỐ HỒ CHÍ MINH",
     "description": "Đơn vị nghiên cứu và điều trị hàng đầu về Y học Cổ truyền Việt Nam, kết hợp tinh hoa y học cổ truyền và y học hiện đại trong chăm sóc sức khỏe.",
     "about": {
-      "title": "Về Viện"
+      "title": "Về Viện",
+      "intro": "Giới thiệu chung",
+      "functions": "Chức năng & Nhiệm vụ",
+      "structure": "Sơ đồ tổ chức",
+      "news": "Tin tức & Sự kiện"
     },
     "specialties": {
       "title": "Chuyên khoa nổi bật",
@@ -205,7 +213,13 @@
     "rights": "Bảo lưu mọi quyền.",
     "privacy": "Chính sách bảo mật",
     "terms": "Điều khoản sử dụng",
-    "adminPortal": "Cổng nội bộ"
+    "adminPortal": "Cổng nội bộ",
+    "hours": {
+      "title": "Giờ làm việc",
+      "weekday": "T2–T6: 06:00–16:30",
+      "evening": "(Chiều T2–T6: 13:00–16:30)",
+      "weekend": "T7, CN: 07:00–11:30"
+    }
   },
   "search": {
     "title": "Tra Cứu Thông Tin Khám Bệnh",
@@ -250,7 +264,9 @@
       "research": "Nghiên cứu khoa học",
       "patient": "Hướng dẫn bệnh nhân"
     },
-    "read": "Đọc"
+    "read": "Đọc",
+    "attachments": "Tài liệu đính kèm",
+    "uncategorized": "Chưa phân loại"
   },
   "about": {
     "instituteName": "Viện Y Dược Học Dân Tộc TP.HCM",
@@ -463,8 +479,8 @@
   "home": {
     "header": {
       "logoAlt": "Logo Viện",
-      "instituteName": "Viện Y Dược Học",
-      "instituteShort": "Dân Tộc TP.HCM",
+      "instituteName": "VIỆN Y DƯỢC HỌC DÂN TỘC",
+      "instituteShort": "THÀNH PHỐ HỒ CHÍ MINH",
       "nav": {
         "about": "Giới Thiệu",
         "booking": "Đặt Lịch Khám",
@@ -582,6 +598,7 @@
         "embedding": "Đặt Lịch Cấy Chỉ",
         "pricing": "Bảng Giá Dịch Vụ"
       },
+      "contactTitle": "Liên Hệ & Địa Chỉ",
       "infoTitle": "Thông Tin Phụ Trợ",
       "info": {
         "training": "Đào Tạo - Chỉ Đạo Tuyến",

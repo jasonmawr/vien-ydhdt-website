@@ -6,6 +6,18 @@ export function middleware(request: NextRequest): NextResponse {
   const isAuthPage = request.nextUrl.pathname.startsWith("/admin/login");
   const isAdminRoute = request.nextUrl.pathname.startsWith("/admin");
 
+  // Fix: Sync headers to prevent Next.js Server Action CSRF mismatch under reverse proxy
+  const requestHeaders = new Headers(request.headers);
+  const origin = request.headers.get("origin");
+  if (origin) {
+    const originHost = origin.replace(/^https?:\/\//, "");
+    const xForwardedHost = request.headers.get("x-forwarded-host");
+    if (xForwardedHost && xForwardedHost !== originHost) {
+      requestHeaders.set("x-forwarded-host", originHost);
+    }
+    requestHeaders.set("host", originHost);
+  }
+
   if (isAdminRoute && !isAuthPage) {
     if (!token) {
       // Chuyển hướng người dùng về trang đăng nhập nếu chưa có token
@@ -19,7 +31,11 @@ export function middleware(request: NextRequest): NextResponse {
     return NextResponse.redirect(new URL("/admin", request.url).toString(), 302);
   }
 
-  return NextResponse.next();
+  return NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
 }
 
 // Cấu hình áp dụng middleware cho các route bắt đầu bằng /admin

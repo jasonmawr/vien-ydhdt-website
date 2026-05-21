@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { Stethoscope, UserRound, CalendarDays, ShieldCheck, Clock, CreditCard } from "lucide-react";
 import { getExamPricing } from "@/services/api";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
+import { translateServiceName } from "@/lib/translations";
 
 const bookingModes = [
   {
@@ -49,6 +50,7 @@ export default async function DatLichPage() {
   const t = await getTranslations('booking');
   const tFeatures = await getTranslations('features');
   const tPricing = await getTranslations('pricing');
+  const locale = await getLocale();
   const pricingData = await getExamPricing().catch(() => []);
 
   return (
@@ -132,7 +134,7 @@ export default async function DatLichPage() {
                   {pricingData.length > 0 ? (
                     pricingData.map((item, index) => (
                       <tr key={item.id} className={`border-b border-gray-50 hover:bg-gray-50 ${index % 2 === 0 ? "bg-white" : "bg-gray-50/30"}`}>
-                        <td className="py-3 px-4 font-medium">{item.name}</td>
+                        <td className="py-3 px-4 font-medium">{translateServiceName(item.name, locale)}</td>
                         <td className="py-3 px-4 text-right text-emerald-700 font-semibold">
                           {new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(item.priceBHYT)}
                         </td>
