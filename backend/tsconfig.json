@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "ignoreDeprecations": "5.0",
     "module": "commonjs",
     "lib": ["ES2022"],
     "outDir": "./dist",
@@ -14,10 +13,9 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "baseUrl": "./src",
     "paths": {
-      "@modules/*": ["modules/*"],
-      "@shared/*": ["shared/*"]
+      "@modules/*": ["./src/modules/*"],
+      "@shared/*": ["./src/shared/*"]
     }
   },
   "include": ["src/**/*"],
