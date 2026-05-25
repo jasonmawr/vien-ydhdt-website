@@ -13,7 +13,7 @@ const FAQS = [
     items: [
       {
         q: "Làm sao đặt lịch khám tại Viện?",
-        a: "Bạn có thể đặt lịch qua 3 cách: (1) Đặt online tại mục 'Đặt lịch' trên website; (2) Gọi hotline 0964 392 632; (3) Đến trực tiếp tại quầy tiếp đón 273-275 Nam Kỳ Khởi Nghĩa, Quận 3.",
+        a: "Bạn có thể đặt lịch qua 3 cách: (1) Đặt online tại mục 'Đặt lịch' trên website; (2) Gọi hotline 0964 392 632; (3) Đến trực tiếp tại quầy tiếp đón 273 - 275 Nguyễn Văn Trỗi, Quận Phú Nhuận.",
       },
       {
         q: "Đặt lịch trước có được ưu tiên không?",

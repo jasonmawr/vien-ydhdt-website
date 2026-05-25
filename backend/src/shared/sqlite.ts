@@ -326,18 +326,33 @@ NGUYÊN TẮC:
   // Seed default hospital configs if not set (ensuring values exist)
   const defaultHospitalConfigs = [
     { key: 'hospital_name', value: 'Viện Y dược học Dân tộc Thành phố Hồ Chí Minh' },
-    { key: 'hospital_address_1', value: '179-187 Nam Kỳ Khởi Nghĩa, P. Võ Thị Sáu, Q.3, TP.HCM' },
-    { key: 'hospital_address_2', value: '218K Trần Hưng Đạo B, P. Chợ Lớn, TP.HCM' },
-    { key: 'hospital_phone', value: '(028) 3932 6579 - (028) 3932 6004' },
-    { key: 'hospital_hours', value: 'T2-T7: 7h00-11h30 13h00-16h30' },
-    { key: 'hospital_website', value: 'yhct.vn' }
+    { key: 'hospital_address_1', value: '273 - 275 Nguyễn Văn Trỗi, Phường 10, Quận Phú Nhuận, TP. Hồ Chí Minh' },
+    { key: 'hospital_address_2', value: '' },
+    { key: 'hospital_phone', value: '(028) 3844 3047 - (028) 3844 2349' },
+    { key: 'hospital_hours', value: 'T2-T6: 7h00-11h30, 13h30-16h30 (Thứ 7: Khám ngoài giờ)' },
+    { key: 'hospital_website', value: 'vienydhdt.gov.vn' }
   ];
+
+  const incorrectHospitalValues: Record<string, string[]> = {
+    hospital_name: ['Bệnh viện Y học cổ truyền TP.HCM', 'Bệnh viện Y học Cổ truyền TP.HCM', 'Viện Y DƯỢC HỌC DÂN TỘC THÀNH PHỐ HỒ CHÍ MINH'],
+    hospital_address_1: ['179-187 Nam Kỳ Khởi Nghĩa, P. Võ Thị Sáu, Q.3, TP.HCM', '273-275 Nam Kỳ Khởi Nghĩa, Phường 7, Quận 3, TP.HCM', '273-275 Nam Kỳ Khởi Nghĩa, Q.3, TP.HCM'],
+    hospital_address_2: ['218K Trần Hưng Đạo B, P. Chợ Lớn, TP.HCM'],
+    hospital_phone: ['(028) 3932 6579 - (028) 3932 6004'],
+    hospital_hours: ['T2-T7: 7h00-11h30 13h00-16h30', 'T2-T7: 7h00-11h30 13h00-16h30'],
+    hospital_website: ['yhct.vn']
+  };
+
   for (const item of defaultHospitalConfigs) {
-    await db.run(
-      'INSERT OR IGNORE INTO chatbot_configs (key, value) VALUES (?, ?)',
-      item.key,
-      item.value
-    );
+    const current = await db.get('SELECT value FROM chatbot_configs WHERE key = ?', item.key);
+    if (!current) {
+      await db.run('INSERT INTO chatbot_configs (key, value) VALUES (?, ?)', item.key, item.value);
+    } else {
+      const oldVals = incorrectHospitalValues[item.key] || [];
+      if (oldVals.includes(current.value) || current.value.includes('Nam Kỳ Khởi Nghĩa') || current.value.includes('yhct.vn')) {
+        await db.run('UPDATE chatbot_configs SET value = ? WHERE key = ?', item.value, item.key);
+        console.log(`[Web CMS] Đã cập nhật sửa đổi thông tin bệnh viện cũ cho ${item.key} thành: ${item.value}`);
+      }
+    }
   }
 
   // Seed default Eastern Medicine knowledge (15 FAQ cards)

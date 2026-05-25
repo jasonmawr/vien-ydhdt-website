@@ -104,8 +104,8 @@ export default async function RootLayout({
     email: "bvyhdt@yahoo.com",
     address: {
       "@type": "PostalAddress",
-      streetAddress: "273-275 Nam Kỳ Khởi Nghĩa, Phường 7",
-      addressLocality: "Quận 3",
+      streetAddress: "273 - 275 Nguyễn Văn Trỗi, Phường 10",
+      addressLocality: "Quận Phú Nhuận",
       addressRegion: "TP.HCM",
       postalCode: "70000",
       addressCountry: "VN",

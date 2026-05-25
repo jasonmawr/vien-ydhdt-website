@@ -148,11 +148,11 @@ export default function ChatbotPortalPage() {
   // Tab 7: Hospital Configurations (Cài đặt)
   const [hospitalConfigs, setHospitalConfigs] = useState({
     hospital_name: "Viện Y dược học Dân tộc Thành phố Hồ Chí Minh",
-    hospital_address_1: "179-187 Nam Kỳ Khởi Nghĩa, P. Võ Thị Sáu, Q.3, TP.HCM",
-    hospital_address_2: "218K Trần Hưng Đạo B, P. Chợ Lớn, TP.HCM",
-    hospital_phone: "(028) 3932 6579 - (028) 3932 6004",
-    hospital_hours: "T2-T7: 7h00-11h30 13h00-16h30",
-    hospital_website: "yhct.vn",
+    hospital_address_1: "273 - 275 Nguyễn Văn Trỗi, Phường 10, Quận Phú Nhuận, TP. Hồ Chí Minh",
+    hospital_address_2: "",
+    hospital_phone: "(028) 3844 3047 - (028) 3844 2349",
+    hospital_hours: "T2-T6: 7h00-11h30, 13h30-16h30 (Thứ 7: Khám ngoài giờ)",
+    hospital_website: "vienydhdt.gov.vn",
     system_prompt: "",
     welcome_message: "",
     ai_model: "gemini-2.0-flash",
@@ -590,11 +590,11 @@ export default function ChatbotPortalPage() {
         setHospitalConfigs(prev => ({
           ...prev,
           hospital_name: data.hospital_name || "Viện Y dược học Dân tộc Thành phố Hồ Chí Minh",
-          hospital_address_1: data.hospital_address_1 || "179-187 Nam Kỳ Khởi Nghĩa, P. Võ Thị Sáu, Q.3, TP.HCM",
-          hospital_address_2: data.hospital_address_2 || "218K Trần Hưng Đạo B, P. Chợ Lớn, TP.HCM",
-          hospital_phone: data.hospital_phone || "(028) 3932 6579 - (028) 3932 6004",
-          hospital_hours: data.hospital_hours || "T2-T7: 7h00-11h30 13h00-16h30",
-          hospital_website: data.hospital_website || "yhct.vn",
+          hospital_address_1: data.hospital_address_1 || "273 - 275 Nguyễn Văn Trỗi, Phường 10, Quận Phú Nhuận, TP. Hồ Chí Minh",
+          hospital_address_2: data.hospital_address_2 !== undefined ? data.hospital_address_2 : "",
+          hospital_phone: data.hospital_phone || "(028) 3844 3047 - (028) 3844 2349",
+          hospital_hours: data.hospital_hours || "T2-T6: 7h00-11h30, 13h30-16h30 (Thứ 7: Khám ngoài giờ)",
+          hospital_website: data.hospital_website || "vienydhdt.gov.vn",
           system_prompt: data.system_prompt || "",
           welcome_message: data.welcome_message || "",
           ai_model: data.ai_model || "gemini-2.0-flash",
@@ -1498,7 +1498,7 @@ export default function ChatbotPortalPage() {
                               type="text"
                               value={hospitalConfigs.hospital_address_2}
                               onChange={(e) => setHospitalConfigs({ ...hospitalConfigs, hospital_address_2: e.target.value })}
-                              required
+                              placeholder="(Nếu có)"
                               className="text-xs font-bold text-stone-700 outline-none bg-transparent w-full border-b border-transparent focus:border-[#109173] pb-0.5 mt-0.5"
                             />
                           </div>
