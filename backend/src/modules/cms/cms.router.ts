@@ -223,10 +223,46 @@ cmsRouter.post('/posts/bulk-action', canPublish, async (req, res) => {
     const placeholders = ids.map(() => '?').join(',');
     if (action === 'publish') {
       await db.run(`UPDATE posts SET status='published', updated_at=CURRENT_TIMESTAMP WHERE id IN (${placeholders})`, ids);
+      // Tự động đồng bộ sang chatbot_knowledge hoạt động hàng loạt
+      try {
+        const postsToSync = await db.all(`SELECT id, title, excerpt, content FROM posts WHERE id IN (${placeholders})`, ids);
+        for (const post of postsToSync) {
+          const plainContent = post.content.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+          const RAGText = post.excerpt ? `${post.excerpt}\n${plainContent}` : plainContent;
+          await db.run(
+            `INSERT INTO chatbot_knowledge (id, source_type, source_reference, title, content, is_active, updated_at)
+             VALUES (?, 'cms_post', ?, ?, ?, 1, CURRENT_TIMESTAMP)
+             ON CONFLICT(id) DO UPDATE SET 
+               title = excluded.title,
+               content = excluded.content,
+               is_active = 1,
+               updated_at = CURRENT_TIMESTAMP`,
+            [`cms-${post.id}`, String(post.id), post.title, RAGText]
+          );
+        }
+      } catch (errBulk) {
+        console.error('[CMS Bulk Sync] Lỗi đồng bộ chatbot:', errBulk);
+      }
     } else if (action === 'unpublish') {
       await db.run(`UPDATE posts SET status='draft', updated_at=CURRENT_TIMESTAMP WHERE id IN (${placeholders})`, ids);
+      // Tự động ẩn các bài viết trong tri thức chatbot
+      try {
+        const kbIds = ids.map(id => `cms-${id}`);
+        const kbPlaceholders = kbIds.map(() => '?').join(',');
+        await db.run(`UPDATE chatbot_knowledge SET is_active = 0 WHERE id IN (${kbPlaceholders})`, kbIds);
+      } catch (errUnpub) {
+        console.error('[CMS Bulk Unpublish] Lỗi ẩn chatbot:', errUnpub);
+      }
     } else if (action === 'delete') {
       await db.run(`DELETE FROM posts WHERE id IN (${placeholders})`, ids);
+      // Tự động xóa các bài viết khỏi tri thức chatbot
+      try {
+        const kbIds = ids.map(id => `cms-${id}`);
+        const kbPlaceholders = kbIds.map(() => '?').join(',');
+        await db.run(`DELETE FROM chatbot_knowledge WHERE id IN (${kbPlaceholders})`, kbIds);
+      } catch (errDel) {
+        console.error('[CMS Bulk Delete] Lỗi xóa chatbot:', errDel);
+      }
     } else {
       return res.status(400).json({ success: false, error: 'Action không hợp lệ' });
     }
@@ -272,6 +308,27 @@ cmsRouter.post('/posts', canEdit, async (req, res) => {
           `INSERT INTO post_attachments (post_id, file_name, file_url, file_type, file_size) VALUES (?, ?, ?, ?, ?)`,
           [postId, file.file_name, file.file_url, file.file_type || null, file.file_size || null]
         );
+      }
+    }
+
+    // Realtime chatbot knowledge base sync for RAG
+    if (finalStatus === 'published') {
+      try {
+        const plainContent = content.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+        const RAGText = excerpt ? `${excerpt}\n${plainContent}` : plainContent;
+        const knowledgeId = `cms-${postId}`;
+        await db.run(
+          `INSERT INTO chatbot_knowledge (id, source_type, source_reference, title, content, is_active, updated_at)
+           VALUES (?, 'cms_post', ?, ?, ?, 1, CURRENT_TIMESTAMP)
+           ON CONFLICT(id) DO UPDATE SET 
+             title = excluded.title,
+             content = excluded.content,
+             updated_at = CURRENT_TIMESTAMP`,
+          [knowledgeId, String(postId), title, RAGText]
+        );
+        console.log(`[Chatbot Sync] Sync bài viết mới "${title}" sang tri thức Chatbot AI`);
+      } catch (errSync) {
+        console.error(`[Chatbot Sync] Lỗi sync bài viết mới sang RAG:`, errSync);
       }
     }
     
@@ -327,6 +384,32 @@ cmsRouter.put('/posts/:id', canEdit, async (req, res) => {
         }
       }
     }
+
+    // Realtime chatbot knowledge base sync for RAG khi cập nhật bài viết
+    if (finalUpdateStatus === 'published') {
+      try {
+        const plainContent = content.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+        const RAGText = excerpt ? `${excerpt}\n${plainContent}` : plainContent;
+        const knowledgeId = `cms-${req.params.id}`;
+        await db.run(
+          `INSERT INTO chatbot_knowledge (id, source_type, source_reference, title, content, is_active, updated_at)
+           VALUES (?, 'cms_post', ?, ?, ?, 1, CURRENT_TIMESTAMP)
+           ON CONFLICT(id) DO UPDATE SET 
+             title = excluded.title,
+             content = excluded.content,
+             updated_at = CURRENT_TIMESTAMP`,
+          [knowledgeId, String(req.params.id), title, RAGText]
+        );
+        console.log(`[Chatbot Sync] Đồng bộ bài viết cập nhật "${title}" sang tri thức Chatbot AI`);
+      } catch (errSync) {
+        console.error(`[Chatbot Sync] Lỗi sync bài viết cập nhật sang RAG:`, errSync);
+      }
+    } else {
+      // Nếu bài viết chuyển thành nháp (draft), tạm ẩn khỏi tri thức của Chatbot
+      try {
+        await db.run("UPDATE chatbot_knowledge SET is_active = 0 WHERE id = ?", [`cms-${req.params.id}`]);
+      } catch {}
+    }
     
     res.json({ success: true, message: 'Cập nhật bài viết thành công' });
   } catch (error) {
@@ -340,7 +423,15 @@ cmsRouter.delete('/posts/:id', canAdmin, async (req, res) => {
   try {
     const db = await getWebDb();
     await db.run('DELETE FROM posts WHERE id = ?', [req.params.id]);
-    // post_attachments is configured with ON DELETE CASCADE so it should be deleted automatically
+    
+    // Tự động xóa khỏi chatbot_knowledge
+    try {
+      await db.run('DELETE FROM chatbot_knowledge WHERE id = ?', [`cms-${req.params.id}`]);
+      console.log(`[Chatbot Sync] Đã xóa bài viết ID ${req.params.id} khỏi tri thức Chatbot`);
+    } catch (errSync) {
+      console.error('[Chatbot Sync] Lỗi xóa tri thức chatbot khi xóa bài viết:', errSync);
+    }
+
     res.json({ success: true, message: 'Đã xóa bài viết' });
   } catch (error) {
     console.error('[CMS] deletePost error:', error);

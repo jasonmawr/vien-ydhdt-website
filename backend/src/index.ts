@@ -25,6 +25,7 @@ import patientAuthRouter from "./modules/patient-auth/patient-auth.router";
 import patientRouter from "./modules/patient/patient.router";
 import usersRouter from "./modules/users/users.router";
 import reviewsRouter from "./modules/reviews/reviews.router";
+import qnaRouter from "./modules/qna/qna.router";
 import { ensureWebUsersTable } from "./modules/auth/auth.service";
 import { getWebDb } from "./shared/sqlite";
 
@@ -120,6 +121,7 @@ app.use("/api/patient/auth", strictLimiter, patientAuthRouter);
 app.use("/api/patient", patientRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/reviews", reviewsRouter);
+app.use("/api/qna", qnaRouter);
 
 // Static files
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));

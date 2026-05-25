@@ -13,8 +13,6 @@ const fadeIn = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, tra
 
 export default function LienHePage() {
   const t = useTranslations('contact');
-  const [submitted, setSubmitted] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const contactItems = [
     {
@@ -43,10 +41,56 @@ export default function LienHePage() {
     },
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  
+  const [form, setForm] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    subject: "Đặt lịch khám",
+    message: ""
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setTimeout(() => { setIsSubmitting(false); setSubmitted(true); }, 1500);
+    setErrorMessage(null);
+
+    try {
+      const res = await fetch("/api/qna", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name: form.name,
+          phone: form.phone,
+          email: form.email || null,
+          subject: form.subject,
+          message: form.message
+        })
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setSubmitted(true);
+        setForm({
+          name: "",
+          phone: "",
+          email: "",
+          subject: "Đặt lịch khám",
+          message: ""
+        });
+      } else {
+        setErrorMessage(data.error || "Đã xảy ra lỗi khi gửi câu hỏi.");
+      }
+    } catch (err) {
+      setErrorMessage("Không thể kết nối đến máy chủ. Vui lòng thử lại sau.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -99,6 +143,12 @@ export default function LienHePage() {
               <h2 className="text-2xl font-bold text-stone-900 mb-2">{t('form.title')}</h2>
               <p className="text-stone-500 mb-8">{t('form.subtitle')}</p>
 
+              {errorMessage && (
+                <div className="mb-6 p-4 rounded-xl bg-rose-50 border border-rose-100 text-rose-700 text-sm font-semibold flex items-center gap-2">
+                  <span>⚠️ {errorMessage}</span>
+                </div>
+              )}
+
               {submitted ? (
                 <div className="py-12 text-center">
                   <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
@@ -115,30 +165,59 @@ export default function LienHePage() {
                   <div className="grid sm:grid-cols-2 gap-5">
                     <div>
                       <label className="text-sm font-semibold text-stone-700 mb-1.5 block">{t('form.nameLabel')}</label>
-                      <Input required placeholder={t('form.namePlaceholder')} className="h-12 rounded-xl bg-stone-50 border-stone-200" />
+                      <Input 
+                        required 
+                        value={form.name}
+                        onChange={(e) => setForm({ ...form, name: e.target.value })}
+                        placeholder={t('form.namePlaceholder')} 
+                        className="h-12 rounded-xl bg-stone-50 border-stone-200" 
+                      />
                     </div>
                     <div>
                       <label className="text-sm font-semibold text-stone-700 mb-1.5 block">{t('form.phoneLabel')}</label>
-                      <Input required type="tel" placeholder={t('form.phonePlaceholder')} className="h-12 rounded-xl bg-stone-50 border-stone-200" />
+                      <Input 
+                        required 
+                        type="tel" 
+                        value={form.phone}
+                        onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                        placeholder={t('form.phonePlaceholder')} 
+                        className="h-12 rounded-xl bg-stone-50 border-stone-200" 
+                      />
                     </div>
                   </div>
                   <div>
                     <label className="text-sm font-semibold text-stone-700 mb-1.5 block">{t('form.emailLabel')}</label>
-                    <Input type="email" placeholder={t('form.emailPlaceholder')} className="h-12 rounded-xl bg-stone-50 border-stone-200" />
+                    <Input 
+                      type="email" 
+                      value={form.email}
+                      onChange={(e) => setForm({ ...form, email: e.target.value })}
+                      placeholder={t('form.emailPlaceholder')} 
+                      className="h-12 rounded-xl bg-stone-50 border-stone-200" 
+                    />
                   </div>
                   <div>
                     <label className="text-sm font-semibold text-stone-700 mb-1.5 block">{t('form.subjectLabel')}</label>
-                    <select className="flex h-12 w-full rounded-xl border border-stone-200 bg-stone-50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500">
-                      <option>{t('form.subjects.appointment')}</option>
-                      <option>{t('form.subjects.services')}</option>
-                      <option>{t('form.subjects.results')}</option>
-                      <option>{t('form.subjects.feedback')}</option>
-                      <option>{t('form.subjects.other')}</option>
+                    <select 
+                      value={form.subject}
+                      onChange={(e) => setForm({ ...form, subject: e.target.value })}
+                      className="flex h-12 w-full rounded-xl border border-stone-200 bg-stone-50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    >
+                      <option value="Đặt lịch khám">{t('form.subjects.appointment')}</option>
+                      <option value="Hỏi về dịch vụ">{t('form.subjects.services')}</option>
+                      <option value="Tra cứu kết quả khám">{t('form.subjects.results')}</option>
+                      <option value="Góp ý chất lượng dịch vụ">{t('form.subjects.feedback')}</option>
+                      <option value="Khác">{t('form.subjects.other')}</option>
                     </select>
                   </div>
                   <div>
                     <label className="text-sm font-semibold text-stone-700 mb-1.5 block">{t('form.messageLabel')}</label>
-                    <Textarea required placeholder={t('form.messagePlaceholder')} className="min-h-[140px] rounded-xl bg-stone-50 border-stone-200 resize-none" />
+                    <Textarea 
+                      required 
+                      value={form.message}
+                      onChange={(e) => setForm({ ...form, message: e.target.value })}
+                      placeholder={t('form.messagePlaceholder')} 
+                      className="min-h-[140px] rounded-xl bg-stone-50 border-stone-200 resize-none" 
+                    />
                   </div>
                   <Button type="submit" disabled={isSubmitting} className="w-full h-14 rounded-xl bg-primary-600 hover:bg-primary-700 font-bold text-base">
                     {isSubmitting ? t('form.submitting') : t('form.submit')}

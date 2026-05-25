@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, CalendarDays, FileText, Settings, Users, User, Terminal, Image, BarChart2, ShieldCheck, Star } from "lucide-react";
+import { LayoutDashboard, CalendarDays, FileText, Settings, Users, User, Terminal, Image, BarChart2, ShieldCheck, Star, MessageSquare, HelpCircle } from "lucide-react";
 import { LogoutButton } from "./LogoutButton";
 
 export default function AdminLayout({
@@ -57,6 +57,14 @@ export default function AdminLayout({
           <Link href="/admin/reviews" className={`flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 ${pathname.includes('/reviews') ? 'bg-primary-800 text-white shadow-md font-semibold' : 'text-primary-200 hover:bg-primary-900/50 hover:text-white'}`}>
             <Star size={18} />
             <span>Đánh giá</span>
+          </Link>
+          <Link href="/admin/chatbot" className={`flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 ${pathname.includes('/chatbot') ? 'bg-primary-800 text-white shadow-md font-semibold' : 'text-primary-200 hover:bg-primary-900/50 hover:text-white'}`}>
+            <MessageSquare size={18} />
+            <span>AI Chatbot</span>
+          </Link>
+          <Link href="/admin/qna" className={`flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 ${pathname.includes('/qna') ? 'bg-primary-800 text-white shadow-md font-semibold' : 'text-primary-200 hover:bg-primary-900/50 hover:text-white'}`}>
+            <HelpCircle size={18} />
+            <span>Hỏi đáp (Q&A)</span>
           </Link>
           <Link href="/admin/users" className={`flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 ${pathname.includes('/users') ? 'bg-primary-800 text-white shadow-md font-semibold' : 'text-primary-200 hover:bg-primary-900/50 hover:text-white'}`}>
             <ShieldCheck size={18} />

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ChevronDown, Search, MessageCircle, Phone } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -104,8 +104,44 @@ function FAQItem({ q, a }: { q: string; a: string }) {
 
 export default function FAQPage() {
   const [search, setSearch] = useState("");
+  const [dynamicQnas, setDynamicQnas] = useState<any[]>([]);
 
-  const filtered = FAQS.map((cat) => ({
+  useEffect(() => {
+    fetch("/api/qna")
+      .then(res => res.json())
+      .then(json => {
+        if (json.success && json.data) {
+          setDynamicQnas(json.data);
+        }
+      })
+      .catch(err => console.error("Error fetching dynamic Q&As:", err));
+  }, []);
+
+  // Kết hợp danh sách FAQ tĩnh và động
+  const mergedFaqs = FAQS.map(cat => {
+    const matchedDynamics = dynamicQnas
+      .filter(q => q.subject === cat.category)
+      .map(q => ({ q: q.message, a: q.answer }));
+    return {
+      ...cat,
+      items: [...cat.items, ...matchedDynamics]
+    };
+  });
+
+  const standardCategories = FAQS.map(c => c.category);
+  const otherDynamics = dynamicQnas
+    .filter(q => !standardCategories.includes(q.subject))
+    .map(q => ({ q: q.message, a: q.answer }));
+
+  const finalFaqs = [...mergedFaqs];
+  if (otherDynamics.length > 0) {
+    finalFaqs.push({
+      category: "Giải đáp từ Bác sĩ Chuyên khoa",
+      items: otherDynamics
+    });
+  }
+
+  const filtered = finalFaqs.map((cat) => ({
     ...cat,
     items: cat.items.filter(
       (item) =>
