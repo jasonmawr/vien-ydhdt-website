@@ -59,8 +59,8 @@ export default function SocialFAB() {
     };
   }, []);
 
-  // Ẩn trên toàn bộ trang admin (giống ChatWidget)
-  if (pathname?.startsWith("/admin")) return null;
+  // Ẩn trên toàn bộ trang admin hoặc trang chatbot độc lập
+  if (pathname?.startsWith("/admin") || pathname?.startsWith("/chatbot")) return null;
 
   // Ẩn khi chatbot AI đang mở để tránh bị che khuất
   if (isChatOpen) return null;

@@ -656,7 +656,7 @@ export default function ChatbotAdminPage() {
                   Chào buổi tối 👋
                 </h2>
                 <p className="text-xs text-sky-100 mt-1 font-medium">
-                  Tổng quan hoạt động trợ lý AI - Bệnh viện Y học Cổ truyền TP.HCM
+                  Tổng quan hoạt động trợ lý AI - Viện Y dược học Dân tộc Thành phố Hồ Chí Minh
                 </p>
               </div>
               <div className="flex items-center gap-3 bg-white/20 px-4 py-2 rounded-xl text-xs font-bold shrink-0">
@@ -741,7 +741,7 @@ export default function ChatbotAdminPage() {
                 </h3>
                 <div className="space-y-3">
                   {[
-                    { q: "Địa chỉ Bệnh viện Y học Cổ truyền TP.HCM", count: 13 },
+                    { q: "Địa chỉ Viện Y dược học Dân tộc Thành phố Hồ Chí Minh", count: 13 },
                     { q: "Giờ làm việc của bệnh viện như thế nào?", count: 10 },
                     { q: "Thời gian khám BHYT?", count: 6 },
                     { q: "Tôi muốn đặt lịch khám bệnh", count: 6 },
