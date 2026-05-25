@@ -225,7 +225,7 @@ export default function PatientAppointmentsPage() {
                   </div>
                   <div className="flex items-center gap-2 col-span-2">
                     <MapPin className="w-4 h-4 text-stone-400 shrink-0" />
-                    <span className="text-xs">273-275 Nam Kỳ Khởi Nghĩa, P.7, Q.3, TP.HCM</span>
+                    <span className="text-xs">273 - 275 Nguyễn Văn Trỗi, Phường 10, Quận Phú Nhuận, TP. Hồ Chí Minh</span>
                   </div>
                 </div>
 
