@@ -161,7 +161,8 @@ graph TD
   * Chia hệ thống cổng thông tin thành các phân hệ giao diện (Sub-portals / Subsites) độc lập về bố cục nhưng chia sẻ chung dữ liệu quản trị:
     1. **Cổng Khám chữa bệnh & Dịch vụ (Main Medical Portal):** Nơi cung cấp thông tin tức thì cho người bệnh: bảng giá dịch vụ y tế, lịch khám chi tiết của bác sĩ trong tuần, form đăng ký khám nhanh, giới thiệu các loại dịch vụ y tế cổ truyền thế mạnh của Viện.
     2. **Trung tâm Tin tức & Truyền thông Y tế (News Center):** Nơi đăng tải chuyên nghiệp các bài viết y học, thông tin dịch tễ, công trình nghiên cứu khoa học, hoạt động của Viện.
-    3. **Kênh Hỏi đáp Y học (Q&A Interactive Portal):** Không gian tương tác trực tiếp giữa Bác sĩ và Người bệnh. Người bệnh gửi câu hỏi ẩn danh → Hệ thống điều phối đến bác sĩ chuyên khoa duyệt và trả lời → Hiển thị công khai các câu hỏi phổ biến để cộng đồng cùng tra cứu.
+    3. **Kênh Hỏi đáp Y học (Q&A Interactive Portal):** **[HOÀN THÀNH 100% - 25/05/2026]** Không gian tương tác trực tiếp giữa Bác sĩ và Người bệnh. Người bệnh gửi câu hỏi y tế tại trang Liên hệ/Hỏi đáp -> Lưu SQLite bền vững -> Bác sĩ xem danh sách, duyệt, trả lời câu hỏi tại `/admin/qna` -> Tự động đồng bộ hiển thị lên danh sách Hỏi & Đáp công khai của website để cộng đồng cùng tra cứu.
+    4. **Phân hệ AI Chatbot trợ lý y khoa:** **[HOÀN THÀNH 100% - 25/05/2026]** Tự động hóa RAG tri thức y khoa từ bài viết CMS động, hỗ trợ quản lý lịch trực bác sĩ và tự động dọn dẹp (purge) tri thức rác.
 
 ### 5.4 Phân hệ Mua sắm Dược phẩm Trực tuyến (Pharmacy Online Booking)
 * **Mô tả bài toán:** Người bệnh y học cổ truyền thường có nhu cầu bốc thuốc Đông y, mua các loại dược liệu thành phẩm uy tín của Viện và giao tận nhà. Việc đặt mua thuốc y tế đòi hỏi quy trình kiểm soát toa thuốc vô cùng chặt chẽ.
