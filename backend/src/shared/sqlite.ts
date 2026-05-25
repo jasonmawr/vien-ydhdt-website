@@ -200,6 +200,168 @@ async function initWebDb(db: Database<sqlite3.Database, sqlite3.Statement>) {
     )
   `);
 
+  // ─── Chatbot Configs ───
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS chatbot_configs (
+      key TEXT PRIMARY KEY,
+      value TEXT NOT NULL,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_by TEXT
+    )
+  `);
+
+  // ─── Chatbot Knowledge Base (FAQ & RAG Sources) ───
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS chatbot_knowledge (
+      id TEXT PRIMARY KEY,
+      source_type TEXT NOT NULL, -- 'faq', 'document', 'cms_post', 'url'
+      source_reference TEXT,
+      title TEXT NOT NULL,
+      content TEXT NOT NULL,
+      is_active INTEGER DEFAULT 1,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  // ─── Chatbot Conversations ───
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS chatbot_conversations (
+      session_id TEXT PRIMARY KEY,
+      ip_address TEXT,
+      user_agent TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      rating INTEGER, -- 1: 👍, -1: 👎
+      feedback_notes TEXT
+    )
+  `);
+
+  // ─── Chatbot Messages ───
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS chatbot_messages (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      session_id TEXT NOT NULL,
+      role TEXT NOT NULL, -- 'user', 'assistant'
+      content TEXT NOT NULL,
+      timestamp INTEGER NOT NULL,
+      FOREIGN KEY (session_id) REFERENCES chatbot_conversations(session_id) ON DELETE CASCADE
+    )
+  `);
+
+  // ─── Chatbot Schedules (Lịch khám RAG) ───
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS chatbot_schedules (
+      id TEXT PRIMARY KEY,
+      title TEXT NOT NULL,
+      content TEXT NOT NULL,
+      is_active INTEGER DEFAULT 1,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  // ─── Chatbot Unresolved Questions (Cần bổ sung) ───
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS chatbot_unresolved (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      question TEXT NOT NULL,
+      match_score INTEGER DEFAULT 0,
+      is_resolved INTEGER DEFAULT 0,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  // ─── Patient Q&As (Hỏi đáp y học y khoa) ───
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS patient_qnas (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      phone TEXT NOT NULL,
+      email TEXT,
+      subject TEXT NOT NULL,
+      message TEXT NOT NULL,
+      is_answered INTEGER DEFAULT 0,
+      answer TEXT,
+      answered_by TEXT,
+      answered_at DATETIME,
+      is_public INTEGER DEFAULT 0,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  // Seed default patient Q&As if table is empty
+  const qnaCount = await db.get('SELECT COUNT(*) as count FROM patient_qnas');
+  if (qnaCount.count === 0) {
+    await db.run(`
+      INSERT INTO patient_qnas (name, phone, email, subject, message, is_answered, answer, answered_by, answered_at, is_public)
+      VALUES 
+      ('Nguyễn Văn A', '0912345678', 'vana@gmail.com', 'Khám & Điều trị', 'Châm cứu chữa thoái hóa cột sống cổ có đau không thưa bác sĩ? Liệu trình mất bao lâu?', 1, 'Chào bạn! Phương pháp châm cứu tại Viện sử dụng kim châm cứu chuyên dụng vô trùng dùng một lần cực kỳ mỏng nên hầu như không gây đau đớn. Bạn chỉ cảm thấy cảm giác căng tức nhẹ (còn gọi là đắc khí) tại các huyệt đạo, điều này chứng tỏ hiệu quả kích thích dòng năng lượng tốt. Thông thường một liệu trình kéo dài khoảng 10–12 buổi, mỗi buổi 20–30 phút tùy thuộc vào mức độ thoái hóa cột sống của bạn.', 'BS. Đỗ Tấn Khoa', CURRENT_TIMESTAMP, 1),
+      ('Trần Thị B', '0987654321', 'thib@gmail.com', 'Bảo hiểm y tế', 'Bệnh viện có nhận khám bảo hiểm y tế trái tuyến vào ngày Thứ Bảy không ạ?', 1, 'Chào chị! Viện Y Dược Học Dân Tộc có tiếp nhận khám BHYT đúng tuyến và trái tuyến bình thường vào Thứ Bảy (Sáng 7:00-11:30, Chiều 13:30-16:30) theo hình thức khám ngoài giờ. Khi đi khám, chị vui lòng mang theo thẻ BHYT và căn cước công dân gốc để nhân viên y tế hỗ trợ làm thủ tục hưởng chế độ theo tỷ lệ quy định hiện hành.', 'Bộ phận hỗ trợ BHYT', CURRENT_TIMESTAMP, 1),
+      ('Phạm Văn C', '0903334445', 'vanc@gmail.com', 'Đặt lịch khám', 'Tôi đã đặt lịch khám online qua web nhưng muốn đổi giờ khám có được không?', 0, NULL, NULL, NULL, 0)
+    `);
+    console.log('[Web CMS] Đã tạo dữ liệu mẫu Hỏi đáp y học (Q&A).');
+  }
+
+  // Seed default chatbot configs
+  const configCount = await db.get('SELECT COUNT(*) as count FROM chatbot_configs');
+  if (configCount.count === 0) {
+    const defaultPrompt = `Bạn là "Y Dược AI" — trợ lý ảo Viện Y Dược Học Dân Tộc TP.HCM.
+
+NGUYÊN TẮC:
+1. Trả lời tiếng Việt, lịch sự, ngắn gọn (<150 từ). Dùng emoji phù hợp.
+2. KHÔNG chẩn đoán, KHÔNG kê đơn. Khuyên đặt lịch khám khi hỏi triệu chứng.
+3. Không biết → nói thẳng, hướng dẫn gọi (028) 3844 2349.
+4. Ưu tiên hướng dẫn đặt lịch qua website khi phù hợp.`;
+
+    await db.run('INSERT INTO chatbot_configs (key, value) VALUES (?, ?)', 'system_prompt', defaultPrompt);
+    await db.run('INSERT INTO chatbot_configs (key, value) VALUES (?, ?)', 'welcome_message', 'Xin chào! Tôi là trợ lý ảo Y Dược AI của Viện Y Dược Học Dân Tộc TP.HCM. Tôi có thể giúp gì cho bạn hôm nay?');
+    await db.run('INSERT INTO chatbot_configs (key, value) VALUES (?, ?)', 'ai_model', 'gemini-2.0-flash');
+    await db.run('INSERT INTO chatbot_configs (key, value) VALUES (?, ?)', 'temperature', '0.7');
+    await db.run('INSERT INTO chatbot_configs (key, value) VALUES (?, ?)', 'widget_theme_color', '#0ea5e9');
+    await db.run('INSERT INTO chatbot_configs (key, value) VALUES (?, ?)', 'widget_avatar_url', '');
+    console.log('[Web CMS] Đã tạo cấu hình chatbot mặc định.');
+  }
+
+  // Seed default chatbot schedules
+  const scheduleCount = await db.get('SELECT COUNT(*) as count FROM chatbot_schedules');
+  if (scheduleCount.count === 0) {
+    const defaultScheduleContent = `LỊCH KHÁM NGOẠI TRÚ BÁC SĨ (Áp dụng từ 04/05/2026):
+- Bác sĩ Đỗ Tấn Khoa: Khám sáng Thứ 2, Thứ 4 (Phòng chuyên gia 102).
+- Bác sĩ Nguyễn Thùy My: Khám cả ngày Thứ 3, Thứ 5 (Phòng châm cứu 204).
+- Bác sĩ Phạm Quốc Thịnh: Khám Thứ 6 (Phòng Vật lý trị liệu 105).
+- Giờ khám: Sáng 7:00-11:30, Chiều 13:30-16:30.`;
+
+    await db.run(
+      `INSERT INTO chatbot_schedules (id, title, content, is_active) VALUES (?, ?, ?, 1)`,
+      'sched-default',
+      'Lịch khám ngoại trú — áp dụng từ 04/05/2026',
+      defaultScheduleContent
+    );
+    console.log('[Web CMS] Đã tạo lịch khám chatbot mẫu.');
+  }
+
+  // Seed unresolved questions (Cần bổ sung)
+  const unresolvedCount = await db.get('SELECT COUNT(*) as count FROM chatbot_unresolved');
+  if (unresolvedCount.count === 0) {
+    const questions = [
+      "Có gì hay ho bro",
+      "Sao tin được",
+      "Lịch nhậu có không bro",
+      "Giao ra Hà Nội được không",
+      "Bác sỹ tên my",
+      "bác sỹ thịnh khám ngày nào",
+      "bác sĩ Đỗ Tấn Khoa là ai",
+      "ai là giám đốc bệnh viện",
+      "bệnh viện có cao phong thấp không",
+      "Opening hours"
+    ];
+    for (const q of questions) {
+      await db.run('INSERT INTO chatbot_unresolved (question, match_score, is_resolved) VALUES (?, 0, 0)', q);
+    }
+    console.log('[Web CMS] Đã tạo danh sách câu hỏi cần bổ sung mẫu.');
+  }
+
   // ─── Scheduled publishing column (nếu chưa có) ───
   try {
     await db.exec(`ALTER TABLE posts ADD COLUMN scheduled_at DATETIME`);
