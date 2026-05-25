@@ -85,7 +85,7 @@ Khi người dùng truy cập vào trang chi tiết bác sĩ, Backend sẽ thự
 
 ## 4. Đặc tả Phân hệ Đã hoàn thiện (Sẵn sàng Vận hành)
 
-Hiện tại, đội ngũ CNTT nội bộ của Viện đã phát triển hoàn tất khoảng 96% các tính năng nền tảng của hệ thống:
+Hiện tại, đội ngũ CNTT nội bộ của Viện đã phát triển hoàn tất khoảng 98% các tính năng nền tảng của hệ thống:
 
 ### 4.1 Phân hệ Người bệnh (Patient Portal & Public Site)
 * **Giao diện trang chủ chuyên nghiệp:** Thiết kế theo phong cách các bệnh viện đại học hiện đại, có banner mosaic uy tín, khu vực thống kê nhanh và danh mục chuyên khoa nổi bật (châm cứu, vật lý trị liệu, trĩ, xoa bóp bấm huyệt).
@@ -95,7 +95,7 @@ Hiện tại, đội ngũ CNTT nội bộ của Viện đã phát triển hoàn 
   3. Đặt lịch theo **Ngày mong muốn**.
 * **Tra cứu lịch khám bằng OTP:** Bệnh nhân chỉ cần nhập số điện thoại → Nhận mã OTP (gửi qua SMS/Zalo) → Xem toàn bộ lịch sử hẹn khám, trạng thái (Chờ xác nhận / Đã xác nhận / Đã khám / Đã hủy).
 * **Hệ thống đánh giá bác sĩ sau khám:** Sau khi hoàn tất khám bệnh, liên kết đánh giá được tự động gửi qua Zalo/Email cho bệnh nhân để chấm điểm 1-5 sao và viết nhận xét. Admin duyệt trước khi hiển thị lên profile bác sĩ.
-* **Trợ lý ảo AI Chatbot 24/7:** Tích hợp mô hình Gemini 2.0 Flash được huấn luyện chuyên biệt về thông tin giờ giấc khám bệnh của Viện, kiến thức các cây thuốc Đông y, bài thuốc cổ truyền.
+* **Trợ lý ảo AI Chatbot 24/7:** Tích hợp mô hình Gemini 2.0 Flash được huấn luyện chuyên biệt về thông tin giờ giấc khám bệnh của Viện, kiến thức các cây thuốc Đông y, bài thuốc cổ truyền. **[Cập nhật 25/05/2026]** Đã tách thành **Cổng quản trị Chatbot AI độc lập** tại `/chatbot` cho phép Giám đốc truy cập trực tiếp không cần đăng nhập (Token bypass), tích hợp 7 tab quản trị chuyên sâu (Chat Simulator, Tổng quan, Kiến thức RAG, Lịch khám, Hội thoại, Cần bổ sung, Cài đặt), gieo hạt 15 thẻ tri thức Đông Y chuẩn xác, hiệu ứng Cyber/Framer Motion cao cấp, và cơ chế tự động migration sửa đổi dữ liệu cũ trong SQLite.
 
 ### 4.2 Phân hệ Quản trị & CMS Nội bộ (Admin Portal)
 * **Trình soạn thảo bài viết nâng cao (Rich-text Editor):** Tích hợp công cụ Tiptap v2, cho phép biên tập viên soạn thảo tin tức, quyết định y tế chuyên sâu, nhúng video, ảnh, định dạng bảng biểu và đính kèm file PDF văn bản hành chính một cách dễ dàng.
@@ -163,6 +163,7 @@ graph TD
     2. **Trung tâm Tin tức & Truyền thông Y tế (News Center):** Nơi đăng tải chuyên nghiệp các bài viết y học, thông tin dịch tễ, công trình nghiên cứu khoa học, hoạt động của Viện.
     3. **Kênh Hỏi đáp Y học (Q&A Interactive Portal):** **[HOÀN THÀNH 100% - 25/05/2026]** Không gian tương tác trực tiếp giữa Bác sĩ và Người bệnh. Người bệnh gửi câu hỏi y tế tại trang Liên hệ/Hỏi đáp -> Lưu SQLite bền vững -> Bác sĩ xem danh sách, duyệt, trả lời câu hỏi tại `/admin/qna` -> Tự động đồng bộ hiển thị lên danh sách Hỏi & Đáp công khai của website để cộng đồng cùng tra cứu.
     4. **Phân hệ AI Chatbot trợ lý y khoa:** **[HOÀN THÀNH 100% - 25/05/2026]** Tự động hóa RAG tri thức y khoa từ bài viết CMS động, hỗ trợ quản lý lịch trực bác sĩ và tự động dọn dẹp (purge) tri thức rác.
+    5. **Cổng quản trị AI Chatbot Độc lập (Standalone Sub-Portal):** **[HOÀN THÀNH 100% - 25/05/2026]** Tách biệt hoàn toàn khỏi CMS Admin tại đường dẫn `/chatbot`, hỗ trợ Giám đốc truy cập nhanh không cần đăng nhập qua Token bảo mật, giao diện thuần Việt 100% với hiệu ứng Cyber/Framer Motion, 7 tab quản trị chuyên sâu, gieo hạt 15 thẻ tri thức Đông Y, cơ chế DB Auto-migration tự động sửa đổi thông tin bệnh viện cũ sang chuẩn mới, và chuẩn hóa toàn bộ địa chỉ liên hệ trên toàn hệ thống (273 - 275 Nguyễn Văn Trỗi, Phường 10, Quận Phú Nhuận, TP. Hồ Chí Minh). Xem chi tiết tại [AI_CHATBOT_ENHANCEMENTS.md](AI_CHATBOT_ENHANCEMENTS.md).
 
 ### 5.4 Phân hệ Mua sắm Dược phẩm Trực tuyến (Pharmacy Online Booking)
 * **Mô tả bài toán:** Người bệnh y học cổ truyền thường có nhu cầu bốc thuốc Đông y, mua các loại dược liệu thành phẩm uy tín của Viện và giao tận nhà. Việc đặt mua thuốc y tế đòi hỏi quy trình kiểm soát toa thuốc vô cùng chặt chẽ.

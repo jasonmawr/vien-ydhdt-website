@@ -59,6 +59,23 @@ Tài liệu này đóng vai trò là "Bản thiết kế thi công" (Blueprint) 
 
 ---
 
+## 🤖 Phase 20.5: Nâng cấp AI Chatbot & Cổng Quản trị Độc lập — ✅ HOÀN THÀNH (2026-05-25)
+
+**Mục tiêu:** Tách biệt phân hệ AI Chatbot thành cổng quản trị độc lập (Sub-Portal) cho Ban Giám đốc truy cập nhanh, bổ sung tri thức Đông Y chuyên sâu, chuẩn hóa toàn bộ thông tin liên hệ của Viện.
+
+**Các tính năng đã hoàn thành:**
+1. **Cổng quản trị Chatbot AI độc lập** tại `/chatbot` với 7 tab chuyên sâu: Chat Simulator, Tổng quan, Kiến thức RAG, Lịch khám, Hội thoại, Cần bổ sung, Cài đặt. *(Đã xong)*
+2. **Chế độ khách (Guest Token bypass)** cho Giám đốc: Truy cập qua URL kèm token bảo mật, không cần đăng nhập CMS. *(Đã xong)*
+3. **Gieo hạt 15 thẻ tri thức Đông Y** chuẩn xác từ các nguồn y khoa chính thống vào SQLite. *(Đã xong)*
+4. **Hiệu ứng Cyber/Framer Motion** cao cấp: Chuyển tab trượt mượt, spring physics cho bong bóng chat, Cyber Glow hover effects. *(Đã xong)*
+5. **Thuần Việt hóa 100%** toàn bộ nút bấm, nhãn thao tác, loại bỏ thương hiệu bên thứ ba. *(Đã xong)*
+6. **Chuẩn hóa thông tin bệnh viện** toàn hệ thống: Sửa đổi từ địa chỉ/hotline cũ sang đúng chuẩn Viện Y dược học Dân tộc (273 - 275 Nguyễn Văn Trỗi, P.10, Q. Phú Nhuận). *(Đã xong)*
+7. **DB Auto-migration:** Cơ chế tự động phát hiện và sửa đổi dữ liệu gieo hạt cũ trong SQLite khi backend khởi động. *(Đã xong)*
+
+**Chi tiết kỹ thuật:** Xem [AI_CHATBOT_ENHANCEMENTS.md](AI_CHATBOT_ENHANCEMENTS.md)
+
+---
+
 ## 🚀 Phase 20: Triển khai Production (Go-Live)
 
 **Mục tiêu:** Đưa hệ thống từ máy tính Local lên Máy chủ (Server) thật của bệnh viện, cấu hình tên miền và bảo mật HTTPS để phục vụ bệnh nhân thực tế.
