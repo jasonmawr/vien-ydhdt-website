@@ -306,7 +306,7 @@ async function initWebDb(db: Database<sqlite3.Database, sqlite3.Statement>) {
   // Seed default chatbot configs
   const configCount = await db.get('SELECT COUNT(*) as count FROM chatbot_configs');
   if (configCount.count === 0) {
-    const defaultPrompt = `Bạn là "Y Dược AI" — trợ lý ảo Viện Y Dược Học Dân Tộc TP.HCM.
+    const defaultPrompt = `Bạn là "Y Dược AI" — trợ lý ảo Viện Y dược học Dân tộc Thành phố Hồ Chí Minh.
 
 NGUYÊN TẮC:
 1. Trả lời tiếng Việt, lịch sự, ngắn gọn (<150 từ). Dùng emoji phù hợp.
@@ -315,17 +315,17 @@ NGUYÊN TẮC:
 4. Ưu tiên hướng dẫn đặt lịch qua website khi phù hợp.`;
 
     await db.run('INSERT INTO chatbot_configs (key, value) VALUES (?, ?)', 'system_prompt', defaultPrompt);
-    await db.run('INSERT INTO chatbot_configs (key, value) VALUES (?, ?)', 'welcome_message', 'Xin chào! Tôi là trợ lý ảo Y Dược AI của Viện Y Dược Học Dân Tộc TP.HCM. Tôi có thể giúp gì cho bạn hôm nay?');
+    await db.run('INSERT INTO chatbot_configs (key, value) VALUES (?, ?)', 'welcome_message', 'Xin chào! Tôi là trợ lý ảo Y Dược AI của Viện Y dược học Dân tộc Thành phố Hồ Chí Minh. Tôi có thể giúp gì cho bạn hôm nay?');
     await db.run('INSERT INTO chatbot_configs (key, value) VALUES (?, ?)', 'ai_model', 'gemini-2.0-flash');
     await db.run('INSERT INTO chatbot_configs (key, value) VALUES (?, ?)', 'temperature', '0.7');
-    await db.run('INSERT INTO chatbot_configs (key, value) VALUES (?, ?)', 'widget_theme_color', '#0ea5e9');
+    await db.run('INSERT INTO chatbot_configs (key, value) VALUES (?, ?)', 'widget_theme_color', '#109173');
     await db.run('INSERT INTO chatbot_configs (key, value) VALUES (?, ?)', 'widget_avatar_url', '');
     console.log('[Web CMS] Đã tạo cấu hình chatbot mặc định.');
   }
 
   // Seed default hospital configs if not set (ensuring values exist)
   const defaultHospitalConfigs = [
-    { key: 'hospital_name', value: 'Bệnh viện Y học Cổ truyền TP.HCM' },
+    { key: 'hospital_name', value: 'Viện Y dược học Dân tộc Thành phố Hồ Chí Minh' },
     { key: 'hospital_address_1', value: '179-187 Nam Kỳ Khởi Nghĩa, P. Võ Thị Sáu, Q.3, TP.HCM' },
     { key: 'hospital_address_2', value: '218K Trần Hưng Đạo B, P. Chợ Lớn, TP.HCM' },
     { key: 'hospital_phone', value: '(028) 3932 6579 - (028) 3932 6004' },
