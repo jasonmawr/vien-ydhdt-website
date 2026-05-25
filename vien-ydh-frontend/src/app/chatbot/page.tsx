@@ -919,20 +919,30 @@ export default function ChatbotPortalPage() {
                     </div>
                   </div>
 
-                  {/* 6 metrics Row */}
+                  {/* 6 metrics Row - Fully Clickable for seamless premium transition */}
                   <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
                     {[
-                      { l: "Khách ghé thăm", v: analytics.summary.totalChats, color: "text-[#109173] bg-emerald-50 border-emerald-100" },
-                      { l: "Cuộc hội thoại", v: analytics.summary.totalChats, color: "text-[#109173] bg-emerald-50 border-emerald-100" },
-                      { l: "Số tin nhắn", v: analytics.summary.totalMessages, color: "text-[#109173] bg-emerald-50 border-emerald-100" },
-                      { l: "Đánh giá tốt", v: `${analytics.summary.likes} 👍`, color: "text-blue-600 bg-blue-50 border-blue-100" },
-                      { l: "Tổng tri thức", v: analytics.summary.knowledgeCount, color: "text-purple-600 bg-purple-50 border-purple-100" },
-                      { l: "Cần phản hồi", v: analytics.summary.unresolvedCount, color: "text-rose-600 bg-rose-50 border-rose-100" }
+                      { l: "Khách ghé thăm", v: analytics.summary.totalChats, color: "text-[#109173] bg-emerald-50 border-emerald-100", targetTab: "history" },
+                      { l: "Cuộc hội thoại", v: analytics.summary.totalChats, color: "text-[#109173] bg-emerald-50 border-emerald-100", targetTab: "history" },
+                      { l: "Số tin nhắn", v: analytics.summary.totalMessages, color: "text-[#109173] bg-emerald-50 border-emerald-100", targetTab: "history" },
+                      { l: "Đánh giá tốt", v: `${analytics.summary.likes} 👍`, color: "text-blue-600 bg-blue-50 border-blue-100", targetTab: "history" },
+                      { l: "Tổng tri thức", v: analytics.summary.knowledgeCount, color: "text-purple-600 bg-purple-50 border-purple-100", targetTab: "knowledge" },
+                      { l: "Cần phản hồi", v: analytics.summary.unresolvedCount, color: "text-rose-600 bg-rose-50 border-rose-100", targetTab: "unresolved" }
                     ].map((item, idx) => (
-                      <div key={idx} className="bg-white border rounded-2xl p-5 text-center flex flex-col justify-center items-center shadow-xs border-stone-200/80 hover:scale-[1.03] transition-all duration-300 hover:shadow-md">
+                      <button
+                        key={idx}
+                        onClick={() => {
+                          setActiveTab(item.targetTab as any);
+                          if (item.l === "Đánh giá tốt") {
+                            setFilterSessionRating("1");
+                          }
+                        }}
+                        title={`Bấm để chuyển nhanh qua trang ${item.l}`}
+                        className="bg-white border rounded-2xl p-5 text-center flex flex-col justify-center items-center shadow-xs border-stone-200/80 hover:scale-[1.03] transition-all duration-300 hover:shadow-md hover:border-[#109173] cursor-pointer"
+                      >
                         <span className="text-[9px] text-stone-400 font-extrabold uppercase tracking-wider">{item.l}</span>
                         <span className={`text-base font-black mt-2.5 px-3.5 py-1 rounded-full border ${item.color}`}>{item.v}</span>
-                      </div>
+                      </button>
                     ))}
                   </div>
 
