@@ -36,6 +36,12 @@ backend/node_modules/
 /backend/logs/
 /logs/
 
+# database (SQLite runtime files)
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+*.sqlite-journal
+
 # vercel
 .vercel
 

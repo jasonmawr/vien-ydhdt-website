@@ -146,3 +146,8 @@ NEXT_PUBLIC_API_URL=http://192.168.1.34/api
 3.  **Xác minh tính năng:**
     *   Mở chatbot AI, các biểu tượng chia sẻ mạng xã hội góc phải phải ẩn đi linh động để không che chatbot.
     *   Thực hiện đặt lịch khám thử, chọn các bác sĩ mới thêm để kiểm tra đồng bộ dữ liệu.
+4.  **Xác minh Cổng quản trị AI Chatbot độc lập (Cập nhật 25/05/2026):**
+    *   Truy cập `http://192.168.1.34/chatbot?token=director_vip_secure_key` để kiểm tra trang quản trị AI Chatbot hoạt động bình thường mà không cần đăng nhập.
+    *   Kiểm tra tab **Cài đặt** hiển thị đúng thông tin: Viện Y dược học Dân tộc Thành phố Hồ Chí Minh, 273 - 275 Nguyễn Văn Trỗi, (028) 3844 3047, vienydhdt.gov.vn.
+    *   Kiểm tra tab **Kiến thức** hiển thị đủ 15 thẻ tri thức Đông Y đã được gieo hạt.
+    *   Xác nhận cơ chế DB Auto-migration đã tự động cập nhật thông tin bệnh viện cũ (nếu có) trong SQLite bằng cách kiểm tra log khởi động backend.

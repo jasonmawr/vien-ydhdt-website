@@ -1,6 +1,6 @@
 # **KIẾN TRÚC HỆ THỐNG & CẤU TRÚC THƯ MỤC**
 
-*Tài liệu chuẩn - Cập nhật: 2026-04-22*
+*Tài liệu chuẩn - Cập nhật: 2026-05-25*
 
 ## **1. KIẾN TRÚC TỔNG THỂ (DUAL-DB ARCHITECTURE)**
 
@@ -10,7 +10,7 @@ Hệ thống của Viện Y Dược Học Dân Tộc được thiết kế theo 
 - **Frontend Client (Port 3000):** Next.js (App Router), React 19, Tailwind v4. Proxy toàn bộ `/api/*` về Backend qua `rewrites` trong `next.config.ts` để hỗ trợ Mobile LAN.
 - **Backend API (Port 4000):** Express.js, TypeScript. Đóng vai trò làm Controller giao tiếp với 2 Cơ sở dữ liệu.
 - **Database 1 (Core HIS):** Oracle 11g (`192.168.1.113:1521/medi`). Chứa dữ liệu lâm sàng và cấu hình bệnh viện.
-- **Database 2 (Web CMS):** SQLite nội bộ của Backend (sau này có thể đổi qua PostgreSQL). Chứa dữ liệu nội dung bài viết, tin tức, cấu hình web.
+- **Database 2 (Web CMS):** SQLite nội bộ của Backend (sau này có thể đổi qua PostgreSQL). Chứa dữ liệu nội dung bài viết, tin tức, cấu hình web, cấu hình AI Chatbot, cơ sở tri thức RAG Đông Y.
 
 ## **2. QUYẾT ĐỊNH KIẾN TRÚC LƯU TRỮ (ARCHITECTURAL DECISION)**
 
@@ -35,6 +35,7 @@ Hệ thống của Viện Y Dược Học Dân Tộc được thiết kế theo 
   - Vì nó chỉ là 1 file, khi bạn copy code lên Server bằng Git, hệ thống sẽ tự động tạo file này nếu chưa có.
   - Chạy `npm run dev` hoặc `pm2` là xong. Bạn không cần phải cài đặt cấu hình rườm rà như SQL Server hay MySQL. 
   - Rất phù hợp cho Web CMS lưu lượng vừa và nhỏ. Việc Backup cũng chỉ đơn giản là copy file `database.sqlite` cất đi.
+- **Auto-migration:** Khi khởi động, hệ thống tự kiểm tra và cập nhật dữ liệu cấu hình bệnh viện cũ (nếu có) sang thông tin chuẩn mới của Viện Y dược học Dân tộc TP.HCM.
 
 ## **4. CẤU TRÚC THƯ MỤC**
 
@@ -45,16 +46,29 @@ vien-ydhdt-website/
 │   │   ├── index.ts            # Entry point
 │   │   ├── shared/
 │   │   │   ├── database.ts     # Oracle connection pool
-│   │   │   └── sqlite.ts       # Nơi thiết lập Web CMS Database
+│   │   │   └── sqlite.ts       # Web CMS Database + Auto-migration
 │   │   ├── modules/
 │   │   │   ├── his/            # Chuyên trách giao tiếp Oracle HIS
-│   │   │   └── cms/            # Chuyên trách giao tiếp Web DB (Bài viết, Auth)
+│   │   │   ├── cms/            # Chuyên trách giao tiếp Web DB (Bài viết, Auth)
+│   │   │   └── chatbot/        # AI Chatbot: RAG, Knowledge, Conversations, Analytics
+│   │   │       ├── chatbot.router.ts    # API endpoints Admin & Public
+│   │   │       ├── chatbot.service.ts   # Gemini AI integration & RAG
+│   │   │       └── knowledge-base.ts    # Tri thức cứng Đông Y
 ├── vien-ydh-frontend/          # Next.js Frontend
 │   ├── src/
 │   │   ├── app/                
 │   │   │   ├── (main)/         # Trang public (Home, Đặt lịch, Tin tức)
-│   │   │   └── admin/          # Admin Dashboard (Protected)
+│   │   │   ├── admin/          # Admin Dashboard (Protected)
+│   │   │   │   └── chatbot/    # CMS Chatbot Admin (Login required)
+│   │   │   └── chatbot/        # Standalone AI Chatbot Sub-Portal (Token bypass)
 │   │   ├── components/         
 │   │   ├── services/
 │   │   │   └── api.ts          # SSOT Data Fetching
+├── docs/
+│   └── project/
+│       ├── AI_CHATBOT_ENHANCEMENTS.md  # Nhật ký bàn giao AI Chatbot
+│       ├── ARCHITECTURE.md             # (Tệp này)
+│       ├── DEPLOYMENT_PLAN.md
+│       ├── NEXT_PHASES_PLAN.md
+│       └── SYSTEM_SPECIFICATION.md
 ```
