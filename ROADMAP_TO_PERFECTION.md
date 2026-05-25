@@ -35,7 +35,7 @@
 | Web CMS (SQLite) | Quản lý bài viết, danh mục, SEO, file đính kèm | ✅ Enterprise MVP | 2026-05-12 |
 | HIS Integration (Oracle) | Bác sĩ, lịch hẹn, chuyên khoa | ✅ Read+Write | 2026-05-12 |
 | Admin Panel | CRUD dashboard, logs, analytics, media, users | ✅ Done 100% (auth fix 05-21) | 2026-05-21 |
-| AI Chatbot | Gemini 2.0 Flash + RAG | ✅ MVP | 2026-05-12 |
+| AI Chatbot | Gemini 2.0 Flash + RAG + Dashboard quản trị đầy đủ (đồng bộ CMS, dọn dẹp tri thức, quản lý lịch trực) | ✅ Hoàn thành 100% | 2026-05-25 |
 | Social FAB | Facebook / YouTube / Zalo floating button | ✅ Done | 2026-05-13 |
 | PWA (manifest + sw.js) | Offline support, installable | ✅ Scaffolded | 2026-05-12 |
 | OG Image động | opengraph-image.tsx | ✅ Done | 2026-05-12 |
@@ -56,7 +56,7 @@
 | Multi-source Booking | Đồng bộ lịch khám đa kênh (Web, App, Tổng đài, Trực tiếp) | 🔄 0% (Co-development) | 2026-05-21 |
 | Clinical Results Portal | Cổng tra cứu kết quả cận lâm sàng, xét nghiệm, đơn thuốc | 🔄 0% (Co-development) | 2026-05-21 |
 | Operations CMS | CMS nội bộ quản lý văn bản, thông báo, báo cáo điều hành | 🔄 0% (Co-development) | 2026-05-21 |
-| Sub-portals Layouts | Tách biệt bố cục subsites khám bệnh, tin tức, Q&A hỏi đáp | 🔄 0% (Co-development) | 2026-05-21 |
+| Sub-portals Layouts | Tách biệt bố cục subsites khám bệnh, tin tức, Hỏi đáp y khoa Q&A (Hoàn thành Kênh Q&A Hỏi đáp y học & FAQ động) | 🔄 30% (Co-development) | 2026-05-25 |
 | Pharmacy E-Commerce | Mua dược liệu và thuốc theo đơn online (quy trình phức tạp) | 🔄 0% (Co-development) | 2026-05-21 |
 | EMR Secure Channel | Cổng cung cấp Bệnh án điện tử có ký số bảo mật | 🔄 0% (Co-development) | 2026-05-21 |
 
