@@ -33,8 +33,14 @@ yarn-error.log*
 # backend
 backend/dist/
 backend/node_modules/
-backend/logs/
-logs/
+/backend/logs/
+/logs/
+
+# database (SQLite runtime files)
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+*.sqlite-journal
 
 # vercel
 .vercel

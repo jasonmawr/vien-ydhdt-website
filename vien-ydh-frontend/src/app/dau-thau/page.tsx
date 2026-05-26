@@ -126,7 +126,7 @@ export default function DauThauPage() {
                 { icon: Phone, label: "Điện thoại", value: "028 3844 3047" },
                 { icon: Mail, label: "Email", value: "v.ydhdt@tphcm.gov.vn" },
                 { icon: Clock, label: "Giờ làm việc", value: "Thứ 2 – Thứ 6, 8:00 – 16:00" },
-                { icon: FileText, label: "Địa chỉ", value: "273-275 Nam Kỳ Khởi Nghĩa, Q.3, TP.HCM" },
+                { icon: FileText, label: "Địa chỉ", value: "273 - 275 Nguyễn Văn Trỗi, P.10, Q. Phú Nhuận, TP.HCM" },
               ].map(({ icon: Icon, label, value }) => (
                 <div key={label} className="flex items-start gap-3 bg-stone-50 rounded-xl p-4">
                   <Icon className="h-5 w-5 text-primary-500 shrink-0 mt-0.5" />

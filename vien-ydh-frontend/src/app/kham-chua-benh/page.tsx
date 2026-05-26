@@ -158,7 +158,7 @@ export default function KhamChuaBenhPage() {
               </div>
               <div className="mt-6 flex items-center gap-3 text-white/80">
                 <MapPin className="h-5 w-5 shrink-0" />
-                <span>273-275 Nam Kỳ Khởi Nghĩa, Phường 7, Quận 3, TP.HCM</span>
+                <span>273 - 275 Nguyễn Văn Trỗi, Phường 10, Quận Phú Nhuận, TP. Hồ Chí Minh</span>
               </div>
             </div>
             <div className="text-center">

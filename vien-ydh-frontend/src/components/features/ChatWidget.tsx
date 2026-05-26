@@ -163,8 +163,8 @@ export default function ChatWidget() {
     });
   };
 
-  // Ẩn chatbot trên trang admin
-  if (pathname?.startsWith("/admin")) return null;
+  // Ẩn chatbot trên trang admin hoặc trang chatbot độc lập
+  if (pathname?.startsWith("/admin") || pathname?.startsWith("/chatbot")) return null;
 
   return (
     <>

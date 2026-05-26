@@ -1,9 +1,10 @@
 /**
  * @file chatbot.service.ts
- * @description Dịch vụ AI Chatbot sử dụng Google Gemini API.
- * Multi-model fallback + exponential backoff retry để đảm bảo tỷ lệ thành công cao.
+ * @description Dịch vụ AI Chatbot sử dụng Google Gemini API với CSDL SQLite CMS động.
+ * Hỗ trợ cấu hình Prompt, Welcome message, Mô hình AI động, lưu trữ lịch sử chat bền vững và RAG.
  */
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { getWebDb } from "../../shared/sqlite";
 import { buildSystemPrompt } from "./knowledge-base";
 
 // Types
@@ -26,8 +27,6 @@ export interface ChatResponse {
 }
 
 // ─── Config ────────────────────────────────────────────
-const SESSION_TTL = 30 * 60 * 1000; // 30 phút
-const MAX_HISTORY = 10; // Giảm từ 20 → 10 để tiết kiệm token
 const FALLBACK_MODELS = [
   "gemini-flash-latest",
   "gemini-2.5-flash",
@@ -36,20 +35,6 @@ const FALLBACK_MODELS = [
 ];
 const MAX_RETRIES = 3;
 const BASE_DELAY_MS = 3000; // 3s, 6s, 12s
-
-// ─── Session Store ─────────────────────────────────────
-const sessions = new Map<string, ChatMessage[]>();
-
-// Dọn session hết hạn mỗi 10 phút
-setInterval(() => {
-  const now = Date.now();
-  for (const [id, messages] of sessions) {
-    const lastMsg = messages[messages.length - 1];
-    if (lastMsg && now - lastMsg.timestamp > SESSION_TTL) {
-      sessions.delete(id);
-    }
-  }
-}, 10 * 60 * 1000);
 
 // ─── Gemini Client ─────────────────────────────────────
 let genAI: GoogleGenerativeAI | null = null;
@@ -65,13 +50,54 @@ function getGenAI(): GoogleGenerativeAI {
   return genAI;
 }
 
-// Cache system prompt (không cần build lại mỗi lần)
-let cachedSystemPrompt: string | null = null;
-function getSystemPrompt(): string {
-  if (!cachedSystemPrompt) {
-    cachedSystemPrompt = buildSystemPrompt();
+// ─── Dynamic Config & Prompt Helpers ───────────────────
+export async function getChatbotConfig(key: string, defaultValue: string): Promise<string> {
+  try {
+    const db = await getWebDb();
+    const row = await db.get("SELECT value FROM chatbot_configs WHERE key = ?", key);
+    return row ? row.value : defaultValue;
+  } catch (err) {
+    return defaultValue;
   }
-  return cachedSystemPrompt;
+}
+
+export async function getDynamicSystemPrompt(): Promise<string> {
+  try {
+    const db = await getWebDb();
+    const configRow = await db.get("SELECT value FROM chatbot_configs WHERE key = ?", "system_prompt");
+    const basePrompt = configRow ? configRow.value : buildSystemPrompt();
+
+    // Lấy thêm tri thức từ kho tri thức động (Active Knowledge)
+    const knowledgeRows = await db.all(
+      "SELECT title, content FROM chatbot_knowledge WHERE is_active = 1"
+    );
+
+    // Lấy thêm lịch khám bác sĩ đang hoạt động (Active Schedules)
+    const scheduleRows = await db.all(
+      "SELECT title, content FROM chatbot_schedules WHERE is_active = 1"
+    );
+
+    let extraContext = "";
+
+    if (knowledgeRows && knowledgeRows.length > 0) {
+      const knowledgeText = knowledgeRows
+        .map((k) => `### ${k.title}\n${k.content}`)
+        .join("\n\n");
+      extraContext += `\n\nKIẾN THỨC BỔ SUNG (RAG):\nSử dụng các thông tin chính thức sau đây từ Viện để trả lời nếu người dùng hỏi liên quan:\n${knowledgeText}`;
+    }
+
+    if (scheduleRows && scheduleRows.length > 0) {
+      const scheduleText = scheduleRows
+        .map((s) => `### ${s.title}\n${s.content}`)
+        .join("\n\n");
+      extraContext += `\n\nLỊCH KHÁM BÁC SĨ (RAG):\nSử dụng lịch khám chính thức dưới đây để trả lời chính xác khi bệnh nhân hỏi về lịch trực hay ngày khám của bác sĩ cụ thể:\n${scheduleText}`;
+    }
+
+    return `${basePrompt}${extraContext}`;
+  } catch (err) {
+    console.error("[Chatbot] Lỗi xây dựng dynamic system prompt:", err);
+    return buildSystemPrompt();
+  }
 }
 
 // ─── Helpers ───────────────────────────────────────────
@@ -84,16 +110,30 @@ function sleep(ms: number): Promise<void> {
 }
 
 function isRateLimitError(msg: string): boolean {
-  return msg.includes("429") || msg.includes("quota") || msg.includes("Too Many") || msg.includes("high demand") || msg.includes("503");
+  return (
+    msg.includes("429") ||
+    msg.includes("quota") ||
+    msg.includes("Too Many") ||
+    msg.includes("high demand") ||
+    msg.includes("503")
+  );
 }
 
 // ─── Gemini API Call (single model) ────────────────────
-async function callModel(modelName: string, history: ChatMessage[], message: string): Promise<string> {
+async function callModel(
+  modelName: string,
+  history: ChatMessage[],
+  message: string,
+  systemPrompt: string
+): Promise<string> {
   const ai = getGenAI();
+  const temperatureStr = await getChatbotConfig("temperature", "0.7");
+  const temperature = parseFloat(temperatureStr) || 0.7;
+
   const model = ai.getGenerativeModel({
     model: modelName,
     generationConfig: {
-      temperature: 0.7,
+      temperature,
       topP: 0.9,
       topK: 40,
       maxOutputTokens: 800,
@@ -108,8 +148,11 @@ async function callModel(modelName: string, history: ChatMessage[], message: str
 
   const chat = model.startChat({
     history: [
-      { role: "user", parts: [{ text: getSystemPrompt() }] },
-      { role: "model", parts: [{ text: "Tôi hiểu. Tôi là Y Dược AI, trợ lý ảo của Viện Y Dược Học Dân Tộc TP.HCM." }] },
+      { role: "user", parts: [{ text: systemPrompt }] },
+      {
+        role: "model",
+        parts: [{ text: "Tôi hiểu. Tôi là Y Dược AI, trợ lý ảo của Viện Y Dược Học Dân Tộc TP.HCM." }],
+      },
       ...recentHistory,
     ],
   });
@@ -119,14 +162,22 @@ async function callModel(modelName: string, history: ChatMessage[], message: str
 }
 
 // ─── Robust Gemini Call (multi-model + retry) ──────────
-async function callGeminiRobust(history: ChatMessage[], message: string): Promise<string> {
+async function callGeminiRobust(
+  history: ChatMessage[],
+  message: string,
+  systemPrompt: string,
+  preferredModel: string
+): Promise<string> {
   let lastError: Error | null = null;
 
-  for (const modelName of FALLBACK_MODELS) {
+  // Ưu tiên preferredModel lên hàng đầu
+  const models = [preferredModel, ...FALLBACK_MODELS.filter((m) => m !== preferredModel)];
+
+  for (const modelName of models) {
     for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
       try {
-        const reply = await callModel(modelName, history, message);
-        if (attempt > 0 || modelName !== FALLBACK_MODELS[0]) {
+        const reply = await callModel(modelName, history, message, systemPrompt);
+        if (attempt > 0 || modelName !== preferredModel) {
           console.log(`[Chatbot] ✅ Thành công với ${modelName} (attempt ${attempt + 1})`);
         }
         return reply;
@@ -137,12 +188,14 @@ async function callGeminiRobust(history: ChatMessage[], message: string): Promis
         if (isRateLimitError(errMsg)) {
           // Rate limit → đợi rồi retry
           const delay = BASE_DELAY_MS * Math.pow(2, attempt);
-          console.log(`[Chatbot] ⏳ ${modelName} rate limited, retry ${attempt + 1}/${MAX_RETRIES} in ${delay / 1000}s...`);
+          console.log(
+            `[Chatbot] ⏳ ${modelName} rate limited, retry ${attempt + 1}/${MAX_RETRIES} in ${delay / 1000}s...`
+          );
           await sleep(delay);
           continue;
         }
 
-        // Lỗi khác (404, permission...) → chuyển model
+        // Lỗi khác → chuyển sang model tiếp theo
         console.log(`[Chatbot] ❌ ${modelName} failed: ${errMsg.substring(0, 100)}`);
         break;
       }
@@ -172,27 +225,81 @@ function getSuggestedQuestions(reply: string, userMessage: string): string[] {
   return ["Viện có những dịch vụ gì?", "Cách đặt lịch khám online?", "Giờ làm việc của Viện?"];
 }
 
-// ─── Main Entry Point ──────────────────────────────────
-export async function processMessage(req: ChatRequest): Promise<ChatResponse> {
-  const sessionId = req.sessionId || generateSessionId();
-  let history = sessions.get(sessionId) || [];
+// ─── Session History DB Helpers ────────────────────────
+export async function getSessionHistoryFromDb(sessionId: string): Promise<ChatMessage[]> {
+  try {
+    const db = await getWebDb();
+    const rows = await db.all(
+      "SELECT role, content, timestamp FROM chatbot_messages WHERE session_id = ? ORDER BY id ASC",
+      sessionId
+    );
+    return rows.map((r) => ({
+      role: r.role as "user" | "assistant",
+      content: r.content,
+      timestamp: r.timestamp,
+    }));
+  } catch (err) {
+    console.error("[Chatbot] Lỗi load history từ DB:", err);
+    return [];
+  }
+}
 
-  // Thêm tin nhắn người dùng
+// ─── Main Entry Point ──────────────────────────────────
+export async function processMessage(
+  req: ChatRequest,
+  ipAddress?: string,
+  userAgent?: string
+): Promise<ChatResponse> {
+  const sessionId = req.sessionId || generateSessionId();
+  const db = await getWebDb();
+
+  // 1. Tạo hoặc kiểm tra hội thoại trong DB
+  const conv = await db.get(
+    "SELECT session_id FROM chatbot_conversations WHERE session_id = ?",
+    sessionId
+  );
+  if (!conv) {
+    await db.run(
+      "INSERT INTO chatbot_conversations (session_id, ip_address, user_agent) VALUES (?, ?, ?)",
+      sessionId,
+      ipAddress || null,
+      userAgent || null
+    );
+  } else {
+    await db.run(
+      "UPDATE chatbot_conversations SET updated_at = CURRENT_TIMESTAMP WHERE session_id = ?",
+      sessionId
+    );
+  }
+
+  // 2. Lấy lịch sử hội thoại hiện tại
+  let history = await getSessionHistoryFromDb(sessionId);
+
+  // 3. Thêm tin nhắn của User vào DB
+  const userMsgTime = Date.now();
+  await db.run(
+    "INSERT INTO chatbot_messages (session_id, role, content, timestamp) VALUES (?, 'user', ?, ?)",
+    sessionId,
+    req.message,
+    userMsgTime
+  );
+
+  // Ghi nhận tin nhắn mới vào history local cho context của AI
   history.push({
     role: "user",
     content: req.message,
-    timestamp: Date.now(),
+    timestamp: userMsgTime,
   });
 
-  // Giới hạn history
-  if (history.length > MAX_HISTORY) {
-    history = history.slice(-MAX_HISTORY);
-  }
+  // 4. Giải quyết Cấu hình AI Persona và Prompt động
+  const systemPrompt = await getDynamicSystemPrompt();
+  const preferredModel = await getChatbotConfig("ai_model", "gemini-2.0-flash");
 
   let reply: string;
 
   try {
-    reply = await callGeminiRobust(history, req.message);
+    // 5. Gọi Gemini robust
+    reply = await callGeminiRobust(history, req.message, systemPrompt, preferredModel);
   } catch (error: any) {
     console.error("[Chatbot] ❌ All models exhausted:", error.message?.substring(0, 150));
 
@@ -203,14 +310,41 @@ export async function processMessage(req: ChatRequest): Promise<ChatResponse> {
     }
   }
 
-  // Lưu phản hồi
-  history.push({
-    role: "assistant",
-    content: reply,
-    timestamp: Date.now(),
-  });
+  // 6. Lưu phản hồi của Assistant vào DB
+  const assistantMsgTime = Date.now();
+  await db.run(
+    "INSERT INTO chatbot_messages (session_id, role, content, timestamp) VALUES (?, 'assistant', ?, ?)",
+    sessionId,
+    reply,
+    assistantMsgTime
+  );
 
-  sessions.set(sessionId, history);
+  // 7. Tự động ghi nhận câu hỏi chưa khớp (unresolved) nếu bot trả lời bằng số hotline hoặc fallback
+  const replyLower = reply.toLowerCase();
+  if (
+    replyLower.includes("(028) 3844 2349") ||
+    replyLower.includes("bận") ||
+    replyLower.includes("thử lại sau") ||
+    replyLower.includes("không biết") ||
+    replyLower.includes("chưa có thông tin")
+  ) {
+    try {
+      // Tránh trùng lặp câu hỏi chưa khớp trong hàng đợi
+      const existing = await db.get(
+        "SELECT id FROM chatbot_unresolved WHERE question = ? AND is_resolved = 0",
+        req.message.trim()
+      );
+      if (!existing) {
+        await db.run(
+          "INSERT INTO chatbot_unresolved (question, match_score, is_resolved) VALUES (?, 0, 0)",
+          req.message.trim()
+        );
+        console.log(`[Unresolved Logs] Đã tự động ghi nhận câu hỏi cần bổ sung: "${req.message}"`);
+      }
+    } catch (errUnresolved) {
+      console.error("[Unresolved Logs] Lỗi ghi nhận câu hỏi cần bổ sung:", errUnresolved);
+    }
+  }
 
   return {
     reply,
@@ -222,6 +356,6 @@ export async function processMessage(req: ChatRequest): Promise<ChatResponse> {
 /**
  * Lấy lịch sử chat theo session
  */
-export function getSessionHistory(sessionId: string): ChatMessage[] {
-  return sessions.get(sessionId) || [];
+export async function getSessionHistory(sessionId: string): Promise<ChatMessage[]> {
+  return getSessionHistoryFromDb(sessionId);
 }

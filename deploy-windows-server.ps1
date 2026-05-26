@@ -66,6 +66,13 @@ if (Test-Path $NextCachePath) {
     Remove-Item -Path $NextCachePath -Recurse -Force
 }
 
+# Xoa thu muc dev tam de tranh khoa tap tin va giảm kich thuoc
+$NextDevPath = "vien-ydh-frontend\.next\dev"
+if (Test-Path $NextDevPath) {
+    Write-Host "-> Dang don dep thu muc dev Next.js..." -ForegroundColor Gray
+    Remove-Item -Path $NextDevPath -Recurse -Force
+}
+
 Compress-Archive -Path "vien-ydh-frontend\.next", "vien-ydh-frontend\public", "vien-ydh-frontend\package.json", "vien-ydh-frontend\next.config.ts", "vien-ydh-frontend\messages" -DestinationPath $FrontendZip -Force
 
 # ──────────────────────────────────────────────────────────────────────────
